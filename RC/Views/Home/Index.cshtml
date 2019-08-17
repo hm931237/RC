@@ -1,0 +1,755 @@
+﻿@model RC.Models.UserLogin
+@using RC.Models
+
+@{
+
+    ApplicationDbContext db = new ApplicationDbContext();
+    var sectors = db.Sector.ToList();
+
+    int gifts = db.Offers.ToList().Count();
+    int reviews = db.Reviews.ToList().Count();
+    int org = db.Organizations.ToList().Count();
+    int client = db.Clients.ToList().Count();
+
+
+}
+
+
+
+
+<head>
+    <link href="~/Content/style.css" rel="stylesheet" type="text/css" media="screen" runat="server" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <style type="text/css">
+        body {
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        .modal-login {
+            color: #636363;
+            width: 350px;
+        }
+
+            .modal-login .modal-content {
+                padding: 20px;
+                border-radius: 5px;
+                border: none;
+            }
+
+            .modal-login .modal-header {
+                border-bottom: none;
+                position: relative;
+                justify-content: center;
+            }
+
+            .modal-login h4 {
+                text-align: center;
+                font-size: 26px;
+                margin: 30px 0 -15px;
+            }
+
+            .modal-login .form-control:focus {
+                border-color: #70c5c0;
+            }
+
+            .modal-login .form-control, .modal-login .btn {
+                min-height: 40px;
+                border-radius: 3px;
+            }
+
+            .modal-login .close {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+            }
+
+            .modal-login .modal-footer {
+                background: #ecf0f1;
+                border-color: #dee4e7;
+                text-align: center;
+                justify-content: center;
+                margin: 0 -20px -20px;
+                border-radius: 5px;
+                font-size: 13px;
+            }
+
+                .modal-login .modal-footer a {
+                    color: #999;
+                }
+
+            .modal-login .avatar {
+                position: absolute;
+                margin: 0 auto;
+                left: 0;
+                right: 0;
+                top: -70px;
+                width: 95px;
+                height: 95px;
+                border-radius: 50%;
+                z-index: 9;
+                background: #60c7c1;
+                // padding: 15px;
+                box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+            }
+
+                .modal-login .avatar img {
+                    width: 100%;
+                }
+
+            .modal-login.modal-dialog {
+                margin-top: 80px;
+            }
+
+            .modal-login .btn {
+                color: #fff;
+                border-radius: 4px;
+                background: #60c7c1;
+                text-decoration: none;
+                transition: all 0.4s;
+                line-height: normal;
+                border: none;
+            }
+
+                .modal-login .btn:hover, .modal-login .btn:focus {
+                    background: #45aba6;
+                    outline: none;
+                }
+
+        .trigger-btn {
+            display: inline-block;
+            margin: 100px auto;
+        }
+
+        #username, #password {
+            color: black;
+        }
+
+        .avatar img {
+            height: 91px;
+        }
+
+
+        /*color box*/
+
+        .themes {
+            position: fixed;
+            top: 110px;
+            left: 0;
+            text-align: left;
+            color: white;
+            z-index: 2;
+            -webkit-transition: 0.5s ease;
+        }
+
+            .themes p.themes-btn {
+                color: #333;
+                background: white;
+                padding: 23px 15px;
+                box-shadow: 3px 3px 0 -2px rgba(0,0,0,0.2);
+                border-radius: 0 0 5px 0;
+                font-weight: bold;
+                -webkit-transition: 0.5s ease;
+            }
+
+                .themes p.themes-btn:hover {
+                    box-shadow: 4px 4px 10px -3px rgba(0,0,0,0.56);
+                    transtion: 0.5s ease;
+                }
+
+            .themes .colors {
+                float: left;
+                padding: 10px;
+                background: rgba(0,0,0,0.5);
+                border-radius: 0 0 10px 0;
+                margin-left: -300px;
+                -webkit-transition: 0.5s ease;
+            }
+
+                .themes .colors.active {
+                    margin-left: 0;
+                }
+
+                .themes .colors h3 {
+                    font-size: 15px;
+                    font-family: Tahoma;
+                    font-weight: normal;
+                    text-transform: capitalize;
+                    margin-bottom: 7px;
+                    -webkit-transition: 0.5s ease;
+                }
+
+            .themes .themes-btn {
+                float: right;
+                cursor: pointer;
+                -webkit-transition: 0.5s ease;
+            }
+
+            .themes ul li {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                border-radius: 7.8px;
+                margin-right: 2px;
+                -webkit-transition: 0.5s ease;
+            }
+
+                .themes ul li:hover {
+                    filter: alpha(opicity=80);
+                    opacity: 0.8;
+                }
+
+            .themes ul.theme-colors li:nth-child(1), .themes ul.logo-colors li:nth-child(1),
+            .themes ul.text-colors li:nth-child(1) {
+                background-color: #000;
+                color: #000;
+                -webkit-transition: 0.5s ease;
+            }
+
+            .themes ul.theme-colors li:nth-child(2), .themes ul.logo-colors li:nth-child(2),
+            .themes ul.text-colors li:nth-child(2) {
+                background-color: #fff;
+                color: #fff;
+                -webkit-transition: 0.5s ease;
+            }
+
+            .themes ul.theme-colors li:nth-child(3), .themes ul.logo-colors li:nth-child(3),
+            .themes ul.text-colors li:nth-child(3) {
+                background-color: #0084d6;
+                color: #0084d6;
+                -webkit-transition: 0.5s ease;
+            }
+
+            .themes ul.theme-colors li:nth-child(4),
+            .themes ul.logo-colors li:nth-child(4),
+            .themes ul.text-colors li:nth-child(4) {
+                background-color: #f44336;
+                color: #f44336;
+                -webkit-transition: 0.5s ease;
+            }
+
+
+            .themes ul.theme-colors li:nth-child(5),
+            .themes ul.logo-colors li:nth-child(5),
+            .themes ul.text-colors li:nth-child(5) {
+                background-color: #7b1fa2;
+                color: #7b1fa2;
+                -webkit-transition: 0.5s ease;
+            }
+
+            .themes ul.theme-colors li:nth-child(6),
+            .themes ul.logo-colors li:nth-child(6),
+            .themes ul.text-colors li:nth-child(6) {
+                background-color: #00acc1;
+                color: #00acc1;
+                -webkit-transition: 0.5s ease;
+            }
+
+
+            .themes ul.theme-colors li:nth-child(7),
+            .themes ul.logo-colors li:nth-child(7),
+            .themes ul.text-colors li:nth-child(7) {
+                background-color: #43a047;
+                color: #43a047;
+                -webkit-transition: 0.5s ease;
+            }
+
+            .themes ul.theme-colors li:nth-child(8),
+            .themes ul.logo-colors li:nth-child(8),
+            .themes ul.text-colors li:nth-child(8) {
+                background-color: #f57c00;
+                color: #f57c00;
+                -webkit-transition: 0.5s ease;
+            }
+
+
+            .themes ul.theme-colors li:nth-child(9),
+            .themes ul.logo-colors li:nth-child(9),
+            .themes ul.text-colors li:nth-child(9) {
+                background-color: #455a64;
+                color: #455a64;
+                -webkit-transition: 0.5s ease;
+            }
+
+
+
+        .themes-btn {
+            border-top-right-radius: 25px !important;
+            border-bottom-right-radius: 25px !important;
+            padding: 15px 35px !important;
+            -webkit-transition: 0.5s ease;
+        }
+
+   
+    </style>
+
+
+</head>
+<!--Color Box section-->
+
+<div class="themes">
+    <div class="colors">
+        <h3>theme colors</h3>
+        <ul class="theme-colors">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+
+        </ul>
+        <br />
+        <h3>Logo colors</h3>
+        <ul class="logo-colors">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <br />
+        <h3>Text colors</h3>
+        <ul class="text-colors">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <p class="themes-btn"><i class="fas fa-palette fa-2x fa-spin"></i></p>
+</div>
+<!-- Home Section -->
+
+<section id="home">
+    <div id="home-cover" class="bg-parallax animated  fadeIn">
+        <div id="home-content-box">
+            <div id="home-content-box-inner">
+                <div id="home-heading" class="animated zoomIn">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <br>
+                    <h3>Reviewza ! <br> Trusted Reviews, Smart Decisions !</h3>
+
+                </div>
+
+
+
+                @foreach (var sector in sectors)
+                {
+
+                    <div class="category-btn animated zoomInRight">
+                        <a class="btn btn-lg" href="/Home/SeeAllOrOneSector/@sector.Id" role="button" title="view our work"><i class="@sector.IconPath fa-3x"></i><br>@sector.Name</a>
+                    </div>
+
+
+                }
+
+
+                <div id="home-btn">
+
+
+
+                    <!-- Button HTML (to Trigger Modal) -->
+
+                    <a href="/Home/SeeAllOrOneSector" class="btn btn-lg btn-general btn-white" role="button"> See all</a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- services Section -->
+<section id="services">
+    <div class="content-box">
+        <div class="content-heading wow bounceInLeft text-center" data-wow-duration="2s" data-wow-delay="0.3s">
+            <h3>Services</h3>
+            <div class="content-heading-underline"></div>
+            <p>
+                Make smarter, faster and more informed decisions by quickly understanding the reviews and <br>
+                accessing the information that matters most to you.
+            </p>
+
+        </div>
+
+        <div class="container">
+            <div class="row wow bounceInLeft " data-wow-duration="2s" data-wow-delay="0.3s">
+                <div class="col-md-4">
+                    <div class="service-item text-center">
+                        <div class="service-item-icon">
+                            <i class="fas fa-gift fa-3x"></i>
+                        </div>
+                        <div class="service-item-title">
+                            <h3>Earn Rewards</h3>
+                            <p>It is rewarding to write reviews on PlanetRate. You can exchange the points you earn with gift cards, discounts and other free stuff.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-item text-center">
+                        <div class="service-item-icon">
+                            <i class="fas fa-clock fa-3x"></i>
+                        </div>
+                        <div class="service-item-title">
+                            <h3>Save Time</h3>
+                            <p>Make smarter, faster and more informed decisions by quickly understanding the reviews and accessing the information that matters most to you.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-item text-center">
+                        <div class="service-item-icon">
+                            <i class="fas fa-lightbulb fa-3x"></i>
+                        </div>
+                        <div class="service-item-title">
+                            <h3>Smart Reviews</h3>
+                            <p>Just by reading the rating attributes you can make a smart decision quickly without reading text reviews. Smart reviews. Smart decisions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-item text-center">
+                        <div class="service-item-icon">
+                            <i class="fas fa-users fa-3x"></i>
+                        </div>
+                        <div class="service-item-title">
+                            <h3>Get Social</h3>
+                            <p>You can follow different reviewers, categories and even things that are of interest to you. They will all appear in your reviews feed!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-item text-center">
+                        <div class="service-item-icon">
+                            <i class="fab fa-elementor fa-3x"></i>
+                        </div>
+                        <div class="service-item-title">
+                            <h3>Filters</h3>
+                            <p>Each category has unique filters. You can filter each category by what matters most to you. You will see the results based on what you filtered!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-item text-center">
+                        <div class="service-item-icon">
+                            <i class="fas fa-plus-circle fa-3x"></i>
+                        </div>
+                        <div class="service-item-title">
+                            <h3>Contribute</h3>
+                            <p>If something you want to review is not on PlanetRate, you can easily add it.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Top 8 Organizations -->
+<section id="top-8-org">
+    <div class="content-box">
+        <div class="content-heading wow bounceInUp text-center" data-wow-duration="2s" data-wow-delay="0.3s">
+            <h3>Choose the best Organization !</h3>
+            <div class="content-heading-underline"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row no-gutters wow bounceInLeft" data-wow-duration="2s" data-wow-delay="0.3s">
+            <div class="col-md-3">
+                <div class="img-wrapper">
+                    <a href="~/Content/img/education.jpg" title="work description goes here">
+                        <img src="~/Content/img/education.jpg" class="img-responsive" alt="work">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="img-wrapper">
+                    <a href="~/Content/img/rest.jpg" title="work description goes here">
+                        <img src="~/Content/img/rest.jpg" class="img-responsive" alt="work">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="img-wrapper">
+                    <a href="~/Content/img/Cherry_Hospital-1.jpg" title="work description goes here">
+                        <img src="~/Content/img/Cherry_Hospital-1.jpg" class="img-responsive" alt="work">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="img-wrapper">
+                    <a href="~/Content/img/mc.jpg" title="work description goes here">
+                        <img src="~/Content/img/mc.jpg" class="img-responsive" alt="work">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="img-wrapper">
+                    <a href="~/Content/img/starbucks.jpg" title="work description goes here">
+                        <img src="~/Content/img/starbucks.jpg" class="img-responsive" alt="work">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="img-wrapper">
+                    <a href="~/Content/img/rest.jpg" title="work description goes here">
+                        <img src="~/Content/img/rest.jpg" class="img-responsive" alt="work">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="img-wrapper">
+                    <a href="~/Content/img/medical.jpg" title="work description goes here">
+                        <img src="~/Content/img/medical.jpg" class="img-responsive" alt="work">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="img-wrapper">
+                    <a href="~/Content/img/kfc.jpg" title="work description goes here">
+                        <img src="~/Content/img/kfc.jpg" class="img-responsive" alt="work">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- Top Reviewer  -->
+
+<section id="top-reviewer">
+    <div class="content-box">
+        <div class="content-heading wow bounceInUp text-center" data-wow-duration="2s" data-wow-delay="0.3s">
+            <h3>Top Reviewer</h3>
+            <div class="content-heading-underline"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row wow bounceInUpr" data-wow-duration="2s" data-wow-delay="0.3s">
+            <div class="col-md-12">
+                <div id="reviewer-content" class="owl-carousel owl-theme">
+
+
+                    @{
+                        var topReviewers = ViewBag.topReviewers as IEnumerable<RC.Models.Client>;
+                    }
+                    @foreach (var reviewer in topReviewers)
+                    {
+                        <div class="reviewer-profile">
+                            <img src="~/files/@reviewer.User.imageUrl" class="img-responsive" alt="reviewer">
+                            <div class="reviewer-info text-center">
+                                <h4 class="reviewer-name">
+                                    @reviewer.firstName @reviewer.lastName
+                                </h4>
+                                <ul class="social-listx">
+                                    <li><a href="#" class="social-iconx icon-gray"><i class="fab fa-facebook-f"></i></a></li>
+
+                                    <li><a href="#" class="social-iconx icon-gray"><i class="fab fa-google-plus-g"></i></a></li>
+
+                                    <li><a href="#" class="social-iconx icon-gray"><i class="fab fa-linkedin"></i></a></li>
+
+
+
+                                </ul>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- stats  -->
+<section id="stats">
+    <div class="stats-cover bg-parallax">
+        <div class="content-box">
+            <div class="content-heading content-title-white wow bounceInUp text-center" data-wow-duration="2s" data-wow-delay="0.3s">
+                <h3>We never stop improving</h3>
+                <div class="content-heading-underline"></div>
+            </div>
+
+            <div class="container">
+                <div class="row wow bounceInUpr text-center" data-wow-duration="2s" data-wow-delay="0.3s">
+                    <div class="col-md-3">
+                        <div class="stats-item">
+                            <i class="fas fa-user fa-5x"></i>
+                            <h2><span class="counter">@client</span>+<span></span></h2>
+                            <p>Users</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-item">
+                            <i class="fas fa-building fa-5x"></i>
+                            <h2><span class="counter">@org</span>+<span></span></h2>
+                            <p>Organziations</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-item">
+                            <i class="fa fa-star fa-5x"></i>
+                            <h2><span class="counter">@reviews</span>+<span></span></h2>
+                            <p>Review</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-item">
+                            <i class="fas fa-gift fa-5x"></i>
+                            <h2><span class="counter">@gifts</span>+<span></span></h2>
+                            <p>Rewards</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div id="contact-left">
+                    <h3>Reviewing club</h3>
+                    <p>We believe in <strong>Simple</strong>, <strong>Clean</strong> & <strong>Modern</strong> Design Standards with Responsive Approach. Browse the amazing work of our company.</p>
+
+
+                    <div id="contact-info">
+
+                        <address>
+                            <strong>Headquarters:</strong><br>
+                            <p>
+                                221 Jockey Hollow, Suite 600<br>
+                                Smithtown, NY 11787
+                            </p>
+                        </address>
+                        <div id="phone-fax-email">
+                            <p>
+                                <strong>Phone:</strong><span> (91) 8974 56984 </span> <br>
+                                <strong>Fax:</strong><span>  (91) 66 8754 8978  </span> <br>
+                                <strong>Email:</strong><span>  info@RC.com  </span> <br>
+                            </p>
+                        </div>
+
+                        <ul class="social-listx">
+                            <li><a href="#" class="social-iconx icon-white"><i class="fab fa-facebook"></i></a></li>
+                            <li><a href="#" class="social-iconx icon-white"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="#" class="social-iconx icon-white"><i class="fab fa-youtube"></i></a></li>
+                            <li><a href="#" class="social-iconx icon-white"><i class="fab fa-google-plus-g"></i></a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div id="contact-right">
+
+                    <h3>Contact Us</h3>
+                    <form action="#">
+                        <input type="text" name="full-name" placeholder="Full Name" class="form-control">
+                        <input type="text" name="email-address" placeholder="Email Address " class="form-control">
+                        <textarea row="5" name="message" placeholder="Message..." class="form-control"></textarea>
+
+                        <div id="send-btn">
+                            <a class="btn btn-lg btn-general btn-white" role="button" href="#">Send</a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="copy-right ">Copyrights © 2017 All Rights Reserved by RC Inc.</div>
+        </div>
+    </div>
+    <a href="#home" class="btn-fixed btn  smooth-scroll" title="home" role="button"><i class="fas fa-caret-up"></i></a>
+</footer>
+
+
+
+
+<!-- Modal HTML -->
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-login">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="avatar">
+                    <img class="imglogin" src="~/Content/img/user.png" alt="Avatar" />
+
+                </div>
+                <h4 class="modal-title">Member Login</h4>
+                <button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+
+
+
+
+                @using (Html.BeginForm())
+                {
+
+                    <div class="form-group">
+
+                        @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control", id = "username", type = "text", name = "username", placeholder = "Username" } })
+
+                        <span class="error_form" id="email_error_message"></span>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password", name = "password", id = "password", placeholder = "password" } })
+                        <span class="error_form" id="password_error_message"></span>
+                    </div>
+                    <div class="form-group">
+
+
+                        <button type="button" class="submit action-button btn btn-primary btn-lg btn-block login-btn" id="submit" onclick="validate();">Login</button>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <a href="#">You dont have account?</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery.js"></script>
+<script src="~/Scripts/toastr.js"></script>
+
+
+<script>
+
+    function update_nav() {
+        document.getElementById("removeToggle").style.display = 'none';
+
+    }
+    window.onload = update_nav;
+</script>

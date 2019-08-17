@@ -1,0 +1,949 @@
+﻿@model RC.ViewModels.OrganizationFactorViewModel
+@using RC.Models
+@{
+    ViewBag.Title = "Reviews";
+    Layout = "~/Views/Shared/_OrganizationLayout.cshtml";
+    ApplicationDbContext db = new ApplicationDbContext();
+    var UserLoggedIn = (RC.Models.User)Session["LoggedInUser"];
+    var counter = 1;
+    int UserId = Convert.ToInt32(Session["UserId"]);
+    var clt = new Client();
+    if (Convert.ToInt32(Session["LoginUserTypeId"]) == 2)
+    {
+
+        clt = db.Clients.SingleOrDefault(x => x.userId == UserId);
+    }
+}
+<head>
+
+    @Styles.Render("~/Content/Reviews.css")
+    <style>
+        @@import url(http://fonts.googleapis.com/css?family=Roboto);
+
+        /****** LOGIN MODAL ******/
+        .loginmodal-container {
+            padding: 30px;
+            max-width: 350px;
+            width: 100% !important;
+            background-color: #F7F7F7;
+            margin: 0 auto;
+            border-radius: 2px;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            font-family: roboto;
+        }
+
+            .loginmodal-container h1.report {
+                text-align: center;
+                font-size: 1.8em;
+                padding: 0 !important;
+                font-family: roboto;
+            }
+
+            .loginmodal-container input[type=submit] {
+                width: 100%;
+                display: block;
+                margin-bottom: 10px;
+                position: relative;
+            }
+
+            .loginmodal-container input[type=text], input[type=password] {
+                height: 44px;
+                font-size: 16px;
+                width: 100%;
+                margin-bottom: 10px;
+                -webkit-appearance: none;
+                background: #fff;
+                border: 1px solid #d9d9d9;
+                border-top: 1px solid #c0c0c0;
+                /* border-radius: 2px; */
+                padding: 0 8px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+            }
+
+                .loginmodal-container input[type=text]:hover, input[type=password]:hover {
+                    border: 1px solid #b9b9b9;
+                    border-top: 1px solid #a0a0a0;
+                    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+                    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+                    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+                }
+
+        .loginmodal {
+            text-align: center;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            font-weight: 700;
+            height: 36px;
+            padding: 0 8px;
+            /* border-radius: 3px; */
+            /* -webkit-user-select: none;
+           user-select: none; */
+        }
+
+        .loginmodal-submit {
+            /* border: 1px solid #3079ed; */
+            border: 0px;
+            color: #fff;
+            text-shadow: 0 1px rgba(0,0,0,0.1);
+            background-color: #4d90fe;
+            padding: 17px 0px;
+            font-family: roboto;
+            font-size: 14px;
+            /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#4787ed)); */
+        }
+
+            .loginmodal-submit:hover {
+                /* border: 1px solid #2f5bb7; */
+                border: 0px;
+                text-shadow: 0 1px rgba(0,0,0,0.3);
+                background-color: #357ae8;
+                /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#357ae8)); */
+            }
+
+        .loginmodal-container a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 400;
+            text-align: center;
+            display: inline-block;
+            opacity: 0.6;
+            transition: opacity ease 0.5s;
+        }
+
+        .login-help {
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="loginmodal-container">
+            <h1 class="report">Report Organization</h1><br>
+
+
+
+
+            @using (Html.BeginForm("Report_org", "Organization"))
+            {
+                @Html.HiddenFor(c => Model.Organization.Id)
+                <div class="form-group">
+                    @Html.TextAreaFor(model => model.orgContent, htmlAttributes: new { @class = "form-control", id = "repp", type = "text", name = "content", placeholder = "Write your problem here .." })
+                    @*  @Html.TextBoxFor(model => model.orgContent,  htmlAttributes:new { @class = "form-control", id = "repp", type = "text", name = "content", placeholder = "Write your problem here .." }  )*@
+                    <input type="submit" class="submit action-button btn btn-primary btn-lg btn-block login-btn" value="submit" />
+                </div>
+            }
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="rev-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="loginmodal-container">
+            <h1 class="report">Report review</h1><br>
+
+
+
+
+            @using (Html.BeginForm("Report_rev", "Organization"))
+            {
+                @Html.HiddenFor(c => Model.Organization.Id)
+                <div class="form-group">
+
+
+                    @Html.TextAreaFor(x => x.revContent, new { @class = "form-control", placeholder = "Write your problem here .." })
+                    <input type="submit" class="submit action-button btn btn-primary btn-lg btn-block login-btn" value="submit" id="submit" />
+                </div>
+            }
+
+
+
+            <div class="login-help">
+                <a href="#">Register</a> - <a href="#">Forgot Password</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content" style="margin-top:37px;">
+
+    <div class="row">
+
+        <!-- /.col -->
+        <div class="col-md-12">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                   <li class="active"><a href="#activity" data-toggle="tab">Reviews</a></li>
+@if (Session["LoginUserTypeId"] != null && (byte)Session["LoginUserTypeId"] == 2)
+{
+    <li class="active" data-toggle="tab" style="float:right;">
+        <a href="#" class="submit action-button btn btn-primary btn-lg  " data-toggle="modal" data-target="#login-modal">Report Org</a>
+    </li>
+}
+    @*<li>
+            <a href="#" data-toggle="modal" data-target="#rev-modal">Review</a>
+        </li>*@
+
+                </ul>
+
+                <div class="tab-content">
+                    <div class="active tab-pane" id="activity">
+
+
+                        <!-- Default box -->
+                        <div class="box ">
+                            <div class="box-header with-border">
+                                <div class="user-block">
+
+                                    <img class="img-circle img-bordered-sm" src="~/Content/img/OrganizationsProfilePics/@Model.Organization.User.imageUrl" alt="user image">
+                                    <span class="username">
+                                        <a href="/Organization/index/@Model.Organization.Id">@Model.Organization.orgnizationName</a>
+
+                                    </span>
+                                    <span class="description">Joined In- @UserLoggedIn.JoniedAt.ToString("MMMM yyyy")</span>
+                                </div>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="box-body">
+
+                                @foreach (var orgfactor in Model.OrganizationFactors)
+                                {
+                                    var v10 =orgfactor.factorRate * 10;
+                                    var v100 = orgfactor.factorRate * 100;
+                                    <div class="col-md-4">
+                                        <label>@orgfactor.Factor.Name</label>
+                                        <div class="progress progress-sm active">
+
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="10" style="width: @v100%">
+                                                @Math.Round(v10, 1) / 10
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+
+                                <div class="box-footer">
+                                    <div class="pull-left">
+                                        <p class="lead text-danger review-average-p">Ratings Averages Based On The Total Number Of Reviews (@ViewBag.Count_reviews).</p>
+
+                                    </div>
+                                   
+                                    <div class="pull-right">
+                                        <p>Total Rate <button type="button" class="btn bg-navy margin">@Math.Round(Model.Organization.orgRate, 1)/ 10</button></p>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+                            <!-- /.box-body -->
+                            <!-- /.box-footer-->
+                        </div>
+
+
+                        <!-- /.box -->
+
+
+                        <div class="box box-danger">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">About @Model.Organization.orgnizationName</h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="box box-success">
+
+                                            <div class="user-block">
+                                                <img class="img-circle img-bordered-sm" src="~/Content/img/OrganizationsProfilePics/@Model.Organization.User.imageUrl" alt="user image">
+                                                <div class="username about">
+                                                    <a href="/Organization/index/@Model.Organization.Id" style="">@Model.Organization.orgnizationName</a>
+                                                    <hr />
+                                                </div>
+
+
+                                                @{
+
+                                                    var description = Model.Organization.Description;
+                                                    List<string> desc = new List<string>();
+
+
+                                                }
+                                                <div class="Description" style="padding:5px 10px;">
+                                                    <h4>Brief Description</h4>
+                                                    <p class="text-left">
+                                                        @foreach (var sentence in description.TrimEnd('.').Split('.'))
+                                                        {
+
+
+                                                            desc.Add(sentence);
+                                                        }
+                                                        @desc[0]
+
+
+
+                                                    </p>
+                                                    <p id="ReadMoreContent" style="display:none;">
+                                                        @for (var i = 1; i < desc.Count(); i++)
+                                                        {
+
+                                                            @desc[i];
+
+                                                        }
+                                                    </p>
+
+                                                    <button id="readBtn" class="btn btn-success" style="display:block;">Read More</button>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+                                    <div class="col-md-5">
+                                        <div class="box box-success" style="padding:20px 10px;">
+                                            <div class="item-detail-title">
+
+                                                <h4 class="text-success"><i class="fa fa-calendar"></i> Business hours</h4>
+                                            </div>
+                                            @{
+                                                var myList = (List<RC.Models.WorkTime>)ViewData["WorkTimes"];
+
+
+                                            }
+
+                                            @foreach (var wk in myList)
+                                            {
+                                                <div class="item-detail-block">
+                                                    <div class="row">
+                                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><span><i class="fa fa-check-circle"></i> @wk.Day</span></div>
+                                                        <span>@wk.From.ToShortTimeString() - @wk.To.ToShortTimeString()</span>
+
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-5">
+                                        <div class="box box-success" style="padding:20px 10px;">
+                                            <div class="item-detail-title">
+
+                                                <h4 class="text-success"><i class="fa fa-calendar"></i> Holidays</h4>
+                                            </div>
+                                            @{
+                                                var holidays = (List<String>)ViewData["Holidays"];
+
+
+                                            }
+
+                                            @foreach (var wk in holidays)
+                                            {
+                                                <div class="item-detail-block">
+                                                    <div class="row">
+                                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"><span><i class="fa fa-check-circle"></i> @wk</span></div>
+
+
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+
+                                <hr />
+
+                                <div class="box box-warning col-md-12">
+                                    <div class="info">
+                                        <h2>@Model.Organization.orgnizationName Contact Information</h2>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Phone:</h4>
+                                                <p>@ViewBag.phoneReview</p>
+                                                <h4>Business Email:</h4>
+                                                <p>@Model.Organization.businessEmail</p>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Website:</h4>
+                                                <p>@Model.Organization.websiteUrl</p>
+                                                <h4>Fax:</h4>
+                                                <p>@Model.Organization.Fax</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
+
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+
+                       @if (Convert.ToInt32(Session["LoginUserTypeId"]) != 3 || Convert.ToInt32(Session["LoginUserTypeId"]) != 3)
+                       {
+                        <div class="box box-success">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Review It</h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+
+
+                                @using (Html.BeginForm(@*"Review", "Organization", FormMethod.Post*@))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(m => m.Organization.Id)
+                                    <div class="row">
+
+                                        @for (int i = 0; i < Model.OrganizationFactors.Count(); i++)
+                                        {
+
+                                            var j = 0;
+                                            <div class="col-md-6 col-xs-12">
+                                                <label>@Model.OrganizationFactors[i].Factor.Name</label>
+                                                @Html.TextBoxFor(model => Model.orgfactors[i], new { @id = Model.OrganizationFactors[i].factorId, @class = "input-21c fact", type = "text", title = "" })
+
+                                                <div class="clearfix"></div>
+                                                <hr>
+                                            </div>
+                                        }
+                                    </div>
+
+                                        <hr>
+                                        <div class="form-group">
+                                            <label for="comment">Comment:</label>
+                                            @Html.TextAreaFor(m => Model.feedback, new { @class = "form-control", rows = "5", placeholder = "sharing your comments would be helpful to other.", id = "comment", style = "border:solid 1px #ccc;color: black" })
+                                            @Html.ValidationMessageFor(m => Model.feedback)
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                @{
+                                                    var clt_id = Convert.ToInt32(clt.Id);
+                                                }
+                                                <input type="button" value="Rate" class="btn btn-success btn-block" onclick="Review(@clt_id, @Model.Organization.Id)"/>
+                                            </div>
+                                        </div>
+                                }
+                            </div>
+
+                        </div>
+                       }
+
+
+
+                        <div class="box box-warning">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Total Reviews of @Model.Organization.orgnizationName (@ViewBag.Count_reviews)</h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <!-- /.box-tools -->
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                @*<div class="dropdown pull-right">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                    Sorted By Date and Time <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+                                    </ul>
+
+                                    </div>*@
+
+
+                                @foreach (var client in Model.clients)
+                                {
+
+                                    <div class="row text-center">
+                                        <div class="col-md-3">
+
+                                            <div class="box box-solid">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">Reviewer</h3>
+
+                                                    <div class="box-tools">
+                                                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="box-body no-padding">
+                                                    <ul class="nav nav-pills nav-stacked">
+                                                        <li>
+                                                            <img class="img-circle img-bordered-sm" width="60px" style="display:inline-block;margin-top:5px;" src="~/files/@client.User.imageUrl" />
+                                                            <h5>@client.firstName  @client.lastName</h5>
+                                                            @if (clt.Id == client.Id)
+                                                            {
+                                                                <span><i class="glyphicon glyphicon-pushpin"></i> Pinned</span>
+                                                            }
+                                                        </li>
+                                                        <li>
+                                                            
+                                                                <h5>@client.City.Name</h5>
+                                                        </li>
+                                                        <li>
+                                                            <h5>Reviews</h5>
+
+                                                            @foreach (KeyValuePair<int, int> reviewscount in Model.ClientReviewsNumber)
+                                                            {
+                                                                if (reviewscount.Key == client.Id)
+                                                                {
+                                                                    <span>@reviewscount.Value.ToString()</span>
+
+                                                                }
+
+                                                            }
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                                <!-- /.box-body -->
+                                            </div>
+
+                                        </div>
+
+                                        @{
+                                            float totalRate = 0f;
+
+                                            foreach (var orgfactor in Model.OrganizationFactors)
+                                            {
+
+                                                foreach (var review in Model.Reviews)
+                                                {
+                                                    if (orgfactor.organizationId == review.organizationId && review.clientId == client.Id)
+                                                    {
+                                                        foreach (var rf in Model.ReviewFactors)
+                                                        {
+                                                            if (rf.reviewId == review.Id && rf.organizationFactorId == orgfactor.Id)
+                                                            {
+                                                                totalRate = (totalRate + rf.Rate);
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+
+
+                                            totalRate = totalRate / ViewBag.organizationfactors;
+                                            double result = Math.Round(totalRate, 1);
+
+
+                                        }
+                                        <div class="col-md-9">
+                                            <div class="row">
+                                                <div class="box body-content">
+                                                    <div class="headline" style="margin-top:10px;">
+                                                        <span class="pull-left  inline label label-success" style="padding:11px 19px;font-size:19px;">@result</span>
+                                                        <h4 style="margin-left:5px;float:left;">Reviewed on April 04, 2018</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row text-left">
+
+                                            @foreach (var factor in Model.OrganizationFactors)
+                                            {
+
+                                                {
+                                                        <div class="col-md-6">
+                                                            <h5>@factor.Factor.Name</h5>
+
+
+                                                            @foreach (var review in Model.Reviews)
+                                                            {
+                                                                if (factor.organizationId == review.organizationId && review.clientId == client.Id)
+                                                                {
+                                                                    foreach (var rf in Model.ReviewFactors)
+                                                                    {
+                                                                        if (rf.reviewId == review.Id && rf.organizationFactorId == factor.Id)
+                                                                        {
+
+
+
+                                                                            <div class="progress" style="border-radius:5px;">
+                                                                                <div class="progress-bar progress-bar-yellow" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:@rf.Rate.ToString()0%">
+                                                                                    <span class="sr-only">60% Complete (warning)</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+
+
+
+
+
+                                                                    }
+                                                                }
+                                                            }
+                                                        </div>
+
+
+                                                    
+                                                }
+                                            }
+                                            </div>
+                                            @foreach (var review in Model.Reviews)
+                                            {
+                                                if (review.clientId == client.Id)
+                                                {
+                                                    <div class="row text-left">
+                                                        <div class="col-md-12">
+                                                            <textarea readonly style="width: 100%;height: 130px;border-radius: 7px;">@review.generalFeedback</textarea>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row text-left">
+                                                        <div class="col-md-6">
+                                                            <span>
+                                                                Helpful Review ?
+                                                            </span>
+
+                                                            <ul class="list-inline" style="display:inline;">
+
+
+                                                                @{
+                                                                    var number_of_useful = db.ReviewReactions.Where(rr => rr.reviewId == review.Id).Count();
+                                                                    if (Convert.ToInt32(Session["LoginUserTypeId"]) == 3)
+                                                                    {
+                                                                        <li><i class="fas fa-thumbs-up" id="nouc_@review.Id"></i><span class="text-sm " id="noun_@review.Id">  @number_of_useful</span></li>
+
+                                                                    }
+                                                                    else if(Convert.ToInt32(Session["LoginUserTypeId"]) == 2)
+                                                                    {
+                                                                        var reviewreaction = db.ReviewReactions.SingleOrDefault(rr => rr.clientId == client.Id && rr.reviewId == review.Id);
+                                                                        int userid = Convert.ToInt32(Session["UserId"]);
+                                                                        var client_id = db.Clients.SingleOrDefault(c => c.userId == userid);
+                                                                        if (reviewreaction == null)
+                                                                        {
+                                                                            <li><i class="fas fa-thumbs-up" id="nouc_@review.Id" onclick="Useful(@client_id.Id,@review.Id)"></i><span class="text-sm" id="noun_@review.Id">  @number_of_useful</span></li>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <li><i class="fas fa-thumbs-up" id="nouc_@review.Id" onclick="Useful(@client_id.Id,@review.Id)" style="color: green"></i><span class="text-sm" id="noun_@review.Id">  @number_of_useful</span></li>
+
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <li><i class="fas fa-thumbs-up" id="nouc_@review.Id"></i><span class="text-sm " id="noun_@review.Id">  @number_of_useful</span></li>
+
+                                                                    }
+
+
+                                                                }
+
+
+                                                            </ul>
+
+
+
+                                                        </div>
+
+
+
+                                                    </div>
+                                                }
+                                            }
+                                      
+
+                                            
+                                               
+                                               
+
+                                            
+                          
+
+                                            <div class="col-md-12">
+                                                @if (Session["UserId"] != null && Convert.ToInt32(Session["LoginUserTypeId"]) == 2)
+                                                {
+                                                    var userid = Convert.ToInt32(Session["UserId"]);
+                                                    var clnt = db.Clients.SingleOrDefault(c => c.userId == userid);
+                                                                if (clnt.Id == client.Id)
+                                                                {
+                                                         <button class="btn btn-danger" data-toggle="modal" data-target="#Modal_@counter" style="width: 100%;margin-bottom: 5px;margin-top: 16px" disabled id="report">Report</button>
+                                                     }
+                                                     else
+                                                     {
+                                                         <button class="btn btn-danger" data-toggle="modal" data-target="#Modal_@counter" style="width: 100%;margin-bottom: 5px;margin-top: 16px" id="report">Report</button>
+
+                                                }
+
+                                                }
+                                                
+
+                                                                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                <!--Modal Form of Reports-->
+                                                 
+
+                                           
+                                            <div class="modal fade" id="Modal_@counter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                              
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Report user Now !</h4>
+                                                        </div>
+                                                        @using (Html.BeginForm("Report", "Organization"))
+                                                        {
+
+                                                            <div class="modal-body">
+                                                                @Html.DropDownListFor(r => r.report.reportTypeId, new SelectList(Model.ReportTypes, "Id", "Name"), "Choose report type please", new { @style = "width:100%;border-radius:5px;height:50px;" })
+                                                                <hr />
+
+                                                                <p class="lead">Report Reason</p>
+
+                                                                @Html.TextAreaFor(rep => rep.report.Content, new { rows = 5, cols = 74 })
+
+                                                            </div>
+                                                            <div class="modal-footer">
+
+                                                                <input type="hidden" name="reportedID" value="@client.userId" />
+                                                                <input type="hidden" name="reporterID" value="@Convert.ToInt32(Session["UserId"])" />
+
+                                                                <button id="cancel" type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                                                <input type="submit" class="btn btn-success" value="Submit Report" />
+
+
+
+                                                            </div>
+                                                        }
+                                                      
+                                                
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                               counter++;
+                                                            }
+
+
+                            </div>
+
+                            <!-- /.box -->
+                            <!-- /.tab-content -->
+                        </div>
+                        <!-- /.nav-tabs-custom -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+</section>
+
+
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<script src="~/Scripts/gulpfile.js"></script>
+<script src="~/Scripts/jstars.min.js"></script>
+@section scripts{
+
+
+    @*<script>
+            $(document).ready(function(){
+                $("button").click(function () {
+
+                    $.ajax({url: "demo_test.txt", success: function(result){
+                        $("#div1").html(result);
+                    }});
+                });
+            });
+        </script>*@
+    <script>
+
+
+        function validate() {
+            var content = $("#repp").val();
+            /*  var report = {
+
+                  content : $("#repp").val()
+
+
+              };
+              var isbn = document.getElementById('#repp').value;*/
+            console.log(content);
+            $.ajax({
+                url: '/api/Report/',
+                type: 'POST',
+                data: {'content' : content},
+                success: function () {
+                    // alert("sucesssssss");
+                    // sessionStorage.setItem("MyId", 123);
+                    // window.location.href = authUser.path + authUser.Id.toString();
+
+                },
+                error: function () {
+                    alert("you should enter username and password correctly");
+                }
+            });
+
+        }
+
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $('#report').click(function () {
+
+                $('#Modal').show();
+            });
+
+
+
+
+            @*if(@UserLoggedIn.UserTypeId==3)
+            {
+
+                $( '[id="report"]').css('display','none');
+
+            }*@
+
+            $('#readBtn').click(function () {
+                $('#ReadMoreContent').slideToggle();
+            });
+        });
+    </script>
+    <script>
+        jQuery(document).ready(function() {
+            var factors = [];
+            $(".input-21c").rating({
+                min: 0,
+                max: 10,
+                step: 1,
+                size: "sm",
+                stars: "10"
+            });
+            $(".input-21c").on('rating:change',
+                function(event, value, caption) {
+                    var id = "#" + $(this).attr("id");
+                    $(id).val(value);
+
+                });
+        });
+    </script>
+ <script>
+     function Review(client_id,organization_id) {
+         if (client_id == 0) {
+             toastr.error("You must br logged in ..");
+
+         } else {
+             var facts = document.getElementsByClassName("fact");
+             var factorsRated = [];
+             for (var i = 0; i < facts.length; i++) {
+                 factorsRated.push(facts[i].value);
+             }
+             var review = {
+
+                 generalFeedback: $("#comment").val(),
+                 clientId: client_id,
+                 organizationId: organization_id,
+                 ratedFactors: factorsRated
+
+             };
+             if (review.generalFeedback == "") {
+                 toastr.error("Your comment is important to us..");
+             } else {
+                 $.ajax({
+                     url: '/api/Review/',
+                     type: 'POST',
+                     data: review,
+                     success: function () {
+                         toastr.success("Your rating has been confirmed..");
+                         $('.input-21c').rating('reset');
+                         $("#comment").val("");
+
+                     },
+                     error: function () {
+
+                     }
+                 });
+             }
+
+         }
+     }
+
+ </script>
+    <script>
+        $('#readBtn').click(function () {
+            $('#ReadMoreContent').slideToggle();
+        });
+    </script>
+}

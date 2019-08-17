@@ -1,0 +1,626 @@
+﻿@using RC.Models
+@model RC.ViewModels.OrganizationIndexPost
+
+@{
+	ViewBag.Title = "Home Page";
+	Layout = "~/Views/Shared/_OrganizationLayout.cshtml";
+
+	ApplicationDbContext db = new ApplicationDbContext();
+
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		.accordion {
+			width: 96%;
+			height: 350px;
+			overflow: hidden;
+			margin: 0px auto;
+		}
+
+			.accordion ul {
+				width: 100%;
+				display: table;
+				table-layout: fixed;
+			
+				padding: 0;
+			}
+
+				.accordion ul li {
+					display: table-cell;
+					vertical-align: bottom;
+					position: relative;
+					width: 16.666%;
+					height: 350px;
+					background-repeat: no-repeat;
+					background-position: center center;
+					transition: all 500ms ease-in-out;
+				}
+
+					.accordion ul li div {
+						display: block;
+						overflow: hidden;
+						width: 100%;
+					}
+
+						.accordion ul li div a {
+							display: block;
+							height: 350px;
+							width: 100%;
+							position: relative;
+							z-index: 3;
+							vertical-align: bottom;
+							padding: 15px 20px;
+							box-sizing: border-box;
+							color: #fff;
+							text-shadow: 1px 1px 2px #000;
+							/*filter: invert(100%);*/
+							text-decoration: none;
+							font-family: Open Sans, sans-serif;
+							transition: all 300ms ease-in-out;
+						}
+
+							.accordion ul li div a * {
+								opacity: 0;
+								margin: 0;
+								width: 100%;
+								text-overflow: ellipsis;
+								position: relative;
+								z-index: 5;
+								white-space: nowrap;
+								overflow: hidden;
+								-webkit-transform: translateX(-20px);
+								transform: translateX(-20px);
+								-webkit-transition: all 400ms ease-in-out;
+								transition: all 400ms ease-in-out;
+							}
+
+							.accordion ul li div a h2 {
+								font-family: Montserrat, sans-serif;
+								text-overflow: clip;
+								font-size: 32px;
+								text-transform: uppercase;
+								margin-bottom: 2px;
+								top: 160px;
+							}
+
+							.accordion ul li div a p {
+								top: 160px;
+								font-size: 18px;
+								padding-left: 1em;
+							}
+
+
+
+				.accordion ul li {
+					background-size: cover;
+				}
+
+				.accordion ul:hover li {
+					width: 10%;
+				}
+
+					.accordion ul:hover li:hover {
+						width: 90%;
+					}
+
+						/*.accordion ul:hover li:hover a { background: rgba(0, 0, 0, 0.4); }*/
+
+						.accordion ul:hover li:hover a * {
+							opacity: 1;
+							-webkit-transform: translateX(0);
+							transform: translateX(0);
+						}
+
+				.accordion ul li div a * {
+					opacity: 1;
+					-webkit-transform: translateX(0);
+					transform: translateX(0);
+				}
+	</style>
+
+
+
+</head>
+
+
+<body >
+
+
+	<!-- Main content -->
+    <section class="content post-form" style="margin-top:37px;">
+
+        <div class="row">
+
+
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
+
+                </ul>
+
+                <div class="tab-content">
+                    <div class="active tab-pane" id="activity">
+
+                        <!--Write a Post-->
+                        @{
+                            var userid = Convert.ToInt32(Session["UserId"]);
+                            var user = db.Users.SingleOrDefault(u => u.Id == userid);
+                            if (user == null)
+                            {
+
+                            }
+                            else
+                            {
+                                if (Model.organization.userId ==  user.Id)
+                                {
+                                    <input id="post_text" class="form-control input-sm mind"
+                                           data-toggle="modal" data-target="#Modal" type="text" placeholder="What is in your mind ?">
+                                }
+                                else
+                                {
+
+                                }
+                            }
+
+                        }
+                        
+                        
+
+
+
+                        @if (Model.posts.Count != 0)
+                        {
+
+                            foreach (var post in Model.posts)
+                            {
+                                int likes = 0;
+                                int disLike = 0;
+                                int imgs = 0;
+                                bool promoted = false;
+                                var promotionPost = new Promotion();
+
+                                foreach (var promotion in Model.Promotions)
+                                {
+                                    if (promotion.postId == post.Id)
+                                    {
+                                        promoted = true;
+                                        promotionPost.Reaches = promotion.Reaches;
+                                    }
+                                }
+
+
+                                <div class="post">
+                                    <div class="user-block">
+                                        <a href="#">
+                                            <img class="img-circle img-bordered-sm" src="~/Content/img/OrganizationsProfilePics/@Model.organization.User.imageUrl" alt="user image">
+                                        </a>
+                                        <div class="username">
+                                            @Html.ActionLink(Model.organization.orgnizationName, "Index", "Organization", new { id = Model.organization.Id })
+
+                                            @if (Model.LoginUser.Id == Model.organization.userId)
+                                            {
+                                                <div class="dropdown pull-right">
+
+                                                    <a href="#" id="postButton" class="btn btn-box-tool" data-toggle="dropdown">
+                                                        <i class="fa fa-lg  fa-ellipsis-h"></i>
+
+                                                    </a>
+
+                                                    <ul id="postOptions" class="dropdown-menu">
+
+                                                        <li><a href="javascript:void(0);" class="anchorDetail" data-id="@post.Id"><i class="fa fa-edit"></i>Edit Post</a></li>
+                                                        <li><a href="@Url.Action("deletePost", "Organization", new {id = post.Id})"><i class="fa fa-trash"></i>Delete Post</a></li>
+                                                        @if (promoted == false || promotionPost.Reaches == 0)
+                                                        {
+                                                            <li><a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="@post.Id"><i class="fa fa-star"></i>Promote Post</a></li>
+                                                        }
+
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <span class="description">Posted At - @post.Date.ToString("h:mm tt") </span>
+                                    </div>
+                                    <!-- /.user-block -->
+
+                                    @foreach (var postimage in Model.postImages)
+                                    {
+                                        if (postimage.postId == post.Id)
+                                        {
+                                            imgs++;
+                                        }
+                                    }
+
+                                    @if (imgs != 0)
+                                    {
+                                        <div class="row margin-bottom">
+                                            <div class="accordion">
+                                                <ul>
+                                                    @foreach (var postimage in Model.postImages)
+                                                    {
+                                                        if (postimage.postId == post.Id)
+                                                        {
+
+
+                                                            <li>
+
+                                                                <img width="100%" style="height:100%" class="img-responsive sliderLink" src="~/Content/img/Posts/@postimage.Path" />
+
+                                                            </li>
+
+
+											<!-- /.col -->
+
+
+
+
+
+
+
+                                                        }
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    }
+
+
+                                    <p class="lead" style="color:#000">@post.Content</p>
+
+                                    @foreach (var react in Model.PostReaction)
+                                    {
+                                        if (post.Id == react.postId)
+                                        {
+                                            if (react.Reaction == 1)
+                                            {
+                                                likes = likes + 1;
+                                            }
+                                            if (react.Reaction == 2)
+                                            {
+                                                disLike = disLike + 1;
+                                            }
+                                        }
+                                    }
+
+
+                                    <!-- /.row -->
+
+                                    <ul class="list-inline" style="border:1px solid #ccc;padding:3px">
+                                        <li>
+                                            <i class="fa fa-thumbs-up margin-r-5 text-primary"></i><span class="text-sm text-primary"> @likes</span>
+                                        </li>
+
+                                        <li>
+                                            <i class="fa fa-thumbs-down margin-r-5 text-danger"></i><span class="text-sm text-danger"> @disLike</span>
+                                        </li>
+                                        <li style="float:right">
+                                            <span class="text-success"><i class="glyphicon glyphicon-calendar text-success"></i> @post.Date.ToString("dddd, dd MMMM yyyy") </span>
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+
+
+                            }
+                        }
+                        else
+                        {
+                            <div class="nopost" style="margin:264px 361px;">
+                                <i class="fa fa-location-arrow fa-3x" style="color:#DDD;"></i><span style="color:#DDD;font-size:40px;display:inline-block;font-weight:bold;">No Posts Till Now </span> 
+                            </div>
+
+
+                        }
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- /.nav-tabs-custom -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!-- /.col -->
+        <!-- Button trigger modal -->
+        <!-- Modal -->
+
+        @{
+
+            RC.Models.Post Post = new Post();
+        }
+
+
+        @Html.Partial("PostForm", Post, new ViewDataDictionary { { "id", Model.organization.Id } })
+
+        <div id='myModal' class='modal'>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id='myModalContent'></div>
+                </div>
+            </div>
+
+        </div>
+
+        @*<div id='myModal1' class='modal'>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div id='myModalContent1'></div>
+                    </div>
+                </div>
+
+            </div>*@
+
+    </section>
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<strong class="modal-title" id="exampleModalLabel">Promote Post</strong>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					@*@Html.TextBoxFor(item => item.Promotion.postId, htmlAttributes: new { id = "recipient-name" })*@
+
+					@using (Html.BeginForm("promotion", "organization"))
+					{
+						@Html.HiddenFor(c => c.Promotion.postId, htmlAttributes: new { id = "recipient-name" });
+
+						<div class="form-group">
+							@Html.LabelFor(m => m.Promotion.Reaches)
+							@Html.TextBoxFor(m => m.Promotion.Reaches, new { @class = "form-control", style = "color:black", @required = "required", id = "Reaches", @type = "number" })
+							@Html.ValidationMessageFor(m => m.Promotion.Reaches)
+						</div>
+
+						<div class="form-group">
+							@Html.LabelFor(m => m.Promotion.Gender)
+							<div class="custom-control custom-radio">
+								@Html.RadioButtonFor(m => m.Promotion.Gender, 0, new { htmlAttributes = new { @class = "custom-control-input", @required = "required", }, @checked = "checked" }) Male
+							</div>
+							<div class="custom-control custom-radio">
+								@Html.RadioButtonFor(m => m.Promotion.Gender, 1, new { htmlAttributes = new { @class = "custom-control-input", @required = "required", } }) Female
+							</div>
+							<div class="custom-control custom-radio">
+								@Html.RadioButtonFor(m => m.Promotion.Gender, 2, new { htmlAttributes = new { @class = "custom-control-input", @required = "required", } }) Both
+							</div>
+						</div>
+
+						<div class="form-group">
+							@Html.LabelFor(m => m.PromotionAge.startAge)
+							@Html.TextBoxFor(m => m.PromotionAge.startAge, new { @class = "form-control", style = "color:black", @required = "required", id = "startAge", @type = "number" })
+						</div>
+
+						<div class="form-group">
+							@Html.LabelFor(m => m.PromotionAge.endAge)
+							@Html.TextBoxFor(m => m.PromotionAge.endAge, new { @class = "form-control", style = "color:black", @required = "required", id = "endAge", @type = "number" })
+						</div>
+
+						<div class="modal-footer">
+							@*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>*@
+							<button type="submit" class="btn btn-primary savePromotion">Save</button>
+
+						</div>
+					}
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+   
+
+	<script>
+
+
+		$(document).ready(function () {
+
+			$('#post_text').click(function () {
+
+				$('#Modal').show();
+
+			});
+		});
+
+
+
+		$('#postButton').click(function () {
+			$('#postOptions').fadeToggle();
+
+		});
+
+
+	</script>
+
+
+
+
+	@*@{Session["paysuccess"] = "success"; }*@
+
+	@if (Session["paysuccess"] != null)
+	{
+		<input type="hidden" id="input123" value="Hello World!">
+		<script>
+					function func() {
+						toastr.success("Your post is Promoted successfully");
+					}
+		</script>
+		Session["paysuccess"] = null;
+
+	}
+	else
+	{
+		@*<input type="hidden" id="input123" value="Hello World!" >
+					 <script>
+						 function func() {
+							 console.log("hhhhhhhhh");
+							 toastr.error("payment failed" + document.getElementById("input123").value);
+						 }
+			// alert("Input123 is now ready:" + document.getElementById("input123").value);
+
+					 </script>*@
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+</body>
+</html>
+
+
+@section scripts
+{
+	  <script>   //$(function () {
+
+   // 		$('#top-8-org').magnificPopup({
+   // 			delegate: 'a', // child items selector, by clicking on it popup will open
+   // 			type: 'image',
+   // 			// other options
+   // 			gallery: {
+   // 				enabled: true
+   // 			}
+   // 		});
+
+   // 	});
+
+	</script>
+	<script src="~/Scripts/bootstrap.min.js"></script>
+	<script>
+
+		var TeamDetailPostBackURL = '/Organization/editPost';
+		$(function () {
+			$(".anchorDetail").click(function () {
+				debugger;
+				var $buttonClicked = $(this);
+				var id = $buttonClicked.attr('data-id');
+				var options = { "backdrop": "static", keyboard: true };
+				$.ajax({
+					type: "GET",
+					url: TeamDetailPostBackURL,
+					contentType: "application/json; charset=utf-8",
+					data: { "Id": id },
+					datatype: "json",
+					success: function (data) {
+						debugger;
+						$('#myModalContent').html(data);
+						$('#myModal').modal(options);
+						$('#myModal').modal('show');
+
+					},
+					error: function () {
+						alert("Dynamic content load failed.");
+					}
+				});
+			});
+			//$("#closebtn").on('click',function(){
+			//    $('#myModal').modal('hide');
+
+			$("#closbtn").click(function () {
+				$('#myModal').modal('hide');
+			});
+		});
+
+
+		////$(document).ready(function () {
+		//     var AddPost = '/Organization/addPost';
+		//    $(function () {
+
+		//     $("#post_text").click(function () {
+		//         debugger;
+		//         var $buttonClicked = $(this);
+		//         var id = $buttonClicked.attr('orgId');
+		//         //alert(id);
+		//         var options = { "backdrop": "static", keyboard: true };
+		//         $.ajax({
+		//             type: "GET",
+		//             url: AddPost,
+		//             contentType: "application/json; charset=utf-8",
+		//             data: { "Id": id },
+		//             datatype: "json",
+		//             success: function (data) {
+		//                 debugger;
+		//                 $('#myModalContent').html(data);
+		//                 $('#myModal').modal(options);
+		//                 $('#myModal').modal('show');
+
+		//             },
+		//             error: function () {
+		//                 alert("Dynamic content load failed.");
+		//             }
+		//         });
+		//     });
+		//     $("#closebtn").on('click',function(){
+		//         $('#myModal').modal('hide');
+
+		//     $("#closbtn").click(function () {
+		//         $('#myModal').modal('hide');
+		//     });
+		// });
+		// });
+
+	</script>
+	<script>
+		$('#exampleModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget) // Button that triggered the modal
+			var recipient = button.data('whatever') // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var modal = $(this)
+			//modal.find('.modal-title').text('New message to ' + recipient)
+			modal.find('.modal-body #recipient-name').val(recipient)
+		})
+
+		$(document).ready(function () {
+			$('.savePromotion').attr('disabled', true);
+			$('#Reaches' && "#startAge" && "#endAge").keyup(function () {
+				if ($(this).val().length != 0)
+					$('.savePromotion').attr('disabled', false);
+				else
+					$('.savePromotion').attr('disabled', true);
+			})
+		});
+
+		//$(function () {
+
+		//	$('#top-8-org').magnificPopup({
+		//		delegate: 'a', // child items selector, by clicking on it popup will open
+		//		type: 'image',
+		//		// other options
+		//		gallery: {
+		//			enabled: true
+		//		}
+		//	});
+
+		//});
+
+	</script>
+
+@*<script src="~/Scripts/jquery-1.12.4.min.js"></script>*@
+@*<script src="~/Scripts/jquery.js"></script>*@
+<script src="~/Scripts/toastr.js"></script>
+@*<script src="~/Scripts/jquery.magnific-popup.min.js"></script>*@
+
+
+@Scripts.Render("~/bundles/jqueryval")
+
+}

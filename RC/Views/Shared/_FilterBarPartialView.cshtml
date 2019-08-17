@@ -1,0 +1,41 @@
+﻿@model RC.ViewModels.OrganizationFilterVIewModel
+
+
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <label class="control-label">Sector</label>
+                                @Html.DropDownListFor(model => model.sectorId, new SelectList(Model.Sectors, "Id", "Name"), "Sector", new { @class = "form-control select2", @id = "sector", @onchange = "filter();" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <label class="control-label">Cateogory</label>
+                                @Html.DropDownListFor(model => model.categoryId, new SelectList(Model.Categories, "Id", "Name"), "Category", new { @class = "form-control select2", @id = "category", @onchange = "filter();" })
+                            </div>
+                        </div>
+                    </div>
+
+<div class="col-md-2">
+    <div class="form-group">
+        <div class="col-md-10">
+            <label class="control-label">City</label>
+            @Html.DropDownListFor(model => model.cityId, new SelectList(Model.Cities, "Id", "Name"), "City", new { @class = "form-control select2", @id = "city", @onchange = "filter();" })
+        </div>
+    </div>
+</div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <label class="control-label">Price Range</label>
+                                @Html.DropDownListFor(model => model.priceRangeId, new SelectList(Model.PriceRanges, "Id", "Name"), "Price range", new { @class = "form-control select2", @id = "price", @onchange = "filter();" })
+                            </div>
+                        </div>
+                    </div>
+
+                    

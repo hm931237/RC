@@ -1,0 +1,210 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X UA Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reviewing Club</title>
+    <link rel="shortcut icon" href="~/Content/img/rate.png">
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <!-- fontawesome -->
+    <link href="~/Content/font-awesome/css/all.css" rel="stylesheet" />
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i" rel="stylesheet">
+    <!-- magnific popup -->
+
+    <link href="~/Content/magnific-popup/magnific-popup.css" rel="stylesheet" />
+
+    <!-- carousel-css-->
+
+    <link href="~/Content/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/Content/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
+    <!-- animate CSS -->
+    <link href="~/Content/animate/animate.css" rel="stylesheet" />
+
+    <!-- date picker css-->
+    <link href="~/Content/jquery.timepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+    <!-- bootstrap.css -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <!-- style .css -->
+
+
+    @Styles.Render("~/admin-lte/css")
+    <link href="~/Content/navbar/navbar.css" rel="stylesheet" />
+</head>
+<body>
+
+    @Html.Partial("_NavBarPartial")
+    @RenderBody()
+@Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/admin-lte/lib")
+    <script>
+    var input = document.getElementById("searchInput");
+    input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("searchSubmit").click();
+        }
+    });
+    </script>
+<script>
+    function Subscribe(clt_id, org_id) {
+        var id = event.srcElement.id;
+        if (clt_id == 0) {
+            toastr.error("You must be logged in.");
+        } else {
+            
+            var Subscribe = {
+                
+                clientId: clt_id,
+                organizationId: org_id
+            };
+            $.ajax({
+                url: "/User/Subscribe",
+                type: 'POST',
+                data: Subscribe,
+                success: function (result) {
+                    //  document.getElementById().innerHTML = result;
+                    console.log(id);
+                    console.log(result);
+                    document.getElementById(id).innerHTML = result;
+                }
+            });
+        }
+    }
+
+    $("#target").click(function () {
+        alert("Handler for .click() called.");
+    });
+</script>
+<script>
+    toastr.options = {
+        "preventDuplicates": true,
+        "preventOpenDuplicates": true
+    };
+
+    //  toastr.error("Your Message", "Your Title", { timeOut: 5000 });
+</script>
+    <script>
+    $(document).ready(function () {
+        var organizations = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('orgnizationName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/api/organization?query=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('.organization').typeahead({
+            minLength: 1,
+            highlight: true
+        }, {
+            name: 'organizations',
+            display: 'orgnizationName',
+            source: organizations
+        }).on("typeahead:select", function (e, organization) {
+
+            window.location.href = "/Organization/Index/" +organization.Id;
+        });
+
+    });
+    </script>
+    <script>
+    $(function () {
+
+        $('a[href="#toggle-search"], .navbar-bootsnipp .bootsnipp-search .input-group-btn > .btn[type="reset"]').on('click', function (event) {
+            event.preventDefault();
+            $('.navbar-bootsnipp .bootsnipp-search .input-group > input').val('');
+            $('.navbar-bootsnipp .bootsnipp-search').toggleClass('open');
+            $('a[href="#toggle-search"]').closest('li').toggleClass('active');
+
+            if ($('.navbar-bootsnipp .bootsnipp-search').hasClass('open')) {
+                /* I think .focus dosen't like css animations, set timeout to make sure input gets focus */
+                setTimeout(function () {
+                    $('.navbar-bootsnipp .bootsnipp-search .form-control').focus();
+                }, 100);
+            }
+        });
+
+        $(document).on('keyup', function (event) {
+            if (event.which == 27 && $('.navbar-bootsnipp .bootsnipp-search').hasClass('open')) {
+                $('a[href="#toggle-search"]').trigger('click');
+            }
+        });
+
+    });
+    </script>
+    <script>
+
+    jQuery(document).ready(function () {
+        $(".input-21c").rating({
+            min: 0,
+            max: 10,
+            step: 1,
+            size: "sm",
+            stars: "10"
+        });
+        $(".input-21c").on('rating:change',
+            function (event, value, caption) {
+                var sector = Number(document.getElementById("sector").value);
+                var category = Number(document.getElementById("category").value);
+                var city = Number(document.getElementById("city").value);
+                var price = Number(document.getElementById("price").value);
+                var query = document.getElementById("query").value;
+                var FilterData = {
+                    query: query,
+                    sector: sector,
+                    category: category,
+                    city: city,
+                    priceRange: price,
+                    rate: value
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("FilteringResult", "Home")',
+                    data: FilterData
+                }).done(function (result) {
+                    $("#FilterResult").html(result);
+                   // console.log("rseult : " + result);
+                });
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("FilteringBar", "Home")',
+                    data: FilterData
+                }).done(function (result) {
+
+                    $("#FilterBar").html(result);
+                });
+            });
+    });
+    </script>
+    <!-- jquery -->
+    <!--<script src="~/Scripts/jquery.js"></script>-->
+    <script src="~/Scripts/jquery.magnific-popup.min.js"></script>
+    <!--owel carousel -->
+    <script src="~/Scripts/owl.carousel.min.js"></script>
+    <!-- date picker js-->
+    <!-- <script src="~/Scripts/bootstrap-datepicker.js"></script>
+     <script src="~/Scripts/jquery.timepicker.min.js"></script>
+     <script src="~/Scripts/datepair.js"></script>-->
+    <!-- counter js -->
+    <script src="~/Scripts/jquery.waypoints.min.js"></script>
+    <script src="~/Scripts/jquery.counterup.min.js"></script>
+    <!-- bootstrap js -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <!--  scrool smooth easing js -->
+
+    <script src="~/Scripts/jquery.easing.1.3.js"></script>
+    <!-- wow -->
+    <script src="~/Scripts/wow.min.js"></script>
+    <!-- javascript -->
+    <script src="~/Scripts/Custom.js"></script>
+
+@RenderSection("scripts", required: false)
+</body>
+
+</html>

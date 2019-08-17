@@ -1,0 +1,33 @@
+﻿body {
+}
+
+.review-average-p {
+    font-weight:bold;
+    margin-top:10px;
+}
+.box-body
+{
+    display:block;
+
+
+}
+
+.about a {
+
+    margin-top:18px;
+    display:inline-block;
+}
+
+.user-block img {
+
+margin-top:10px;
+margin-left:5px;
+
+
+}
+
+.terms {
+color:#3c8dbc;
+
+}
+

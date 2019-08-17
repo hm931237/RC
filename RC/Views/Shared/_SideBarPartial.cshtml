@@ -1,0 +1,283 @@
+﻿@using RC.Models
+@using System.Data.Entity
+
+
+@if (Session["UserId"] != null && Convert.ToInt32(Session["LoginUserTypeId"]) == 2)
+{
+        ApplicationDbContext db = new ApplicationDbContext();
+        var userID = (int)Session["UserId"];
+        var client = db.Clients.Include(c=>c.User).SingleOrDefault(c => c.userId == userID);
+    
+        <aside class="main-sidebar" style="position: fixed;top: 57px;padding-top: 0px;">
+
+
+            <!-- sidebar: style can be found in sidebar.less -->
+
+            <section class="sidebar">
+
+
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="~/files/@client.User.imageUrl" class="img-circle" style="width:40px;height:40px;" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        @{
+
+                        }
+                        <p style="color: white">@client.firstName @client.lastName</p>
+                        <a href="@Url.Action("Index", "User")"><i class="fa fa-circle text-success"></i> Online</a>
+                    </div>
+                </div>
+
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li id="sidebar-menu-ul-li" class="active" onclick="myFunction()">
+                        <a href="@Url.Action("Index", "User")">
+                            <i class="fa fa-newspaper-o"></i> <span>News Feed</span>
+                        </a>
+                    </li>
+                    <li id="sidebar-menu-ul-li" onclick="myFunction()">
+                        <a href="@Url.Action("Ratings", "User")">
+                            <i class="fa fa-star"></i>
+                            <span>Ratings</span>
+                        </a>
+                    </li>
+                    <li id="sidebar-menu-ul-li" onclick="myFunction()">
+                        <a href="@Url.Action("Followings", "User")">
+                            <i class="ionicons ion-person-stalker"></i> <span>Followings</span>
+                        </a>
+                    </li>
+                    <li id="sidebar-menu-ul-li" onclick="myFunction()">
+                        <a href="@Url.Action("Gifts", "User")">
+                            <i class="fa fa-gift"></i>
+                            <span>Gifts</span>
+                        </a>
+                    </li>
+                   
+
+                    @if (Convert.ToInt32(Session["orgID"]) != 0)
+                    {
+                        <li id="sidebar-menu-ul-li">
+                            <a href="@Url.Action("Search","Organization")">
+                                <i class="fa fa-laptop"></i>
+                                <span>Launch Comparison</span>
+
+                            </a>
+
+                        </li>
+
+                                                    @*@Html.ActionLink("Launch Comparison", "Search", "Organization", new { @class = "btn btn-success", @style = "width:100%;margin-top:10px;" })*@
+
+                    }
+
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+                            }
+                            else if (Session["UserId"] != null && Convert.ToInt32(Session["LoginUserTypeId"]) == 3)
+                            {
+
+                                    ApplicationDbContext db = new ApplicationDbContext();
+
+
+
+                                    var organ = new Organization();
+                                    var user = new User();
+                                    var usertype = new int();
+                                    if (Session["UserId"] != null)
+                                    {
+                                        var userID = (int)Session["UserId"];
+                                        user = db.Users.Where(u => u.Id == userID).SingleOrDefault();
+                                        usertype = user.UserTypeId;
+                                        if (usertype == 3)
+                                        {
+                                            organ = db.Organizations.Where(org => org.userId == userID).Include(org => org.User).SingleOrDefault();
+                                        }
+
+                                        else if (usertype == 2)
+                                        {
+                                            var orgID = (int)Session["orgID"];
+                                            organ = db.Organizations.Where(org => org.Id == orgID).Include(org => org.User).SingleOrDefault();
+
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var orgID = (int)Session["orgID"];
+                                        organ = db.Organizations.Where(org => org.Id == orgID).Include(org => org.User).SingleOrDefault();
+
+
+                                    }
+
+                                    var LoggedInuser = (RC.Models.User)Session["LoggedInUser"];
+
+
+
+
+
+
+                                    <aside class="main-sidebar" style="position: fixed;top: 57px;padding-top: 0px;z-index: 1">
+
+                                        <!-- sidebar: style can be found in sidebar.less -->
+                                        <section class="sidebar">
+                                            <!-- Sidebar user panel -->
+                                            <div class="user-panel">
+
+                                                <div class="pull-left image">
+                                                    <img src="~/Content/img/OrganizationsProfilePics/@organ.User.imageUrl" class="img-circle" alt="User Image" style="width:40px;height:40px;" />
+                                                </div>
+                                                <div class="pull-left info">
+                                                    <p style="margin-bottom:-2px;font-weight:bold;font-size: 11px;color: white" >@organ.orgnizationName</p>
+                                                    <a href="#">
+                                                        <i class="fa fa-circle text-success"></i> Online
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- search form -->
+                                            <!-- /.search form -->
+                                            <!-- sidebar menu: : style can be found in sidebar.less -->
+                                            <ul class="sidebar-menu">
+                                                <li class="header">MAIN NAVIGATION</li>
+                                                <li class="treeview">
+                                                    <a href="@Url.Action("Index","Organization")">
+                                                        <i class="fa fa-home"></i> <span>Home</span>
+
+                                                    </a>
+                                                </li>
+                                                <li class="treeview">
+
+                                                    <a href="@Url.Action("followers","Organization")">
+                                                        <i class="fa fa-files-o"></i>
+                                                        <span>Followers</span>
+
+                                                    </a>
+
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("getInsights","Organization")">
+                                                        <i class="fa fa-th"></i> <span>Insights</span>
+
+                                                    </a>
+                                                </li>
+
+                                                <li class="treeview">
+                                                    <a href="@Url.Action("Reviews","Organization")">
+                                                        <i class="fa fa-pie-chart"></i>
+                                                        <span>Reviews</span>
+
+                                                    </a>
+
+                                                </li>
+                                                <li class="treeview">
+                                                    <a href="@Url.Action("promotePost","Organization")">
+                                                        <i class="fa fa-laptop"></i>
+                                                        <span>Promoted Posts</span>
+
+                                                    </a>
+
+                                                </li>
+
+
+                             
+
+
+
+                                        </section>
+                                        <!-- /.sidebar -->
+                                    </aside>
+
+
+
+                            }
+                            else if (Session["UserId"] != null && Convert.ToInt32(Session["LoginUserTypeId"]) == 1)
+                            {
+                                <aside class="main-sidebar" style="position: fixed;top: 57px;padding-top: 0px;">
+
+                                    <!-- sidebar: style can be found in sidebar.less -->
+                                    <section class="sidebar">
+                                        @*<ul class="sidebar-menu" data-widget="tree">
+                                                <li class="header">Admin Account</li>
+                                            </ul>*@
+                                        <!-- Sidebar user panel -->
+                                        <div class="user-panel">
+                                            <div class="pull-left image">
+                                                <img src="~/Content/dist/img/avatar.png" class="img-circle" alt="User Image">
+                                            </div>
+                                            <div class="pull-left info">
+                                                <p>Admin</p>
+                                                <a href="#"><i class="fa fa-circle text-success"></i> Adminstrator</a>
+                                            </div>
+                                        </div>
+
+                                        <!-- sidebar menu: : style can be found in sidebar.less -->
+
+                                        <ul class="sidebar-menu">
+
+                                            <li class="header">MAIN NAVIGATION</li>
+                                            <li @ViewBag.Home>
+                                                <a href="@Url.Action("Home", "Admin")">
+                                                    <i class="fa fa-home"></i> <span>Home</span>
+                                                </a>
+                                            </li>
+
+                                            <li @ViewBag.Users>
+                                                <a href="@Url.Action("getUsers", "Admin")">
+                                                    <i class="fa fa-users"></i> <span>Users</span>
+                                                </a>
+                                            </li>
+
+                                            <li @ViewBag.Organizations>
+                                                <a href="@Url.Action("getOrganizations", "Admin")">
+                                                    <i class="fa fa-sitemap"></i> <span>Organizations</span>
+                                                </a>
+                                            </li>
+
+                                            <li @ViewBag.Insights>
+                                                <a href="@Url.Action("getInsights", "Admin")">
+                                                    <i class="fa fa-area-chart"></i> <span>Insights</span>
+                                                </a>
+                                            </li>
+
+                                            <li @ViewBag.Reports>
+                                                <a href="@Url.Action("getReports", "Admin")">
+                                                    <i class="fa fa-file-text"></i> <span>Reports</span>
+                                                </a>
+                                            </li>
+
+                                            <li @ViewBag.Reward>
+                                                <a href="@Url.Action("addReward", "Admin")">
+                                                    <i class="fa fa-trophy"></i> <span>Rewards</span>
+                                                </a>
+                                            </li>
+
+                                          
+                                            <li @ViewBag.Sector>
+                                                <a href="@Url.Action("addSectorAndCategory", "Admin")">
+                                                    <i class="fa fa-cannabis"></i> <span>Factors</span>
+                                                </a>
+                                            </li>
+                                            <li @ViewBag.Sector>
+                                                <a href="@Url.Action("Fedbacks", "Admin")">
+                                                    <i class="fa fa-comment"></i> <span>Feedbacks</span>
+                                                </a>
+                                            </li>
+
+                                            <li @ViewBag.Ads>
+                                                <a href="@Url.Action("addAds", "Admin")">
+                                                    <i class="fa fa-television" aria-hidden="true"></i> <span>Add Advertisement</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </section>
+
+                                </aside>
+
+                            }
+                            else
+                            {
+
+                            }

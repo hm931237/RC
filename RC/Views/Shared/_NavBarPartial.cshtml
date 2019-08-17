@@ -1,0 +1,99 @@
+﻿@model dynamic
+
+
+
+<nav class="[ navbar navbar-fixed-top ][ navbar-bootsnipp animate ]" role="navigation">
+    <button  type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+
+    @if (Convert.ToInt32(Session["UserId"]) != 0)
+    {
+        <a id="removeToggle" href="#" style="color: black" class="sidebar-toggle navbar-brand" data-toggle="push-menu" role="button">
+            <i class="fa fa-align-justify"></i>
+        </a>
+    }
+    <div class="[ container ]">
+        <div class="navbar-header">
+
+            <div class="[ animbrand ]">
+                <a class="[ navbar-brand ][ animate ]" href="/Home/Index">ReviewZa</a>
+            </div>
+
+
+
+        </div>
+        <div class="[ collapse navbar-collapse ]" id="bs-example-navbar-collapse-1">
+            <ul class="[ nav navbar-nav navbar-right ]">
+                <li class="[ visible-xs ]">
+                    <form action="/Home/Search/" method="post" role="search">
+                        <div class="[ input-group ]">
+                            <input type="text" class="form-control organization" id="searchInput" style="color: rgb(95, 176, 228);width: 336px" name="organization" placeholder="Search">
+                            <span class="[ input-group-btn ]">
+                                <button class="[ btn btn-danger ]" type="reset"><span class="[ glyphicon glyphicon-remove ]"></span></button>
+                            </span>
+
+                        </div>
+                        <button type="submit" style="display: none" id="searchSubmit" class="btn btn-default"><i class="fa fa-search"></i></button>
+
+                    </form>
+                </li>
+                <li><a href="/Home/About" class="[ animate ] ">About</a></li>
+
+
+                @if (Convert.ToInt32(Session["UserId"]) == 0)
+                {
+                    <li>
+                        <a href="#" id="loginRemove2" class="[ dropdown-toggle ][ animate ]" data-toggle="dropdown">Resources <span class="[ caret ] "></span></a>
+                        <ul class="[ dropdown-menu ]" role="menu">
+                            <li><a href="#services" class="[ animate ] smooth-scroll">Services <span class="[ pull-right glyphicon glyphicon-pencil ] "></span></a></li>
+                            <li><a href="#top-8-org" class="[ animate ] smooth-scroll"> best organizations <span class="[ pull-right glyphicon glyphicon-align-justify ] smooth-scroll"></span></a></li>
+                            <li><a href="#stats" class="[ animate ] smooth-scroll">Our statistics <span class="[ pull-right glyphicon glyphicon-cloud-download ]"></span></a></li>
+                            <li><a href="#top-reviewer" class="[ animate ] smooth-scroll">Top Reviewer <span class="[ pull-right glyphicon glyphicon-user ] "></span></a></li>
+
+                            <li><a href="#contact" class="[ animate ] smooth-scroll">Our Address <span class="[ pull-right glyphicon glyphicon-tasks ] "></span></a></li>
+                            <li><a href="#contact" class="[ animate ] smooth-scroll">Contact Us <span class="[ pull-right glyphicon glyphicon-edit ] "></span></a></li>
+                        </ul>
+                    </li>}
+                <li class="">
+                    <a href="/Organization/SignUp_Org" class="[ animate ]">Publish your organization </a>
+
+                </li>
+
+                @if (Convert.ToInt32(Session["UserId"]) != 0)
+                {
+
+                    <li><a class="animate" href="/User/logout" style="">Logout</a></li>
+                    <li class="[ hidden-xs ]"><a href="#toggle-search" class="[ animate ]"><span class="[ glyphicon glyphicon-search ]"></span></a></li>
+
+
+                }
+                else
+                {
+                    <li><a class="animate" href="/User/SignUp_User" style="">Register</a></li>
+                    <li id="loginRemove"><a href="#myModal" class="btn btn-lg btn-general btn-white animate" role="button" data-toggle="modal"> Login</a></li>
+                    <li class="[ hidden-xs ]"><a href="#toggle-search" class="[ animate ]"><span class="[ glyphicon glyphicon-search ]"></span></a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="[ bootsnipp-search animate ]">
+        <div class="[ container ]">
+            <form action="/Home/Search/" method="post" role="search">
+                <div class="[ input-group ]">
+                    <input type="text" class="form-control organization" id="searchInput" style="color: rgb(95, 176, 228)" name="organization" placeholder="Search">
+                    <span class="[ input-group-btn ]">
+                        <button class="[ btn btn-danger ]" type="reset"><span class="[ glyphicon glyphicon-remove ]"></span></button>
+                    </span>
+                </div>
+                <button type="submit" style="display: none" id="searchSubmit" class="btn btn-default"><i class="fa fa-search"></i></button>
+            </form>
+
+        </div>
+    </div>
+</nav>
+
+

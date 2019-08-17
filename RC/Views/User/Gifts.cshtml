@@ -1,0 +1,362 @@
+﻿@model List<RC.Models.Offer>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+<head>
+    <style>
+        a.links {
+            background-color: black;
+            color: white;
+            border-radius: 5px;
+            padding: 3px;
+            background-color: #5FB7EA;
+            text-decoration: none;
+        }
+
+            a.links:hover {
+                padding: 4px;
+            }
+    </style>
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+</head>
+
+<ul class="cards" id="load">
+
+    @Html.Partial("_partialGift");
+
+</ul>
+@*<div class="pointload"></div>*@
+
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/Scripts/toastr.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+@section Scripts {
+    <script>
+
+
+        $(document).ready(function () {
+
+            $('#post_text').click(function () {
+
+                $('#Modal').show();
+
+            });
+        });
+
+
+
+           $('#postButton').click(function () {
+                $('#postOptions').fadeToggle();
+
+         });
+
+
+    </script>
+
+
+
+
+
+
+    <script>
+
+
+
+
+
+            $(function () {
+                //$(".anchorDetail").click(function () {
+                $(document).on("click", ".anchorDetail", function () {
+                    debugger;
+                    var $buttonClicked = $(this);
+                    var TeamDetailPostBackURL = '/User/Getcode';
+                    var id = $buttonClicked.attr('data-id');
+                    var options = { "backdrop": "static", keyboard: true };
+                    $.ajax({
+                        type: "Get",
+                        url: TeamDetailPostBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "Id": id },
+                        datatype: "json",
+                        success: function (dataa) {
+                            debugger;
+                            if (dataa == "error") {
+                                toastr.error("you dont have enough points");
+                            }
+                            else {
+                                toastr.success("you got a reward Scan QR Code");
+
+                                $('#myModalContent').html(dataa);
+                                // $('#myModal').modal(options);
+                                $('#myModal').modal('show');}
+
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+                $('#myModal').modal('hide');
+
+                $("#closbtn").click(function () {
+                    $('#myModal').modal('hide');
+                });
+            });
+
+
+
+
+
+            /* funct 2 *********************************/
+            $(function () {
+                //$(".anchorDetail").click(function () {
+                $(document).on("click", ".anchorDetail", function () {
+
+                    debugger;
+                    var $buttonClicked = $(this);
+                    var TeamDetailPostBackURL = '/User/reloadContent';
+                    var id = $buttonClicked.attr('data-id');
+                    var options = { "backdrop": "static", keyboard: true };
+                    $.ajax({
+                        type: "Get",
+                        url: TeamDetailPostBackURL,
+                        contentType: "application/json; charset=utf-8",
+                        data: { "Id": id },
+                        datatype: "json",
+                        success: function (dataa) {
+                            debugger;
+
+                            //  toastr.error("you dont have enough points");
+
+                            //   toastr.success("you got a reward Scan QR Code");
+                            $('#load').html(dataa);
+                            // $('#myModal').modal(options);
+                            // $('#myModal').modal('show');
+
+
+                        },
+                        error: function () {
+                            alert("Dynamic content load failed.");
+                        }
+                    });
+                });
+
+
+
+
+            });
+
+
+
+
+
+    /* load points */
+        $(function () {
+            //$(".anchorDetail").click(function () {
+            $(document).on("click", ".anchorDetail", function () {
+                debugger;
+                var $buttonClicked = $(this);
+                var TeamDetailPostBackURL = '/User/loadingPoint';
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "Get",
+                    url: TeamDetailPostBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Idd": id },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+
+                        //  toastr.error("you dont have enough points");
+                        console.log(data);
+                        //  toastr.success("point reload success");
+                        $('.pointload').html(data);
+
+                        // $('#myModal').modal(options);
+                        // $('#myModal').modal('show');
+
+
+                    },
+                    error: function () {
+                        console.log(dataaaa);
+                        alert("points content load failed.");
+                    }
+                });
+            });
+
+        });
+    </script>
+
+
+
+
+
+
+
+    <script>
+
+
+    $(function () {
+        $(document).on("click", ".anchorDetaill", function () {
+            debugger;
+            var TeamDetailPostBackURL = '/User/Getcodebyemail';
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "Get",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "Idd": id },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+                    if (data == "error") {
+                        toastr.error("you dont have enough points");
+                    } else  {
+                        toastr.success("you got a reward check your email");}
+
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+       $('#myModal').modal('hide');
+
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+
+
+    /* func 2 email */
+    $(function () {
+        $(document).on("click", ".anchorDetaill", function () {
+            debugger;
+            var TeamDetailPostBackURL = '/User/reloadContent';
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "Get",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "Id": id },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+
+                    $('#load').html(data);
+
+
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+        /// $('#myModal').modal('hide');
+
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+
+    /* load points */
+        $(function () {
+            $(document).on("click", ".anchorDetaill", function () {
+
+                debugger;
+                var $buttonClicked = $(this);
+                var TeamDetailPostBackURL = '/User/loadingPoint';
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "Get",
+                    url: TeamDetailPostBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Idd": id },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+
+                        //  toastr.error("you dont have enough points");
+                        console.log(data);
+                        //  toastr.success("point reload success");
+                        $('.pointload').html(data);
+
+                        // $('#myModal').modal(options);
+                        // $('#myModal').modal('show');
+
+
+                    },
+                    error: function () {
+                        console.log(dataaaa);
+                        alert("points content load failed.");
+                    }
+                });
+            });
+
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        toastr.options = {
+            "preventDuplicates": true,
+            "preventOpenDuplicates": true
+        };
+
+      //  toastr.error("Your Message", "Your Title", { timeOut: 5000 });
+    </script>
+
+}
+
+
+
+
+
+
+
+
+
+
+
+@*$(".btn.btn-sm.btn-default").on("click", function () {
+                var imageId = $(this).attr("data-image-id");
+                albumClient.server.like(imageId);
+            });
+
+    $(document).on("click", ".btn.btn-sm.btn-default",function () {
+        var imageId = $(this).attr("data-image-id");
+        albumClient.server.like(iamgeId);
+    });*@

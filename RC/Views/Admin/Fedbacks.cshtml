@@ -1,0 +1,93 @@
+﻿@using RC.Migrations
+@model IEnumerable<RC.Models.FeedBack>
+@{
+    ViewBag.Title = "Fedbacks";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<head>
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+</head>
+
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#activity" data-toggle="tab">Feedbacks Sheet</a></li>
+
+    </ul>
+    
+    
+    
+<div class="tab-content">
+    <div class="active tab-pane" id="activity">
+        <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title text-info text-bold" style="font-size:15px;"><i class="fa fa-comment fa-spin"></i> FeedBacks</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                
+                
+                
+                    <!-- /.box-header -->
+                    <div class="box-body table-responsive no-padding" style="overflow-x: visible">
+
+                        <table id="feedbacks" class="table table-bordered table-condensed table-hover table-responsive">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User</th>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Feedback</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            @foreach (var feedback in Model)
+                            {
+                                <tr>
+                                    <td>@feedback.Id</td>
+                                    <td>@feedback.FullName</td>
+                                    <td>@feedback.Date</td>
+
+                                    @if (feedback.userType == "Organization")
+                                    {
+                                        <td><span class="label label-primary">Organization</span></td>
+
+                                    }
+                                    else
+                                    {
+                                        <td><span class="label label-warning">Client</span></td>
+
+                                    }
+
+                                    <td data-toggle="tooltip" data-placement="bottom" title="@feedback.Content">@feedback.Content</td>
+                                </tr>
+                            }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+        </section>
+    </div>
+</div>
+<div>
+
+</div>

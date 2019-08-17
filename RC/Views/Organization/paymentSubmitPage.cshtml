@@ -1,0 +1,94 @@
+﻿@using System.Configuration
+@model RC.Models.Promotion
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+
+    <style type="text/css">
+        body {
+            font-family: 'Varela Round', sans-serif;
+            height: 100%;
+            background: #333;
+            /*z-index: 3;*/
+        }
+
+        /*loading page*/
+
+
+        .preload {
+            width: 100%;
+            height: 100%;
+            background: #333;
+            /* position: fixed;*/
+            top: 0;
+            left: 0;
+            /*z-index: 1;*/
+        }
+
+        .logo {
+            width: 300px;
+            height: 70px;
+            margin: 150px auto 50px auto;
+            font-size: 50px;
+            text-shadow: -1px 2px 2px #000;
+            text-align: center;
+            color: azure;
+        }
+
+        .loader-frame {
+            width: 70px;
+            height: 70px;
+            margin: auto;
+            position: relative;
+        }
+    </style>
+
+</head>
+<body>
+
+
+    <div class="preload" id="preload">
+        <div class="logo">
+
+            Review<span style="color: darkturquoise;">Za</span>
+        </div>
+
+    </div>
+    <div style="text-align:center;">
+
+
+
+        <form action="@ConfigurationManager.AppSettings["urlSubmitPayment"]">
+            <input type="hidden" name="cmd" value="_cart" />
+            <input type="hidden" name="upload" value="1" />
+            <input type="hidden" name="return" value="@ConfigurationManager.AppSettings["urlReturn"]" />
+            <input type="hidden" name="business" value="@ConfigurationManager.AppSettings["accountBusiness"]" />
+
+
+            <input type="hidden" name="@Url.Content("item_name_1")" value="@Model.postId " />
+            <input type="hidden" name="@Url.Content("item_number_1")" value="@Model.Id " />
+            <input type="hidden" name="@Url.Content("amount_1")" value="@Model.Profit " />
+            <input type="hidden" name="@Url.Content("quantity_1")" value="1" />
+
+
+
+
+            <br />
+            <div class="col-md-12">
+                <input type="submit" value="Checkout Now" class="btn btn-primary " />
+            </div>
+        </form>
+    </div>
+</body>
+</html>

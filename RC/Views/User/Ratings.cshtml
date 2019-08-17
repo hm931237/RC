@@ -1,0 +1,75 @@
+﻿@model IEnumerable<RC.Models.Review>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        @if (Model.Count() == 0)
+        {
+            <div class="row">
+                <div class="col-md-10 col-lg-offset-1">
+                    <div class="alert alert-info" role="alert">There are no previous reviews</div>
+                </div>
+            </div>
+        }
+        else
+        {
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Recently Reatings</h3>
+
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <ul class="products-list product-list-in-box">
+                        @foreach (var review in Model)
+                        {
+                            var rateValue10 = review.TotalRate * 10;
+                            <li class="item">
+                                <div class="product-img">
+                                    <img class="img-rounded" src="/Content/img/OrganizationsProfilePics/@review.Organization.User.imageUrl" alt="Product Image">
+                                </div>
+                                <div class="product-info">
+                                    <a href="/organization/index/@review.Organization.Id" class="product-title">
+                                        @review.Organization.orgnizationName
+                                        @if (review.TotalRate <= 0.3)
+                                        {
+                                            <span class="label label-danger pull-right">@Math.Round(rateValue10 , 1) / 10</span>
+                                        }
+                                        @if (review.TotalRate > 0.3 && review.TotalRate <= 0.5)
+                                        {
+                                            <span class="label label-warning pull-right">@Math.Round(rateValue10, 1) / 10</span>
+                                        }
+                                        @if (review.TotalRate > 0.5 && review.TotalRate <= 0.7)
+                                        {
+                                            <span class="label label-primary pull-right">@Math.Round(rateValue10, 1) / 10</span>
+                                        }
+                                        @if (review.TotalRate > 0.7 && review.TotalRate <= 1.0)
+                                        {
+                                            <span class="label label-success pull-right">@Math.Round(rateValue10, 1) / 10</span>
+                                        }
+
+                                    </a>
+                                    <span class="product-description">
+
+                                        <input class="input-21c" name="input-name" readonly="" type="number" value="@rateValue10" class="rating" min=1 max=10 step=0.1 data-size="xs" data-rtl="true">
+                                        <button type="button" class="btn btn-xs btn-primary" data-toggle="popover" title="Feedback" data-content=" @review.generalFeedback " style="margin-top: 5px">Show Feadback</button>
+
+                                    </span>
+
+                                </div>
+
+
+                            </li>
+                        }
+
+
+                    </ul>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>

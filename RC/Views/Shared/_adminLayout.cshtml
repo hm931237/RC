@@ -1,0 +1,256 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    @Styles.Render("~/admin-lte/css")
+    <link href="~/Content/navbar/navbar.css" rel="stylesheet" />
+
+
+</head>
+
+<body class="hold-transition fixed skin-blue sidebar-mini">
+    <div class="wrapper">
+
+        @Html.Partial("_NavBarPartial")
+
+        <!-- =============================================== -->
+        <!-- Left side column. contains the sidebar -->
+        @Html.Partial("_SideBarPartial")
+        <!-- =============================================== -->
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header"></section>
+
+            <!-- Main content -->
+            <section class="content">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Control Sidebar -->
+        <!-- /.control-sidebar -->
+        <!-- Add the sidebar's background. This div must be placed
+             immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+
+    </div>
+
+    @Html.Partial("_Footer")
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/admin-lte/lib")
+    
+    @Scripts.Render("~/admin-bootstrap/js")
+
+    @Scripts.Render("~/bundles/modernizr")
+<script>
+    toastr.options = {
+        "preventDuplicates": true,
+        "preventOpenDuplicates": true
+    };
+
+    //  toastr.error("Your Message", "Your Title", { timeOut: 5000 });
+</script>
+    <script>
+    $(document).ready(function () {
+
+        var table = $("#feedbacks").DataTable();
+        var Table2 = $("#OrgReviews").DataTable();
+
+        var table3 = $("#ProfitTuple").DataTable();
+
+        var table4 = $("#Subscribers").DataTable();
+        var table5 = $("#ReportTuple").DataTable();
+
+
+
+
+    });
+
+    </script>
+    <script>
+    var input = document.getElementById("searchInput");
+    input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("searchSubmit").click();
+        }
+    });
+    </script>
+    <script>
+    $(function () {
+
+        $('a[href="#toggle-search"], .navbar-bootsnipp .bootsnipp-search .input-group-btn > .btn[type="reset"]').on('click', function (event) {
+            event.preventDefault();
+            $('.navbar-bootsnipp .bootsnipp-search .input-group > input').val('');
+            $('.navbar-bootsnipp .bootsnipp-search').toggleClass('open');
+            $('a[href="#toggle-search"]').closest('li').toggleClass('active');
+
+            if ($('.navbar-bootsnipp .bootsnipp-search').hasClass('open')) {
+                /* I think .focus dosen't like css animations, set timeout to make sure input gets focus */
+                setTimeout(function () {
+                    $('.navbar-bootsnipp .bootsnipp-search .form-control').focus();
+                }, 100);
+            }
+        });
+
+        $(document).on('keyup', function (event) {
+            if (event.which == 27 && $('.navbar-bootsnipp .bootsnipp-search').hasClass('open')) {
+                $('a[href="#toggle-search"]').trigger('click');
+            }
+        });
+
+    });
+    </script>
+
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script>
+
+        //flatpickr(".datepicker",
+        //    {
+        //        dateFormat: "m/d/y"
+        //    });
+        var btnTypes = document.querySelectorAll('.travel-type-wrap .item')
+        var mainForm = document.getElementById('main-form')
+        for (let i = 0; i < btnTypes.length; i++) {
+            btnTypes[i].addEventListener('click', function () {
+                for (let i = 0; i < btnTypes.length; i++) {
+                    btnTypes[i].classList.remove('active')
+                }
+                btnTypes[i].classList.add('active')
+                let className = 'type' + i
+                mainForm.className = `${className} main-form`
+            })
+        }
+    </script>
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+              {
+                  ranges: {
+                      'Today': [moment(), moment()],
+                      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                      'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                      'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                      'This Month': [moment().startOf('month'), moment().endOf('month')],
+                      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                  },
+                  startDate: moment().subtract(29, 'days'),
+                  endDate: moment()
+              },
+              function (start, end) {
+                  $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+              }
+            )
+
+            //Date picker
+            $('#datepicker').datepicker({
+                autoclose: true
+            })
+
+            //iCheck for checkbox and radio inputs
+            $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+                checkboxClass: 'icheckbox_minimal-blue',
+                radioClass: 'iradio_minimal-blue'
+            })
+            //Red color scheme for iCheck
+            $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+                checkboxClass: 'icheckbox_minimal-red',
+                radioClass: 'iradio_minimal-red'
+            })
+            //Flat red color scheme for iCheck
+            $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                checkboxClass: 'icheckbox_flat-green',
+                radioClass: 'iradio_flat-green'
+            })
+
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
+
+            //Timepicker
+            $('.timepicker').timepicker({
+                showInputs: false
+            })
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            var organizations = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('orgnizationName'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/organization?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('.organization').typeahead({
+                minLength: 1,
+                highlight: true
+            }, {
+                name: 'organizations',
+                display: 'orgnizationName',
+                source: organizations
+            }).on("typeahead:select", function (e, organization) {
+                window.location.href = "/Organization/Index/" + organization.Id;
+            });
+
+        });
+    </script>
+
+
+
+    <script>
+
+        jQuery(document).ready(function () {
+            $(".input-21c").rating({
+                min: 0,
+                max: 10,
+                step: 0.1,
+                size: "sm",
+                stars: "10"
+            });
+            $(".input-21c").on('rating:change',
+                function (event, value, caption) {
+
+
+                });
+            $('.input-21c').rating('refresh', { disabled: true, showClear: false, showCaption: false });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

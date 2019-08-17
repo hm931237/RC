@@ -1,0 +1,83 @@
+﻿@model IEnumerable<RC.Models.Subscriber>
+@using RC.Models
+@{
+    ViewBag.Title = "Followers";
+    Layout = "~/Views/Shared/_OrganizationLayout.cshtml";
+    ApplicationDbContext db = new ApplicationDbContext();
+
+}
+<br />
+<br />
+<div class="row">
+    @if (Model.Count() == 0)
+    {
+        <div class="row">
+            <div class="col-md-10 col-lg-offset-1">
+                <div class="alert alert-info" role="alert">There are no Followers</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        foreach (var subscriber in Model)
+        {
+            var num_of_reviewes = db.Reviews.Where(r => r.clientId == subscriber.clientId).Count();
+            var num_of_followings = db.Subscribers.Where(f => f.clientId == subscriber.clientId).Count();
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <!-- Widget: user widget style 1 -->
+                <div class="box box-widget widget-user">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-aqua-active">
+                        <h3 class="widget-user-username">@subscriber.Client.User.Username</h3>
+                        <h5 class="widget-user-desc">@subscriber.Client.User.Email</h5>
+                    </div>
+                    <div class="widget-user-image">
+                        <img class="img-circle" style="height: 95px;width: 95px;" src="/files/@subscriber.Client.User.imageUrl" alt="User Avatar">
+                    </div>
+                    <div class="box-footer">
+                        <div class="row">
+                            <div class="col-sm-4 border-right">
+
+                                <div class="description-block">
+                                    <h5 class="description-header">@num_of_followings</h5>
+                                    <span class="description-text">FOLLOWINGS</span>
+
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-4 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header">@num_of_reviewes</h5>
+                                    <span class="description-text">REVIEWS</span>
+
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-4">
+                                <div class="description-block">
+                                    <h5 class="description-header">@subscriber.Client.Points</h5>
+                                    <span class="description-text">POINTS</span>
+
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                        </div>
+
+                        <!-- /.row -->
+                    </div>
+                </div>
+                <!-- /.widget-user -->
+            </div>
+
+        }
+    }
+</div>
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script src="~/Scripts/bootstrap.min.js"></script>

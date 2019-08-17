@@ -1,0 +1,344 @@
+﻿@using RC.Models
+  @using System.Data.Entity
+    @{
+        ApplicationDbContext db = new ApplicationDbContext();
+        Layout = null;
+
+        var organ = new Organization();
+        var user = new User();
+        var usertype = new int();
+        if (Session["UserId"] != null)
+        {
+            var userID = (int)Session["UserId"];
+            user = db.Users.Where(u => u.Id == userID).SingleOrDefault();
+            usertype = user.UserTypeId;
+            if (usertype == 3)
+            {
+                organ = db.Organizations.Where(o => o.userId == userID).
+                 Include(o => o.City).Include(o => o.Category).Include(o => o.User).SingleOrDefault();
+            }
+
+            else if (usertype == 2)
+            {
+                var orgID = (int)Session["orgID"];
+                organ = db.Organizations.Where(o => o.Id == orgID).
+        Include(o => o.City).Include(o => o.Category).Include(o => o.User).SingleOrDefault();
+
+
+            }
+        }
+        else
+        {
+            var orgID = (int)Session["orgID"];
+            organ = db.Organizations.Where(o => o.Id == orgID).
+    Include(o => o.City).Include(o => o.Category).Include(o => o.User).SingleOrDefault();
+
+        }
+
+
+
+        var category = db.Categories.Where(c => c.Id == organ.categoryId).Include(c => c.Sector).SingleOrDefault();
+        var worktimes = db.WorkTimes.Where(wk => wk.OrganizationId == organ.Id).ToList();
+        List<string> DaysOfWeek = new List<string>
+                {
+                    "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
+
+                };
+
+        List<string> holidays = new List<string>();
+        var i = 1;
+        foreach (var wk in worktimes)
+        {
+
+            if (DaysOfWeek.Contains(wk.Day))
+            {
+                DaysOfWeek.Remove(wk.Day);
+                i++;
+
+            }
+        }
+        foreach (var x in DaysOfWeek)
+        {
+            holidays.Add(x);
+        }
+
+        //Number of followers
+
+        var followers = db.Subscribers.Where(x => x.organizationId == organ.Id).Count();
+
+        //Number of Posts
+
+        var PostsNumber = db.Posts.Where(x => x.organizationId == organ.Id).Count();
+
+
+        //Number of Reviews
+
+        var ReviewsNumber = db.Reviews.Where(x => x.organizationId == organ.Id).Count();
+
+
+    }
+
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>_OrganizationStaticSections</title>
+    </head>
+    <body>
+        <div class="StaticSection" style="margin-top:50px;">
+
+
+            <!-- Profile Image -->
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+
+                    <img style="width:70px;height:70px;" class="profile-user-img img-bordered-sm img-responsive img-circle organization-img" src="~/Content/img/OrganizationsProfilePics/@organ.User.imageUrl" alt="User profile picture">
+
+                    <a href="/Organization/index/@organ.Id" style="text-decoration: none;"><h4 class="profile-username text-center">@organ.orgnizationName</h4></a>
+
+                    <p class="text-muted text-center"></p>
+
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Followers</b> <a class="pull-right">@followers</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Posts</b> <a class="pull-right">@PostsNumber</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Reviews</b> <a class="pull-right">@ReviewsNumber</a>
+                        </li>
+                    </ul>
+                    @if (Session["UserId"] != null && Convert.ToInt32(Session["LoginUserTypeId"]) == 3)
+                    {
+                        @Html.ActionLink("Go To Profile", "Edit", "organization", new { id = @organ.Id }, new { @class = "btn btn-info", @style = "width:100%;text-align:center;" })
+
+                    }
+                    else if (Session["UserId"] != null && Convert.ToInt32(Session["LoginUserTypeId"]) == 2)
+                    {
+                        var orgID = (int)Session["orgID"];
+                        var userid = Convert.ToInt32(Session["UserId"]);
+                        var client = db.Clients.SingleOrDefault(c => c.userId == userid);
+                        var subscribe = db.Subscribers.SingleOrDefault(s => s.clientId == client.Id && s.organizationId == orgID);
+                        if (subscribe == null)
+                        {
+                            <button type="button" class="submit action-button btn btn-primary btn-md btn-block login-btn" id="subscribe_@orgID" onclick="Subscribe(@client.Id,@orgID);">Follow</button>
+
+                        }
+                        else
+                        {
+                            <button type="button" class="submit action-button btn btn-primary btn-md btn-block login-btn" id="subscribe_@orgID" onclick="Subscribe(@client.Id,@orgID);">UnFollow</button>
+
+                        }
+
+                        <button type="button" class="submit action-button btn btn-warning btn-md btn-block login-btn" onclick="window.location.href='/organization/reviews/@orgID'">Review it <i class="fas fa-star"></i></button>
+
+
+                    }
+                    else
+                    {
+                        var orgID = (int)Session["orgID"];
+                        var userid = Convert.ToInt32(Session["UserId"]);
+                        var client = db.Clients.SingleOrDefault(c => c.userId == userid);
+
+                        if (client == null)
+                        {
+                            <button type="button" class="submit action-button btn btn-primary btn-md btn-block login-btn" id="subscribe_@orgID" onclick="Subscribe(0,@orgID);">Follow</button>
+
+                        }
+                        <button type="button" class="submit action-button btn btn-warning btn-md btn-block login-btn" onclick="window.location.href='/organization/reviews/@orgID'">Review it <i class="fas fa-star"></i></button>
+
+
+                    }
+                </div>
+                <!-- /.box-body -->
+            </div>
+        @{
+
+            var description = organ.Description;
+            List<string> desc = new List<string>();
+
+
+        }
+            <!-- /.box -->
+            <!-- About Me Box -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">About @organ.orgnizationName </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <p> <strong><i class="fa fa-book margin-r-5"></i> Breif Description</strong></p>
+                    @foreach (var sentence in description.TrimEnd('.').Split('.'))
+                    {
+
+
+                        desc.Add(sentence);
+                    }
+                    @desc[0]
+
+
+
+                    </p>
+                    <p id="readContent" style="display:none;">
+                        @for (var k = 1; k < desc.Count(); k++)
+                        {
+
+                            @desc[k];
+
+                        }
+                    </p>
+
+                    <button id="readButton" class="btn btn-success" style="display:block;">Read More</button>
+                    <hr>                    <strong><i class="fa fa-umbrella margin-r-5"></i> Sector Name</strong>
+                    <p class="text-muted">
+                        @category.Sector.Name
+                    </p>
+
+                    <hr>
+
+
+                    <strong><i class="fa fa-vector-square margin-r-5"></i> Category Name</strong>
+                    <p class="text-muted">
+                        @organ.Category.Name
+                    </p>
+
+                    <hr>
+
+                    <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+
+                    <p class="text-muted">@organ.City.Name</p>
+
+                    <hr>
+
+
+                    <strong><i class="fa fa-ankh margin-r-5"></i> Joined Reviewza At</strong>
+                    <p class="text-muted">@organ.User.JoniedAt.ToString("dd MMMM yyyy")</p>
+
+                    <hr>
+                    <p class="text-muted">@organ.User.JoniedAt.ToShortDateString()</p>
+
+                    <hr>
+
+
+                    <strong><i class="fa fa-pen margin-r-5"></i> Social Links</strong>
+                    <div class="social">
+                        <div class="face">
+                            <a class="btn btn-social-icon btn-facebook">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="@organ.socialLink_1" style="overflow-wrap: break-word;">@organ.socialLink_1</a>
+                        </div>
+
+                        @if (@organ.socialLink_2 != null)
+                        {
+                            <div class="linked">
+
+                                <a class="btn btn-social-icon btn-linkedin">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+
+                                <a href="@organ.socialLink_2" style="overflow-wrap: break-word;">@organ.socialLink_2</a>
+
+                            </div>
+                        }
+                    </div>
+
+                    <hr>
+
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+
+            <!--Business Hours-->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title" style="font-weight:bold;"><i class="fa fa-calendar-alt"></i>  @organ.orgnizationName Business Hours</h4>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+
+
+                    <table style="font-size:10px;" class="table table-bordered table-condensed table-hover table-responsive table-striped">
+                        <thead>
+
+
+                            <tr class="text-info">
+                                <th>Day</th>
+                                <th>From</th>
+                                <th>To</th>
+                            </tr>
+
+                        </thead>
+                        @foreach (var worktime in worktimes)
+                        {
+
+                            <tr class="text-success">
+
+                                <td>@worktime.Day</td>
+                                <td>@worktime.From.ToShortTimeString()</td>
+                                <td>@worktime.To.ToShortTimeString()</td>
+
+                            </tr>
+
+
+                        }
+                    </table>
+
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+
+
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <h3 class="profile-username text-center">@organ.orgnizationName Holidays</h3>
+                    <hr />
+
+
+                    @foreach (var h in holidays)
+                    {
+
+                        <i class="fa fa-radiation"></i> <span class="lead text-danger">@h</span>
+                        <br />
+
+                    }
+
+
+
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+        </div>
+
+
+
+
+        <script src="~/Scripts/jquery-1.10.2.js"></script>
+            <script>
+
+                $(document).ready(function () {
+
+          
+                    $('#readButton').click(function () {
+                     //   alert();
+
+                       // $("#dots").hide();
+                        $('#readContent').slideToggle();
+                    });
+
+                });
+
+            </script>
+        
+    </body>
+
+
+</html>

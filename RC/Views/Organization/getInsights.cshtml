@@ -1,0 +1,1216 @@
+﻿@using RC.Models;
+@{
+
+    ViewBag.Title = "getInsights";
+    Layout = "~/Views/Shared/_OrganizationLayout.cshtml";
+
+    ApplicationDbContext db = new ApplicationDbContext();
+}
+
+
+
+<div class="nav-tabs-custom" style="margin-top:50px;">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#activity" data-toggle="tab">Organization Visualizations</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+        <div class="active tab-pane" id="activity">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- LINE CHART -->
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-info text-bold" style="font-size:15px;"><i class="fa fa-chart-bar fa-spin"></i> Organization Post Visualization</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="posts" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+
+
+                </div>
+
+
+
+                <div class="col-md-6">
+                    <!-- LINE CHART -->
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-danger text-bold" style="font-size:15px;"><i class="fa fa-chart-line fa-spin"></i> Organization Subscribers Per Month</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="subs" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- LINE CHART -->
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-success text-bold" style="font-size:15px;"><i class="fa fa-chart-bar fa-spin"></i> Subscribers From Each City</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="CitiesFollowers" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+
+
+                </div>
+                @{
+                    //ViewBag.TopClient = TopSub;
+                    //ViewBag.ReactionsNumber = TopUserReactions;
+
+                    var TopClient = (RC.Models.Client)ViewBag.TopClient;
+                    var Reactions = ViewBag.ReactionsNumber;
+
+
+
+                }
+
+                @if (TopClient.Id != 0)
+                {
+                    <div class="col-md-6">
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h3 class="box-title text-info"><i class="fa fa-star fa-spin"></i> Top Fan </h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times "></i></button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="box box-widget widget-user-2">
+                                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                                    <div class="widget-user-header bg-info">
+                                        <div class="widget-user-image">
+                                            <img class="img-circle" src="~/files/@TopClient.User.imageUrl" alt="User Avatar">
+                                        </div>
+                                        <!-- /.widget-user-image -->
+                                        <h3 class="widget-user-username">@TopClient.User.Username</h3>
+                                        <h5 class="widget-user-desc">@TopClient.City.Name Region</h5>
+                                    </div>
+                                    <div class="box-footer no-padding">
+                                        <ul class="nav nav-stacked">
+
+                                            <li><a href="#" class="text-aqua">Total Number Reactions is <span class="pull-right badge bg-aqua">@Reactions</span></a></li>
+                                            <li><a href="#" class="text-green">FirstName <span class="pull-right badge bg-green"> @TopClient.firstName</span></a></li>
+                                            <li><a href="#" class="text-red">LastName <span class="pull-right badge bg-red"> @TopClient.lastName</span></a></li>
+                                            <li><a href="#" class="text-warning">Personal Email <span class="pull-right badge bg-warning"> @TopClient.User.Email</span></a></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+
+
+                    </div>
+                }
+                else
+                {
+
+
+                    <div class="col-md-6">
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h3 class="box-title text-info"><i class="fa fa-star fa-spin"></i> Top Fan </h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="box box-widget widget-user-2">
+                                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                                    <div class="widget-user-header bg-info">
+
+                                        <!-- /.widget-user-image -->
+                                        <h4 class="widget-user-username">Available When you have Subscribers</h4>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+
+
+                    </div>
+
+                }
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-warning text-bold" style="font-size:15px;"><i class="fa fa-chart-bar fa-spin"></i> Reviews and Ages Ranges Visualization</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="AgesReviews" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+
+
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-danger text-bold" style="font-size:15px;"><i class="fa fa-chart-bar fa-spin"></i> Total Reviews Per Year Visualization</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="ReviewsYears" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-primary text-bold" style="font-size:15px;"><i class="fa fa-chart-line fa-spin"></i> Followers Ranges Visualization</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="FollowersGenders" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                    @{
+                        var MalesPercent = @Html.Raw(Json.Encode(ViewBag.MalesPercent));
+                        var FemalesPercent = @Html.Raw(Json.Encode(ViewBag.FemalesPercent));
+                    }
+                    <button id="recommendations" class="btn btn-info" style="width:100%;"><i class="fa fa-ribbon"></i> View Genders Percentages Now !</button>
+                    <div class="box box-info" style="display:none;margin-top:15px;" id="recommendationsResults">
+                        <div class="box-header with-border">
+                            <h1 class="box-title"><i class="fa fa-hands"></i> Launch your Recommendations Now !</h1>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12 col-sm-6 col-xs-12" style="margin-top:10px">
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-info"><i class="fa fa-male"></i></span>
+
+                                    <div class="info-box-content">
+                                        <h2>Males @MalesPercent %</h2>
+
+
+                                    </div>
+                                </div>
+
+
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-primary"><i class="fa fa-female"></i></span>
+
+                                    <div class="info-box-content">
+
+                                        <h2>Females @FemalesPercent %</h2>
+
+                                    </div>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-success text-bold" style="font-size:15px;"><i class="fa fa-chart-bar fa-spin"></i> Total Reviews Per Month Visualization</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="ReviewsMonths" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-6">
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-warning text-bold" style="font-size:15px;"><i class="fa fa-chart-bar fa-spin"></i> Total Useful Reviews Per Year </h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="usefulYears" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+
+
+                </div>
+                <div class="col-md-6">
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-info text-bold" style="font-size:15px;"><i class="fa fa-chart-bar fa-spin"></i> Total Useful Reviews Per Month </h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="usefulMonths" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+
+            @{
+
+                var MalesDouble = @Html.Raw(Json.Encode(ViewBag.MalesUsefulPercent));
+                var FemalesDouble = @Html.Raw(Json.Encode(ViewBag.FemalesUsefulPercent));
+
+
+            }
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-bold text-warning" style="font-size:15px;"><i class="fa fa-clipboard fa-spin"></i> Useful Reviews Percentages !</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12 col-sm-6 col-xs-12" style="margin-top:10px">
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-success"><i class="fa fa-male"></i></span>
+
+                                    <div class="info-box-content">
+                                        <h2>Males @MalesDouble %</h2>
+
+
+                                    </div>
+                                </div>
+
+
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-danger"><i class="fa fa-female"></i></span>
+
+                                    <div class="info-box-content">
+
+                                        <h2>Females @FemalesDouble %</h2>
+
+                                    </div>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+
+
+                </div>
+                <div class="col-md-6">
+
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-info text-bold" style="font-size:15px;"><i class="fa fa-chart-line fa-spin"></i> Total Reports Per Year </h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="ReportsYears" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+
+
+
+            @{
+
+                var MalesReportsDouble = @Html.Raw(Json.Encode(ViewBag.MalesReportsDouble));
+                var FemalesReportsDouble = @Html.Raw(Json.Encode(ViewBag.FemalesReportsDouble));
+
+
+
+
+            }
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title  text-bold text-danger" style="font-size:15px;"><i class="fa fa-desktop fa-spin"></i> Reports Percentages</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12 col-sm-6 col-xs-12" style="margin-top:10px">
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-warning"><i class="fa fa-male"></i></span>
+
+                                    <div class="info-box-content">
+                                        <h2>Males @MalesReportsDouble %</h2>
+
+
+                                    </div>
+                                </div>
+
+
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-danger"><i class="fa fa-female"></i></span>
+
+                                    <div class="info-box-content">
+
+                                        <h2>Females @FemalesReportsDouble %</h2>
+
+                                    </div>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+
+
+
+                </div>
+                <div class="col-md-6">
+
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-info text-bold" style="font-size:15px;"><i class="fa fa-chart-bar fa-spin"></i> Total Reports Per Month </h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <div class="chart">
+                                <canvas id="ReportsMonths" style="height:250px"></canvas>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="~/Scripts/Chart.js"></script>
+
+@section scripts
+{
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script>
+		$("#recommendations").click(function () {
+			$("#recommendationsResults").slideToggle();
+
+		});
+
+		var DateList=  @Html.Raw(Json.Encode(ViewBag.DateList));
+		//console.log(cities);
+		var LikesList =  @Html.Raw(Json.Encode(ViewBag.LikesList));
+		var DislikesList =  @Html.Raw(Json.Encode(ViewBag.DislikesList));
+
+		var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+		var lineChartData = {
+			labels : DateList,
+			datasets : [
+				{
+					label: "Likes Per Post",
+					fillColor : "rgba(97, 103, 116,0.8)",
+					strokeColor : "rgba(97, 103, 116,1)",
+					pointColor : "rgba(97, 103, 116,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(97, 103, 116,1)",
+					data :LikesList
+				},
+				{
+					label: "Dislikes Per Post",
+					fillColor : "rgba(255, 123, 126,0.8)",
+					strokeColor : "rgba(255, 123, 126,1)",
+					pointColor : "rgba(255, 123, 126,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(255, 123, 126,1)",
+					data :DislikesList
+				}
+			]
+
+		}
+
+
+		var ctx = document.getElementById("posts").getContext("2d");
+		window.myLine = new Chart(ctx).Line(lineChartData, {
+			responsive: true
+		});
+
+
+
+
+    </script>
+
+    <script>
+		//Begin of Charts
+		var ClientsPerMonth = @Html.Raw(Json.Encode(ViewBag.ClientsPerMonth));
+		var MonthsInDB=@Html.Raw(Json.Encode(ViewBag.MonthsInDB));
+		var ClientMales =@Html.Raw(Json.Encode(ViewBag.ClientMalesDiverse));
+		var ClientFemales =@Html.Raw(Json.Encode(ViewBag.ClientFemalesDiverse));
+
+		$(function () {
+
+			/* ChartJS
+			 * -------
+			 * Here we will create a few charts using ChartJS
+			 */
+
+			//--------------
+			//- Line CHART -
+			//--------------
+
+			// Get context with jQuery - using jQuery's .get() method.
+			var areaChartCanvas = $("#subs").get(0).getContext("2d");
+			// This will get the first returned node in the jQuery collection.
+			var lineChart = new Chart(areaChartCanvas);
+
+			var areaChartData = {
+				labels:MonthsInDB,
+
+				datasets: [
+
+				{
+					label: "All Clients ",
+					fillColor: "rgba(97, 103, 116,0.9)",
+					strokeColor:"rgba(97, 103, 116,0.8)",
+					pointColor: "rgba(97, 103, 116, 1)",
+					pointStrokeColor: "#c1c7d1",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(97, 103, 116,1)",
+					data: ClientsPerMonth
+				},
+				   {
+					   label: "Males",
+					   fillColor: "rgba(255, 102, 0,0.9)",
+					   strokeColor:"rgba(255, 102, 0,0.8)",
+					   pointColor: "rgba(255, 102, 0, 1)",
+					   pointStrokeColor: "#c1c7d1",
+					   pointHighlightFill: "#fff",
+					   pointHighlightStroke: "rgba(255, 102, 0,1)",
+					   data: ClientMales
+				   },
+					{
+						label: "Females",
+						fillColor: "rgba(255, 0, 0,0.9)",
+						strokeColor:"rgba(255, 0, 0,0.8)",
+						pointColor: "rgba(255, 0, 0, 1)",
+						pointStrokeColor: "#c1c7d1",
+						pointHighlightFill: "#fff",
+						pointHighlightStroke: "rgba(255, 0, 0,1)",
+						data: ClientFemales
+					}
+				]
+
+			};
+
+			var areaChartOptions = {
+				//Boolean - If we should show the scale at all
+				showScale: true,
+				//Boolean - Whether grid lines are shown across the chart
+				scaleShowGridLines: false,
+				//String - Colour of the grid lines
+				scaleGridLineColor: "rgba(0,0,0,.05)",
+				//Number - Width of the grid lines
+				scaleGridLineWidth: 1,
+				//Boolean - Whether to show horizontal lines (except X axis)
+				scaleShowHorizontalLines: true,
+				//Boolean - Whether to show vertical lines (except Y axis)
+				scaleShowVerticalLines: true,
+				//Boolean - Whether the line is curved between points
+				bezierCurve: true,
+				//Number - Tension of the bezier curve between points
+				bezierCurveTension: 0.3,
+				//Boolean - Whether to show a dot for each point
+				pointDot: false,
+				//Number - Radius of each point dot in pixels
+				pointDotRadius: 4,
+				//Number - Pixel width of point dot stroke
+				pointDotStrokeWidth: 1,
+				//Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+				pointHitDetectionRadius: 20,
+				//Boolean - Whether to show a stroke for datasets
+				datasetStroke: true,
+				//Number - Pixel width of dataset stroke
+				datasetStrokeWidth: 2,
+				//Boolean - Whether to fill the dataset with a color
+				datasetFill: true,
+				//String - A legend template
+				legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+				//Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+				maintainAspectRatio: true,
+				//Boolean - whether to make the chart responsive to window resizing
+				responsive: true
+			};
+
+			//Create the line chart
+			lineChart.Line(areaChartData, areaChartOptions);
+
+			//-------------
+			//- LINE CHART -
+			//--------------
+			var lineChartCanvas = $("#subs").get(0).getContext("2d");
+			var lineChart = new Chart(lineChartCanvas);
+			var lineChartOptions = areaChartOptions;
+			lineChartOptions.datasetFill = false;
+			lineChart.Line(areaChartData, lineChartOptions);
+
+
+		});
+
+
+		//End of Line Chart
+    </script>
+
+
+    <script>
+
+		var CityNames  = @Html.Raw(Json.Encode(ViewBag.CityNames));
+		var CityCounter =@Html.Raw(Json.Encode(ViewBag.CityCounter));
+		var MalesCity  =@Html.Raw(Json.Encode(ViewBag.MalesCity));
+		var FemalesCity  =@Html.Raw(Json.Encode(ViewBag.FemalesCity));
+
+		var radarChartData = {
+			labels:CityNames,
+			datasets: [
+
+				{
+					label: "Total Number of Clients",
+					fillColor: "rgba(51, 153, 51,0.6)",
+					strokeColor: "rgba(51, 153, 51,1)",
+					pointColor: "rgba(51, 153, 51,1)",
+					pointStrokeColor: "#fff",
+					pointHighlightFill: "#fff",
+					pointHighlightStroke: "rgba(51, 153, 51,1)",
+					data: CityCounter
+				},
+				 {
+					 label: "Males Total Number",
+					 fillColor: "rgba(51, 153, 51,0.6)",
+					 strokeColor: "rgba(51, 153, 51,1)",
+					 pointColor: "rgba(51, 153, 51,1)",
+					 pointStrokeColor: "#fff",
+					 pointHighlightFill: "#fff",
+					 pointHighlightStroke: "rgba(51, 153, 51,1)",
+					 data: MalesCity
+				 },
+				  {
+					  label: "Females Total Number",
+					  fillColor: "rgba(51, 153, 51,0.6)",
+					  strokeColor: "rgba(51, 153, 51,1)",
+					  pointColor: "rgba(51, 153, 51,1)",
+					  pointStrokeColor: "#fff",
+					  pointHighlightFill: "#fff",
+					  pointHighlightStroke: "rgba(51, 153, 51,1)",
+					  data: FemalesCity
+				  }
+			]
+		};
+
+
+		window.myRadar = new Chart(document.getElementById("CitiesFollowers").getContext("2d")).Radar(radarChartData, {
+			responsive: true
+		});
+
+
+    </script>
+
+    <script>
+
+		//ViewBag.Labels = Labels;
+		//ViewBag.Ages = Ages;
+		//ViewBag.More = More;
+
+		// var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+		var Labels=  @Html.Raw(Json.Encode(ViewBag.Labels));
+		var Ages=  @Html.Raw(Json.Encode(ViewBag.Ages));
+		var More=  @Html.Raw(Json.Encode(ViewBag.More));
+
+		var barChartData = {
+			labels : Labels,
+			datasets : [
+				{
+					label: " Ages Range",
+					fillColor : "rgba(255, 153, 51,0.8)",
+					strokeColor : "rgba(255, 153, 51,0.8)",
+					highlightFill: "rgba(255, 153, 51,0.75)",
+					highlightStroke: "rgba(255, 153, 51,1)",
+					data : Ages
+				},
+		{
+			label: "Reviews Number",
+			fillColor : "rgba(153, 0, 0,0.8)",
+			strokeColor : "rgba(153, 0, 0,0.8)",
+			highlightFill: "rgba(153, 0, 0,0.75)",
+			highlightStroke: "rgba(153, 0, 0,1)",
+			data : More
+		}
+
+			]
+
+		}
+
+		var ctx1 = document.getElementById("AgesReviews").getContext("2d");
+		window.myBar = new Chart(ctx1).Bar(barChartData, {
+			responsive : true
+		});
+
+
+
+
+    </script>
+
+    <script>
+
+		//ViewBag.Labels = Labels;
+		//ViewBag.Ages = Ages;
+		//ViewBag.More = More;
+
+		// var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+		var ReviewsYears=  @Html.Raw(Json.Encode(ViewBag.ReviewsYears));
+		var TotalReviewsPerYear=  @Html.Raw(Json.Encode(ViewBag.TotalReviewsPerYear));
+
+
+		var barChartData = {
+			labels : ReviewsYears,
+			datasets : [
+				{
+					label: "Total Reviews Per Year",
+					fillColor : "rgba(204, 0, 102,0.8)",
+					strokeColor : "rgba(204, 0, 102,0.8)",
+					highlightFill: "rgba(204, 0, 102,0.75)",
+					highlightStroke: "rgba(204, 0, 102,1)",
+					data : TotalReviewsPerYear
+				}
+
+
+			]
+
+		}
+
+		var ctx1 = document.getElementById("ReviewsYears").getContext("2d");
+		window.myBar = new Chart(ctx1).Bar(barChartData, {
+			responsive : true
+		});
+
+
+
+
+    </script>
+
+    <script>
+
+
+		var LabelsFollowers=  @Html.Raw(Json.Encode(ViewBag.LabelsFollowers));
+		var MalesFollowersList =  @Html.Raw(Json.Encode(ViewBag.MalesFollowersList));
+		var FemalesFollowersList =  @Html.Raw(Json.Encode(ViewBag.FemalesFollowersList));
+
+
+		var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+		var lineChartData = {
+			labels : LabelsFollowers,
+			datasets : [
+				{
+					label: "Number of Males",
+					fillColor : "rgba(0, 51, 102,0.8)",
+					strokeColor : "rgba(0, 51, 102,1)",
+					pointColor : "rgba(0, 51, 102,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0, 51, 102,1)",
+					data :MalesFollowersList
+				},
+				{
+					label: "Number of Females",
+					fillColor : "rgba(153, 153, 255,0.8)",
+					strokeColor : "rgba(153, 153, 255,1)",
+					pointColor : "rgba(153, 153, 255,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(153, 153, 255,1)",
+					data :FemalesFollowersList
+				}
+			]
+
+		}
+
+
+		var ctx = document.getElementById("FollowersGenders").getContext("2d");
+		window.myLine = new Chart(ctx).Line(lineChartData, {
+			responsive: true
+		});
+
+
+
+
+    </script>
+
+    <script>
+
+		//ViewBag.Labels = Labels;
+		//ViewBag.Ages = Ages;
+		//ViewBag.More = More;
+
+		// var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+		var MonthsReviews=  @Html.Raw(Json.Encode(ViewBag.MonthsReviews));
+		var TotalReviewsInMonths=  @Html.Raw(Json.Encode(ViewBag.TotalReviewsInMonths));
+
+
+		var barChartData = {
+			labels : MonthsReviews,
+			datasets : [
+				{
+					label: "Total Reviews Per Month",
+					fillColor : "rgba(0, 204, 0,0.8)",
+					strokeColor : "rgba(0, 204, 0,0.8)",
+					highlightFill: "rgba(0, 204, 0,0.75)",
+					highlightStroke: "rgba(0, 204, 0,1)",
+					data : TotalReviewsInMonths
+				}
+
+
+			]
+
+		}
+
+		var ctx1 = document.getElementById("ReviewsMonths").getContext("2d");
+		window.myBar = new Chart(ctx1).Bar(barChartData, {
+			responsive : true
+		});
+
+
+
+
+    </script>
+
+<script>
+                //Begin of Charts
+                var usefulyearsList = @Html.Raw(Json.Encode(ViewBag.usefulyearsList));
+                var usefulMalesList=@Html.Raw(Json.Encode(ViewBag.usefulMalesList));
+                var usefulFemalesList =@Html.Raw(Json.Encode(ViewBag.usefulFemalesList));
+
+
+                $(function () {
+
+                    /* ChartJS
+                     * -------
+                     * Here we will create a few charts using ChartJS
+                     */
+
+                    //--------------
+                    //- Line CHART -
+                    //--------------
+
+                    // Get context with jQuery - using jQuery's .get() method.
+                    var areaChartCanvas = $("#usefulYears").get(0).getContext("2d");
+                    // This will get the first returned node in the jQuery collection.
+                    var lineChart = new Chart(areaChartCanvas);
+
+                    var areaChartData = {
+                        labels:usefulyearsList,
+
+                        datasets: [
+
+                        {
+                            label: "Males Useful Reviews",
+                            fillColor: "rgba(97, 103, 116,0.9)",
+                            strokeColor:"rgba(97, 103, 116,0.8)",
+                            pointColor: "rgba(97, 103, 116, 1)",
+                            pointStrokeColor: "#c1c7d1",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(97, 103, 116,1)",
+                            data: usefulMalesList
+                        },
+                           {
+                               label: "Females Useful Reviews",
+                               fillColor: "rgba(255, 102, 0,0.9)",
+                               strokeColor:"rgba(255, 102, 0,0.8)",
+                               pointColor: "rgba(255, 102, 0, 1)",
+                               pointStrokeColor: "#c1c7d1",
+                               pointHighlightFill: "#fff",
+                               pointHighlightStroke: "rgba(255, 102, 0,1)",
+                               data: usefulFemalesList
+                           }
+                        ]
+
+                    };
+
+                    var areaChartOptions = {
+                        //Boolean - If we should show the scale at all
+                        showScale: true,
+                        //Boolean - Whether grid lines are shown across the chart
+                        scaleShowGridLines: false,
+                        //String - Colour of the grid lines
+                        scaleGridLineColor: "rgba(0,0,0,.05)",
+                        //Number - Width of the grid lines
+                        scaleGridLineWidth: 1,
+                        //Boolean - Whether to show horizontal lines (except X axis)
+                        scaleShowHorizontalLines: true,
+                        //Boolean - Whether to show vertical lines (except Y axis)
+                        scaleShowVerticalLines: true,
+                        //Boolean - Whether the line is curved between points
+                        bezierCurve: true,
+                        //Number - Tension of the bezier curve between points
+                        bezierCurveTension: 0.3,
+                        //Boolean - Whether to show a dot for each point
+                        pointDot: false,
+                        //Number - Radius of each point dot in pixels
+                        pointDotRadius: 4,
+                        //Number - Pixel width of point dot stroke
+                        pointDotStrokeWidth: 1,
+                        //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+                        pointHitDetectionRadius: 20,
+                        //Boolean - Whether to show a stroke for datasets
+                        datasetStroke: true,
+                        //Number - Pixel width of dataset stroke
+                        datasetStrokeWidth: 2,
+                        //Boolean - Whether to fill the dataset with a color
+                        datasetFill: true,
+                        //String - A legend template
+                        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+                        //Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                        maintainAspectRatio: true,
+                        //Boolean - whether to make the chart responsive to window resizing
+                        responsive: true
+                    };
+
+                    //Create the line chart
+                    lineChart.Line(areaChartData, areaChartOptions);
+
+                    //-------------
+                    //- LINE CHART -
+                    //--------------
+                    var lineChartCanvas = $("#usefulYears").get(0).getContext("2d");
+                    var lineChart = new Chart(lineChartCanvas);
+                    var lineChartOptions = areaChartOptions;
+                    lineChartOptions.datasetFill = false;
+                    lineChart.Line(areaChartData, lineChartOptions);
+
+
+                });
+
+
+                //End of Line Chart
+</script>
+
+
+<script>
+
+                //ViewBag.Labels = Labels;
+                //ViewBag.Ages = Ages;
+                //ViewBag.More = More;
+
+                // var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+                var usefulMonthsList=  @Html.Raw(Json.Encode(ViewBag.usefulMonthsList));
+                var usefulMonthsMales=  @Html.Raw(Json.Encode(ViewBag.usefulMonthsMales));
+                var usefulMonthsFemales=  @Html.Raw(Json.Encode(ViewBag.usefulMonthsFemales));
+
+                var barChartData = {
+                    labels : usefulMonthsList,
+                    datasets : [
+                        {
+                            label: "Total Useful Reviews of Males Per Month",
+                            fillColor : "rgba(0, 102, 255,0.8)",
+                            strokeColor : "rgba(0, 102, 255,0.8)",
+                            highlightFill: "rgba(0, 102, 255,0.75)",
+                            highlightStroke: "rgba(0, 102, 255,1)",
+                            data : usefulMonthsMales
+                        },
+                        {
+                            label: "Total Useful Reviews of Females Per Month",
+                            fillColor : "rgba(102, 204, 255,0.8)",
+                            strokeColor : "rgba(102, 204, 255,0.8)",
+                            highlightFill: "rgba(102, 204, 255,0.75)",
+                            highlightStroke: "rgba(102, 204, 255,1)",
+                            data : usefulMonthsFemales
+                        }
+
+
+
+                    ]
+
+                }
+
+                var ctx1 = document.getElementById("usefulMonths").getContext("2d");
+                window.myBar = new Chart(ctx1).Bar(barChartData, {
+                    responsive : true
+                });
+
+</script>
+
+<script>
+
+
+                var ReportsyearsList=  @Html.Raw(Json.Encode(ViewBag.ReportsyearsList));
+                var ReportsMalesList =  @Html.Raw(Json.Encode(ViewBag.ReportsMalesList));
+                var ReportsFemalesList =  @Html.Raw(Json.Encode(ViewBag.ReportsFemalesList));
+
+
+                var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+                var lineChartData = {
+                    labels : ReportsyearsList,
+                    datasets : [
+                        {
+                            label: "Number of Males Reports",
+                            fillColor : "rgba(0, 51, 102,0.8)",
+                            strokeColor : "rgba(0, 51, 102,1)",
+                            pointColor : "rgba(0, 51, 102,1)",
+                            pointStrokeColor : "#fff",
+                            pointHighlightFill : "#fff",
+                            pointHighlightStroke : "rgba(0, 51, 102,1)",
+                            data :ReportsMalesList
+                        },
+                        {
+                            label: "Number of Females Reports",
+                            fillColor : "rgba(153, 153, 255,0.8)",
+                            strokeColor : "rgba(153, 153, 255,1)",
+                            pointColor : "rgba(153, 153, 255,1)",
+                            pointStrokeColor : "#fff",
+                            pointHighlightFill : "#fff",
+                            pointHighlightStroke : "rgba(153, 153, 255,1)",
+                            data :ReportsFemalesList
+                        }
+                    ]
+
+                }
+
+
+                var ctx = document.getElementById("ReportsYears").getContext("2d");
+                window.myLine = new Chart(ctx).Bar(lineChartData, {
+                    responsive: true
+                });
+
+
+
+
+</script>
+
+<script>
+
+                //ViewBag.Labels = Labels;
+                //ViewBag.Ages = Ages;
+                //ViewBag.More = More;
+
+                // var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+                var ReportsMonths=  @Html.Raw(Json.Encode(ViewBag.ReportsMonths));
+                var ReportsMonthsMales=  @Html.Raw(Json.Encode(ViewBag.ReportsMonthsMales));
+                var ReportsMonthsFemales=  @Html.Raw(Json.Encode(ViewBag.ReportsMonthsFemales));
+
+                var barChartData = {
+                    labels : ReportsMonths,
+                    datasets : [
+                        {
+                            label: "Total Reports  of Males Per Month",
+                            fillColor : "rgba(0, 102, 255,0.8)",
+                            strokeColor : "rgba(0, 102, 255,0.8)",
+                            highlightFill: "rgba(0, 102, 255,0.75)",
+                            highlightStroke: "rgba(0, 102, 255,1)",
+                            data : ReportsMonthsMales
+                        },
+                        {
+                            label: "Total Reports of Females Per Month",
+                            fillColor : "rgba(102, 204, 255,0.8)",
+                            strokeColor : "rgba(102, 204, 255,0.8)",
+                            highlightFill: "rgba(102, 204, 255,0.75)",
+                            highlightStroke: "rgba(102, 204, 255,1)",
+                            data : ReportsMonthsFemales
+                        }
+
+
+
+                    ]
+
+                }
+
+                var ctx1 = document.getElementById("ReportsMonths").getContext("2d");
+                window.myBar = new Chart(ctx1).Bar(barChartData, {
+                    responsive : true
+                });
+
+</script>
+
+
+}

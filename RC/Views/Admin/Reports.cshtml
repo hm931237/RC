@@ -1,0 +1,144 @@
+﻿@model IEnumerable<RC.Models.Report>
+@using RC.Models
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+    ApplicationDbContext db=new ApplicationDbContext();
+}
+<section class="content-header"></section>
+
+
+
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#activity" data-toggle="tab">Reports Sheet</a></li>
+
+    </ul>
+<div class="tab-content">
+    <div class="active tab-pane" id="activity">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-info text-bold" style="font-size:15px;"><i class="fa fa-exclamation-circle fa-spin"></i> Reports Against Organizations </h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <table id="userReports" class="table table-bordered table-condensed table-hover table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>Reporter User</th>
+                                    <th>Reported User</th>
+                                    <th>Report Time</th>
+                                    <th>Report Type</th>
+                                    <th>Report Content</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var report in Model)
+                                {
+                                    if (report.reportKindId == 1)
+                                    {
+                                        <tr>
+                                            <td style="font-weight:bolder;font-size:15px;">
+                                                <img src="~/files/@report.reporter.imageUrl" class="img-circle"  style="display:inline-block;width:48px;height:48px;"/>
+                                                @report.reporter.Username
+                                            </td>
+                                            <td style="font-weight:bolder;font-size:15px;">
+                                                <img src="~/Content/img/OrganizationsProfilePics/@report.reported.imageUrl" class="img-circle" style="display:inline-block;width:48px;height:48px;"/>
+                                                @report.reported.Username
+                                            </td>
+                                            <td>@report.Date</td>
+                                            <td>@report.reportType.Name</td>
+                                            <td>@report.Content</td>
+                                        </tr>
+                                    }
+                                }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title text-success text-bold" style="font-size:15px;"><i class="fa fa-exclamation-circle fa-spin"></i> Reports Against Clients </h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <table id="userReports" class="table table-bordered table-condensed table-hover table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>Reporter User</th>
+                                    <th>Reported User</th>
+                                    <th>Report Time</th>
+                                    <th>Report Type</th>
+                                    <th>Report Content</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var report in Model)
+                                {
+                                    var reporter = db.Clients.FirstOrDefault(x => x.userId == report.reporterId);
+                                    var reported = db.Clients.FirstOrDefault(x => x.userId == report.reportedId);
+
+
+                                    if (report.reportKindId == 2)
+                                    {
+                                        <tr>
+                                            <td style="font-weight:bolder;font-size:15px;">
+                                                <img src="~/files/@report.reporter.imageUrl" class="thumbnail" width="48px" height="48px" style="display:inline-block"/>
+                                                @reporter.firstName @reporter.lastName
+                                            </td>
+                                            <td style="font-weight:bolder;font-size:15px;">
+                                                <img src="~/files/@report.reported.imageUrl" class="thumbnail" width="48px" height="48px" style="display:inline-block"/>
+                                                @reported.firstName @reported.lastName
+                                            </td>
+                                            <td>@report.Date</td>
+                                            <td>@report.reportType.Name</td>
+                                            <td>@report.Content</td>
+                                        </tr>
+                                    }
+                                }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+</div>
+@section scripts
+{
+    <script>
+  $(function () {
+      $("#userReports").DataTable();
+  });
+
+  $(function () {
+      $("#organizationReports").DataTable();
+  });
+    </script>
+
+}

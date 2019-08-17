@@ -1,0 +1,40 @@
+﻿
+@model List<RC.Models.Offer>
+@*@foreach (var item in Model)*@
+@for (int i = 0; i < Model.Count(); i++)
+{
+
+
+
+
+
+    <li class="cards__item" style="">
+        <div class="card">
+            <div class="card__image" style="background-image: url(../../files/@Model[i].imageUrl )"></div>
+            <div class="card__content">
+                <div class="card__title">
+                    <span class="pull-left bg bg-black badge"> @Model[i].rewardName</span>
+                    <span class="pull-right bg bg-green badge"><span class="badge bg bg-black">@Model[i].requiredPoint</span> Points</span>
+                </div>
+                <p class="card__text">This is the shorthand for flex-grow, flex-shrink and flex-basis combined. The second and third parameters (flex-shrink and flex-basis) are optional. Default is 0 1 auto. </p>
+                @*<button class="btn btn--block card__btn">Get</button>*@
+                <p style="text-align:center">
+                    Get Via <a href="javascript:void(0);" class="anchorDetaill links " data-id="@Model[i].Id"> Email</a> &nbsp Or &nbsp
+                    <a href="javascript:void(0);" class="anchorDetail links" data-id="@Model[i].Id "> QR Code</a>
+                </p>
+
+            </div>
+        </div>
+    </li>
+
+
+
+
+
+
+
+
+}
+
+
+

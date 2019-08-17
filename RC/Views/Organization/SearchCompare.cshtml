@@ -1,0 +1,444 @@
+﻿@model RC.ViewModels.CompareViewModel
+@using RC.Models;
+
+@{
+    ViewBag.Title = "SearchCompare";
+    Layout = "~/Views/Shared/_OrganizationLayout.cshtml";
+
+    List<List<Organization>> matrix = new List<List<Organization>>();
+    List<Organization> orgs = new List<Organization>();
+}
+
+
+@foreach (var org in Model.organizations)
+{
+    orgs.Add(org);
+
+}
+
+
+
+
+
+@{
+    matrix.Add(orgs);
+    var counter_1 = 0;
+    var counter_2 = 0;
+
+}
+
+
+
+
+<section class="content" style="margin-top:35px">
+    <div class="row">
+
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#activity" data-toggle="tab">Comparison Board</a></li>
+
+            </ul>
+
+            <div class="tab-pane" id="timeline" style="margin-top: 14px;width: 98%;margin-left: 11px;">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h1 class="box-title"><i class="fa fa-hands"></i> Launch your Comparison Now !</h1>
+
+                        <div class="row" style="width: 100%;margin-left: 1px;margin-top: 16px;">
+                            <table class="table table-bordered table-condensed table-hover table-responsive table-striped" style="font-size:15px;font-weight:bolder;">
+                                <thead>
+                                    <tr>
+                                        <th>Points Of Comparison</th>
+                                        <th>First Collaborator</th>
+                                        <th>Second Collaborator</th>
+
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+
+
+                                    @foreach (var sublist in matrix)
+                                    {
+
+                                        <tr>
+                                            <td>organization Image </td>
+                                            @foreach (var value in sublist)
+                                            {
+
+
+                                                <td><img src="~/Content/img/OrganizationsProfilePics/@value.User.imageUrl" class="thumbnail" width="400px" style="max-height:350px" /></td>
+
+
+                                            }
+
+                                        </tr>
+
+
+
+
+
+                                        <tr>
+                                            <td>organization Name</td>
+                                            @foreach (var value in sublist)
+                                            {
+
+
+                                                <td>@value.orgnizationName</td>
+
+
+                                            }
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>Owner First Name</td>
+                                            @foreach (var value in sublist)
+                                            {
+
+
+                                                <td>@value.ownerFirstName</td>
+
+
+                                            }
+
+                                        </tr>
+                                        <tr>
+                                            <td>owner Last Name</td>
+                                            @foreach (var value in sublist)
+                                            {
+
+
+                                                <td>@value.ownerLastName</td>
+
+
+                                            }
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Sector Name</td>
+                                            @foreach (var value in sublist)
+                                            {
+
+
+                                                <td>@value.Category.Sector.Name</td>
+
+
+                                            }
+                                        </tr>
+
+                                        <tr>
+                                            <td>Category Name</td>
+
+                                            @foreach (var value in sublist)
+                                            {
+
+
+                                                <td>@value.Category.Name</td>
+
+
+                                            }
+                                        </tr>
+
+                                        <tr>
+                                            <td>City Name</td>
+
+                                            @foreach (var value in sublist)
+                                            {
+
+
+                                                <td>@value.City.Name</td>
+
+
+                                            }
+                                        </tr>
+
+                                        <tr>
+                                            <td>Price Range</td>
+
+                                            @foreach (var value in sublist)
+                                            {
+
+                                                if (value.PriceRange.Name == "Low")
+                                                {
+                                                    if (value.Id == (int)Session["orgID"])
+                                                    {
+                                                        counter_1++;
+                                                    }
+                                                    else { counter_2++; }
+
+
+                                                    <td><i class="fa fa-check-circle text-success"></i> @value.PriceRange.Name</td>
+                                                }
+
+
+
+                                                else
+                                                {
+                                                    <td><i class="fa fa-times-circle text-danger"></i> @value.PriceRange.Name</td>
+
+                                                }
+
+
+                                            }
+                                        </tr>
+
+                                        <tr>
+                                            <td>Number of Reviews</td>
+
+                                            @for (int i = 0; i < Model.Reviews.Count; i++)
+                                            {
+
+
+                                                if (Model.Reviews[i] > Model.Reviews[i + 1])
+                                                {
+                                                    counter_2++;
+                                                    <td><i class="fa fa-arrow-alt-circle-up text-success"></i> @Model.Reviews[i]</td>
+                                                    <td><i class="fa fa-arrow-alt-circle-down text-danger"></i> @Model.Reviews[i + 1]</td>
+                                                    break;
+                                                }
+
+                                                else if (Model.Reviews[i] < Model.Reviews[i + 1])
+                                                {
+                                                    counter_1++;
+                                                    <td><i class="fa fa-arrow-alt-circle-down text-danger"></i> @Model.Reviews[i]</td>
+                                                    <td><i class="fa fa-arrow-alt-circle-up text-success"></i> @Model.Reviews[i + 1]</td>
+                                                    break;
+                                                }
+
+                                                else if (Model.Reviews[i] == Model.Reviews[i + 1])
+                                                {
+                                                    <td><i class="fa fa-adjust text-primary"></i> @Model.Reviews[i]</td>
+                                                    <td><i class="fa fa-adjust text-primary"></i> @Model.Reviews[i + 1]</td>
+                                                    break;
+                                                }
+
+
+                                            }
+                                        </tr>
+
+
+
+
+                                        <tr>
+                                            <td>Reports Against Organization</td>
+
+                                            @for (int i = 0; i < Model.Reports.Count; i++)
+                                            {
+
+
+                                                if (Model.Reports[i] > Model.Reports[i + 1])
+                                                {
+                                                    counter_1++;
+                                                    <td><i class="fa fa-arrow-alt-circle-up text-danger"></i> @Model.Reports[i]</td>
+                                                    <td><i class="fa fa-arrow-alt-circle-down text-success"></i> @Model.Reports[i + 1]</td>
+                                                    break;
+                                                }
+
+                                                else if (Model.Reports[i] < Model.Reports[i + 1])
+                                                {
+                                                    counter_2++;
+                                                    <td><i class="fa fa-arrow-alt-circle-down text-success"></i> @Model.Reports[i]</td>
+                                                    <td><i class="fa fa-arrow-alt-circle-up text-danger"></i> @Model.Reports[i + 1]</td>
+                                                    break;
+                                                }
+
+                                                else if (Model.Reports[i] == Model.Reports[i + 1])
+                                                {
+                                                    <td><i class="fa fa-adjust text-primary"></i> @Model.Reports[i]</td>
+                                                    <td><i class="fa fa-adjust text-primary"></i> @Model.Reports[i + 1]</td>
+                                                    break;
+                                                }
+
+                                            }
+                                        </tr>
+
+
+
+                                        <tr>
+                                            <td>Number of Followers</td>
+
+                                            @for (int i = 0; i < Model.Followers.Count; i++)
+                                            {
+
+
+                                                if (Model.Followers[i] > Model.Followers[i + 1])
+                                                {
+                                                    counter_2++;
+                                                    <td><i class="fa fa-arrow-alt-circle-up text-success"></i> @Model.Followers[i]</td>
+                                                    <td><i class="fa fa-arrow-alt-circle-down text-danger"></i> @Model.Followers[i + 1]</td>
+                                                    break;
+                                                }
+
+                                                else if (Model.Followers[i] < Model.Followers[i + 1])
+                                                {
+                                                    counter_1++;
+                                                    <td><i class="fa fa-arrow-alt-circle-down text-danger"></i> @Model.Followers[i]</td>
+                                                    <td><i class="fa fa-arrow-alt-circle-up text-success"></i> @Model.Followers[i + 1]</td>
+                                                    break;
+                                                }
+
+                                                else if (Model.Followers[i] == Model.Followers[i + 1])
+                                                {
+                                                    <td><i class="fa fa-adjust text-primary"></i> @Model.Followers[i]</td>
+                                                    <td><i class="fa fa-adjust text-primary"></i> @Model.Followers[i + 1]</td>
+                                                    break;
+                                                }
+
+                                            }
+                                        </tr>
+
+                                        <tr>
+
+
+                                            <td>Organization Total Rate</td>
+
+                                            @for (int i = 0; i < Model.orgRates.Count; i++)
+                                            {
+                                                <td>
+                                                    <input type="text" value="@Model.orgRates[i]" readonly class="input-21c fact" />
+                                                </td>
+
+
+                                            }
+
+                                            @for (int i = 0; i < Model.orgRates.Count; i++)
+                                            {
+                                                if (Model.orgRates[i] > Model.orgRates[i + 1])
+                                                {
+                                                    counter_2++;
+                                                    break;
+                                                }
+                                                else if (Model.orgRates[i] < Model.orgRates[i + 1])
+                                                {
+                                                    counter_1++;
+                                                    break;
+                                                }
+                                                else { break; }
+                                            }
+                                        </tr>
+
+
+                                    }
+                                </tbody>
+                            </table>
+
+
+                        </div>
+
+                        <button id="recommendations" class="btn btn-danger" style="width:100%;"><i class="fa fa-ribbon"></i> View RC Recommendations Now !</button>
+
+                        <div class="box box-danger" style="display:none;margin-top:15px;" id="recommendationsResults">
+                            <div class="box-header with-border">
+                                <h1 class="box-title"><i class="fa fa-hands"></i> Launch your Recommendations Now !</h1>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="col-md-12 col-sm-6 col-xs-12" style="margin-top:10px">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-red"><i class="fa fa-star"></i></span>
+
+                                        <div class="info-box-content">
+                                            <h2 class="info-box-text">Reviewing Club Can help you to take your decision !</h2>
+
+                                            @if (counter_1 > counter_2)
+                                            {
+                                                foreach (var org in orgs)
+                                                {
+                                                    if (org.Id == (int)Session["orgID"])
+                                                    {
+                                                        <p class="btn btn-success" style="font-size:14px">@org.orgnizationName is Recommended </p>
+                                                    }
+
+                                                }
+
+
+
+
+                                            }
+
+                                            else if (counter_1 < counter_2)
+                                            {
+                                                foreach (var org in orgs)
+                                                {
+                                                    if (org.Id != (int)Session["orgID"])
+                                                    {
+                                                        <p>@org.orgnizationName is Recommended </p>
+                                                    }
+
+                                                }
+
+
+
+                                            }
+                                            else if (counter_1 == counter_2)
+                                            {
+                                                <p>Both are Neutral</p>
+
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                    <!-- /.info-box-content -->
+                                </div>
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+
+<script src="~/Scripts/gulpfile.js"></script>
+<script src="~/Scripts/jstars.min.js"></script>
+<script>
+                $(document).ready(function () {
+                    var factors = [];
+                    $(".input-21c").rating({
+                        min: 0,
+                        max: 10,
+                        step: 1,
+                        size: "sm",
+                        stars: "10"
+                    });
+                    $(".input-21c").on('rating:change',
+                        function (event, value, caption) {
+                            var id = "#" + $(this).attr("id");
+                            $(id).val(value);
+
+                        });
+                });
+
+
+
+                $("#recommendations").click(function () {
+                    $("#recommendationsResults").slideToggle();
+
+                });
+
+</script>
+
+
+
+
+

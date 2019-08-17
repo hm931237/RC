@@ -1,0 +1,33 @@
+﻿body {
+
+}
+
+.organization-img {
+width:60px;
+height:60px;
+}
+.social {
+    margin-top:5px;
+}
+ .social .face {
+     margin-bottom:5px;
+
+    }
+
+.mind {
+
+    max-width:100%;
+    margin-bottom:20px;
+    border-radius:4px;
+}
+
+.StaticSection {
+margin-top:78px;
+
+}
+
+.post-form
+{
+    margin-top:500px;
+
+}

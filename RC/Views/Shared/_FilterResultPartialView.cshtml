@@ -1,0 +1,113 @@
+﻿@model RC.ViewModels.OrganizationFilterVIewModel
+@using RC.Models
+@{
+    ApplicationDbContext DB = new ApplicationDbContext();
+}
+
+
+@if (Model.Organizations.Count == 0)
+            {
+    <br />
+        <div class="row">
+            <div class="col-md-10 col-lg-offset-1">
+                <div class="alert alert-info" align="center" role="alert">There are no Search Result</div>
+            </div>
+        </div>
+}
+else
+{
+    foreach (var org in Model.Organizations)
+    {
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#tab_1" data-toggle="tab" style="background-color: #5CB85C;color: white">@Math.Round(org.orgRate, 1)/ 10</a></li>
+                        <li><a href="/organization/reviews/@org.Id" style="color:#5abdf2">Review it</a></li>
+
+                        @{
+                            if (Session["UserId"] != null && Convert.ToInt32(Session["LoginUserTypeId"]) == 2 && Model.client_id != 0)
+                            {
+                                if (Model.OrganizationIdList.Contains(org.Id))
+                                {
+                                    <li class="pull-right">
+                                        <button type="button" class="submit action-button btn btn-primary btn-md btn-block login-btn" id="subscribe_@org.Id" onclick="Subscribe(@Model.client_id,@org.Id);">UnFollow</button>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="pull-right">
+                                        <button type="button" class="submit action-button btn btn-primary btn-md btn-block login-btn" id="subscribe_@org.Id" onclick="Subscribe(@Model.client_id,@org.Id);">UnFollow</button>
+                                    </li>
+                                }
+                            }
+
+                        }
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                            <div class="user-panel">
+                                <div class="pull-left image">
+                                    @{
+                                        var user = DB.Users.Single(u => u.Id == org.userId);
+                                    }
+                                    <img src="~/Content/img/OrganizationsProfilePics/@user.imageUrl" style="width: 50px;height: 45px" class="img-circle" alt="User Image">
+
+                                </div>
+                                <div class="pull-left info">
+                                    <a style="color:#5abdf2;" href="/Organization/Index/@org.Id">@org.orgnizationName</a>
+                                    <br />
+                                    <a href="http://@org.websiteUrl">@org.websiteUrl</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @foreach (var orgfactor in org.OrganizationFactors)
+                                {
+                                    var v10 = orgfactor.factorRate * 10;
+                                    var v100 = orgfactor.factorRate * 100;
+                                    <div class="col-md-6">
+                                        <label>@orgfactor.Factor.Name</label>
+
+                                        @if (v10 == 0)
+                                        {
+                                            <span class="badge pull-right">Not Rated</span>
+
+                                                <div class="progress progress-sm active">
+
+                                                    <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="10" style="width: 0%">
+
+                                                    </div>
+                                                </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge pull-right">@Math.Round(v10, 1) / 10</span>
+
+                                                <div class="progress progress-sm active">
+
+                                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="10" style="width: @v100%">
+
+                                                    </div>
+                                                </div>
+                                        }
+
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+            <br />
+                        <br />
+
+
+
+                                }
+
+
+                            }

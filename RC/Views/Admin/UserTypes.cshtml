@@ -1,0 +1,106 @@
+﻿@model IEnumerable<RC.Models.UserType>
+@{
+    ViewBag.Title = "UserTypes";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+
+
+}
+<section>
+
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#activity" data-toggle="tab">System Roles</a></li>
+
+        </ul>
+
+        <div class="tab-content">
+            <div class="active tab-pane" id="activity">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box">
+
+                            <!-- /.box-header -->
+                            <div class="box-body">
+
+
+
+                                <p>
+                                    <button id="createRole" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Create Role</button>
+                                </p>
+                                <table id="roles" class="table table-bordered table-condensed table-hover table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Role Name</th>
+                                            <th>Edit Role</th>
+
+
+                                        </tr>
+                                    </thead>
+
+                                    @foreach (var role in Model)
+                                    {
+                                        <tr>
+                                            <td>@role.Name</td>
+                                            <td>@Html.ActionLink("Edit Role", "Admin", new { id = role.Id }, new { @class = "btn btn-danger" })</td>
+
+
+
+
+                                        </tr>
+
+
+                                    }
+
+                                    <tbody></tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @{
+
+        RC.Models.UserType usertype = new RC.Models.UserType();
+    }
+    @Html.Partial("CreateUserType",usertype)
+    @Html.Partial("EditUserType")
+
+</section>
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+ <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        var table = $("#roles").DataTable();
+        
+
+
+        
+        $('createRole').click(function () {
+    
+            $('#myModal').show();
+        });
+
+
+
+        $('edit').click(function () {
+
+            $('#Modal').show();
+        });
+
+
+
+
+
+    });
+
+</script>
+ 

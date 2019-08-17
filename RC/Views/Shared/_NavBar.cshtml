@@ -1,0 +1,231 @@
+﻿<style>
+    
+
+.container .search {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  background: #34c6d3;
+  border-radius: 50%;
+  transition: all 1s;
+  z-index: 4;
+  box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4);
+}
+.container .search:hover {
+  cursor: pointer;
+}
+.container .search::before {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: 22px;
+  right: 0;
+  bottom: 0;
+  left: 22px;
+  width: 12px;
+  height: 2px;
+  background: white;
+  transform: rotate(45deg);
+  transition: all .5s;
+}
+.container .search::after {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: -5px;
+  right: 0;
+  bottom: 0;
+  left: -5px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 2px solid white;
+  transition: all .5s;
+}
+.container input {
+  font-family: 'Inconsolata', monospace;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  outline: none;
+  border: none;
+  background: #34c6d3;
+  color: white;
+  text-shadow: 0 0 10px #34c6d3;
+  padding: 0 80px 0 20px;
+  border-radius: 30px;
+  box-shadow: 0 0 25px 0 #34c6d3, 0 20px 25px 0 rgba(0, 0, 0, 0.2);
+  transition: all 1s;
+  opacity: 0;
+  z-index: 5;
+  font-weight: bolder;
+  letter-spacing: 0.1em;
+}
+.container input:hover {
+  cursor: pointer;
+}
+.container input:focus {
+  width: 300px;
+  opacity: 1;
+  cursor: text;
+}
+.container input:focus ~ .search {
+  right: -250px;
+  background: #41464b;
+  z-index: 6;
+}
+.container input:focus ~ .search::before {
+  top: 0;
+  left: 0;
+  width: 25px;
+}
+.container input:focus ~ .search::after {
+  top: 0;
+  left: 0;
+  width: 25px;
+  height: 2px;
+  border: none;
+  background: white;
+  border-radius: 0%;
+  transform: rotate(-45deg);
+}
+.container input::placeholder {
+  color: white;
+  opacity: 0.5;
+  font-weight: bolder;
+}
+
+</style>
+
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid navbar-border">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" style="color: black" class="sidebar-toggle navbar-brand" data-toggle="push-menu" role="button">
+                <i class="fa fa-align-justify"></i>
+            </a>
+            <a class="navbar-brand" href="#"><i class="fa fa-home"></i> Brand</a>
+
+
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+
+                <li class="active"><a href="#"><i class="fa fa-building"></i> About</a></li>
+                <li><a href="#"><i class="fa fa-phone"></i> Contact</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-anchor"></i> Support <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#"<i class="fa fa-envelope"></i> @Html.ActionLink("Sign Up", "SignUp_Org", "Organization", null,
+                                                                              new {@style = "padding-left:0px;"})</a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-comments"></i> @Html.ActionLink("Sign Up", "SignUp_Org", "Organization", null,
+                                                                       new { @style = "padding-left:0px;" })
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-phone"></i> @Html.ActionLink("Sign Up", "SignUp_Org", "Organization", null,
+                                                                    new { @style = "padding-left:0px;" })
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="active active-choice">
+                            <a href="#">
+                                <i class="fa fa-credit-card"></i> @Html.ActionLink("Sign Up", "SignUp_Org", "Organization", null,
+                                                                          new { @style = "padding-left:0px;" })
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <form class="navbar-form" role="search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="search" name="q">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </li>
+                <li><a href="#"><i class="fab fa-twitter color-twitter"></i></a></li>
+                <li><a href="#"><i class="fab fa-facebook color-facebook"></i></a></li>
+                <li><a href="#"><i class="fab fa-linkedin color-linkedin"></i></a></li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+
+
+
+
+
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i> <b class="color-blue">Login</b> <span class="caret"></span></a>
+                    <ul class="dropdown-menu login-panel">
+                        <li>
+                            <div class="dropdown-header">
+                                <span class="login-header color-blue">Sign In</span>
+                                <span class="forgot-password color-blue"><a href="">Forgot password?</a></span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div style="padding: 8px;">
+                                <form id="loginform" class="form-horizontal" role="form" autocomplete="off">
+                                    <div style="margin-bottom: 10px" class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user color-blue"></i></span>
+                                        <!-- USERNAME OR EMAIL ADDRESS -->
+                                        <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email" pattern="[a-zA-Z0-9]{5,}" title="Minimum 5 letters or numbers." oninvalid="this.setCustomValidity('Enter User Name Here')" oninput="setCustomValidity('')" required>
+                                    </div>
+                                    <div style="margin-bottom: 10px" class="input-group">
+                                        <span class="input-group-addon" style="color:#0080C5;"><i class="fa fa-unlock-alt fa-1x"></i></span>
+                                        <!--  PASSWORD  -->
+                                        <input id="login-password" type="password" class="form-control" name="password" placeholder="password" pattern=".{5,}" title="Minmimum 5 letters or numbers." oninvalid="this.setCustomValidity('Enter a password')" oninput="setCustomValidity('')" required>
+                                    </div>
+                                    <div class="center-text">
+                                        <label><input id="login-remember" type="checkbox" name="remember" value="1"> Remember me</label>
+                                    </div>
+                                    <div class="center-text">
+                                        <span class="error-message color-red"><i class="glyphicon glyphicon-warning-sign"></i> Username & password don't match!</span>
+                                    </div>
+                                    <div style="margin-top:10px" class="form-group">
+                                        <!-- Button -->
+                                        <div class="col-sm-12 controls center-text">
+                                            <a id="btn-login" href="@Url.Action("Index", "User")" class="btn btn-block btn-success">Login</a>
+                                            <!--<a id="btn-fblogin" href="#" class="btn btn-primary">Login with Facebook</a>-->
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                        <!--<li class="divider"></li>-->
+                    </ul>
+                </li>
+                
+
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

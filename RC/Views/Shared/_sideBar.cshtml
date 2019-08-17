@@ -1,0 +1,129 @@
+﻿
+@using RC.Models
+@using System.Data.Entity
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+   
+
+
+    var organ = new Organization();
+    var user= new User();
+    var usertype =new int();
+    if (Session["UserId"] != null)
+    {
+        var userID = (int)Session["UserId"];
+        user = db.Users.Where(u => u.Id == userID).SingleOrDefault();
+        usertype = user.UserTypeId;
+        if (usertype == 3)
+        {
+            organ = db.Organizations.Where(org => org.userId == userID).Include(org => org.User).SingleOrDefault();
+        }
+
+        else if (usertype == 2)
+        {
+            var orgID = (int)Session["orgID"];
+            organ = db.Organizations.Where(org => org.Id == orgID).Include(org => org.User).SingleOrDefault();
+
+
+        }
+    }
+    else
+    {
+        var orgID = (int)Session["orgID"];
+        organ = db.Organizations.Where(org => org.Id == orgID).Include(org => org.User).SingleOrDefault();
+
+
+    }
+
+    var LoggedInuser = (RC.Models.User)Session["LoggedInUser"];
+
+}
+   
+         
+
+
+
+<aside class="main-sidebar" style="position: fixed;top: 57px;padding-top: 0px;z-index: 1">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+
+            <div class="pull-left image">
+                <img src="~/Content/img/OrganizationsProfilePics/@organ.User.imageUrl" class="img-circle" alt="User Image" />
+            </div>
+            <div class="pull-left info">
+                <p style="margin-bottom:-2px;font-weight:bold;">@organ.orgnizationName</p>
+                <a href="#">
+                    <i class="fa fa-circle text-success"></i> Online
+                </a>
+            </div>
+        </div>
+        <!-- search form -->
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <li class="header">MAIN NAVIGATION</li>
+            <li class="treeview">
+                <a href="@Url.Action("Index","Organization")">
+                    <i class="fa fa-home"></i> <span>Home</span>
+
+                </a>
+            </li>
+            <li class="treeview">
+
+                <a href="@Url.Action("followers","Organization")">
+                    <i class="fa fa-files-o"></i>
+                    <span>Followers</span>
+
+                </a>
+
+            </li>
+            <li>
+                <a href="@Url.Action("getInsights","Organization")">
+                    <i class="fa fa-th"></i> <span>Insights</span>
+
+                </a>
+            </li>
+
+            <li class="treeview">
+                <a href="@Url.Action("Reviews","Organization")">
+                    <i class="fa fa-pie-chart"></i>
+                    <span>Reviews</span>
+
+                </a>
+
+            </li>
+            <li class="treeview">
+                <a href="@Url.Action("promotePost","Organization")">
+                    <i class="fa fa-laptop"></i>
+                    <span>Promoted Posts</span>
+
+                </a>
+
+            </li>
+
+
+            @if (Convert.ToInt32(Session["LoginUserTypeId"]) == 2)
+            {
+                <li class="treeview">
+                    <a href="@Url.Action("Search","Organization")">
+                        <i class="fa fa-laptop"></i>
+                        <span>Launch Comparison</span>
+
+                    </a>
+
+                </li>
+               
+                @*@Html.ActionLink("Launch Comparison", "Search", "Organization", new { @class = "btn btn-success", @style = "width:100%;margin-top:10px;" })*@
+
+            }
+
+
+
+    </section>
+    <!-- /.sidebar -->
+</aside>
+
+

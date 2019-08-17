@@ -1,0 +1,524 @@
+﻿
+@{
+    ViewBag.Title = "SignUpEditForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Content/sign-up-org.css" rel="stylesheet" type="text/css" media="screen" runat="server" />
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .form-group .radioo input {
+            width: 40px;
+            display: inline;
+        }
+
+        .imagePreview {
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            background-position: center center;
+            background: url(http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
+            background-color: #fff;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            // box-shadow: 0px -3px 6px 2px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            display: block;
+            border-radius: 0px;
+            box-shadow: 0px 4px 6px 2px rgba(0,0,0,0.2);
+            margin margin-top: -5px;
+            width: 170px;
+            position: absolute;
+            bottom: 0px;
+            left: 22px;
+        }
+
+        .imgUp {
+            margin-bottom: 15px;
+        }
+
+        .del {
+            position: absolute;
+            top: 0px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            background-color: rgba(255,255,255,0.6);
+            cursor: pointer;
+        }
+
+        .imgAdd {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #4bd7ef;
+            color: #fff;
+            box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.2);
+            text-align: center;
+            line-height: 30px;
+            margin-top: 0px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        fieldset {
+            min-height: 400px;
+        }
+
+        form {
+            margin-bottom: 100px;
+        }
+
+       span.error_form {
+            color: red;
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+@{
+    ViewBag.Title = "SignUp_User";
+
+}
+@model RC.ViewModels.ClientUser
+<h2>SignUp_User</h2>
+
+@using (Html.BeginForm("Edituser", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form">
+
+
+
+
+        <ul class='progressBar'>
+            <li class='active'>Create your Account </li>
+            <li>Addtional information </li>
+            <li> Choose Profile Picture</li>
+        </ul>
+
+        <b>@ViewBag.text</b>
+
+        <!-- fieldsets -->
+        <fieldset>
+            <h2 class="fs-title">Create your account</h2>
+
+
+            <div class="row input-container">
+
+                @Html.EditorFor(model => model.client.firstName, new { htmlAttributes = new { @class = "", placeholder = "First Name" } })
+
+            </div>
+            <div class="row input-container">
+
+                @Html.EditorFor(model => model.client.lastName, new { htmlAttributes = new { @class = "", placeholder = "Last Name" } })
+
+            </div>
+
+
+            <div class="row input-container">
+
+                @Html.EditorFor(model => model.client.User.Username, new { htmlAttributes = new { @class = "", type = "text", id = "Username", name = "Username", placeholder = "Enter Username", onchange = "UserCheck()" } })
+                <span class="error_form" id="username_error_message"></span>
+                <p id="Status" />
+            </div>
+
+            <div class="row input-container">
+                <div class="col-xs-6 small-input">
+                    @Html.EditorFor(model => model.client.User.Password, new { htmlAttributes = new { @class = "", id = "form_password", placeholder = "Passowrd" } })
+                    <span class="error_form" id="password_error_message"></span>
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-xs-6 small-input">
+                    @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "", id = "form_retype_password", placeholder = "confirm password" } })
+                    <span class="error_form" id="retype_password_error_message"></span>
+                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+
+            <div class="row input-container">
+
+                @Html.EditorFor(model => model.client.User.Email, new { htmlAttributes = new { @class = "", id = "form_email", placeholder = " Email" } })
+
+                <span class="error_form" id="email_error_message"></span>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+            <input type="button" name="next" class="next action-button" value="Next" />
+
+        </fieldset>
+
+
+
+
+
+
+        <fieldset>
+
+            <h2 class="fs-title"> Addtional Information </h2>
+            <div class="row input-container">
+                <div class="col-md-12 small-input">
+                    @Html.DropDownListFor(model => model.client.cityId, new SelectList(Model.city, "Id", "Name"), new { htmlAttributes = new { @class = "", placeholder = "your city" } })
+                </div>
+            </div>
+
+
+
+            <div class="row input-container">
+
+                <p id="basicExample">
+                    @Html.EditorFor(model => model.client.dateOfBirth, new { htmlAttributes = new { @class = "datepicker", placeholder = "Date of birth" } })
+                </p>
+
+
+            </div>
+
+
+
+            <div class="row input-container">
+                <div class="col-xs-6 small-input">
+                    @Html.EditorFor(model => model.client.Age, new { htmlAttributes = new { @class = "", placeholder = "Age", type = "number" } })
+                </div>
+                <div class="col-xs-6 small-input">
+
+                    @Html.EditorFor(model => model.client.Address, new { htmlAttributes = new { @class = "", placeholder = "Address" } })
+                </div>
+
+            </div>
+            <div class="row input-container">
+
+                @Html.EditorFor(model => model.client.businessEmail, new { htmlAttributes = new { @class = "", placeholder = "Business Email" } })
+
+            </div>
+            <div class="form-group ">
+
+
+                <h3>Gender</h3>
+                <div class="radioo">
+
+
+                    @Html.RadioButtonFor(m => m.client.Gender, "Male", new { htmlAttributes = new { @class = "form-control " } }) male &nbsp;&nbsp;&nbsp;&nbsp;
+                    @Html.RadioButtonFor(m => m.client.Gender, "FeMale", new { htmlAttributes = new { @class = "form-control " } }) female
+
+                </div>
+            </div>
+
+
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <input type="button" name="next" class="next action-button" value="Next" />
+
+        </fieldset>
+
+
+        <fieldset>
+
+            <h2 class="fs-title">Choose Profile Picture</h2>
+
+
+
+
+
+            <div class="row">
+
+                <div class="col-md-12 imgUp">
+                    <div class="imagePreview" style="background-image:url('../../files/@Model.client.User.imageUrl ')">
+                        <label class="btn btn-primary">
+                            Upload
+                            <input type="file" name="ImageFile" class="uploadFile img" required value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;display:none; ">
+                        </label>
+                    </div>
+
+
+                </div>
+
+                <!-- col-2 -->
+
+
+            </div>
+
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <div class="form-group" style="display:inline">
+                <div class=" " style="display:inline">
+                    <input type="submit" name="submit" value="Submit" class="submit action-button" style="display:inline" />
+
+
+                </div>
+            </div>
+
+        </fieldset>
+
+
+
+
+
+
+
+
+
+
+    </div>
+}
+
+
+
+
+
+<link href="~/Content/style.css" rel="stylesheet" />
+<footer class="page-footer font-small blue main-footer" style="background-color:black; color:white;">
+    @*<div class="pull-right hidden-xs">
+            <b>Version</b> 2.3.8
+        </div>*@
+    <strong>Copyright &copy; 2014-2016 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights
+    reserved.
+</footer>
+
+
+
+
+
+
+
+
+
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+
+
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+<script>
+
+
+    var ImageObject = [];
+
+
+    $(document).ready(function () {
+        $(document).on("click", "i.del", function () {
+            $(this).parent().remove();
+
+
+        });
+
+
+        $('#cancel').on("click", function () {
+            ImageObject.splice(0, ImageObject.length);
+        });
+
+            $(function () {
+                $(document).on("change", ".uploadFile", function () {
+                    var uploadFile = $(this);
+
+
+                    var files = !!this.files ? this.files : [];
+
+                    if (!files.length || !window.FileReader)
+                        return; // no file selected, or no FileReader support
+
+
+                    if (/^image/.test(files[0].type)) { // only image file
+                        var reader = new FileReader(); // instance of the FileReader
+                        reader.readAsDataURL(files[0]); // read the local file
+
+                        reader.onloadend = function () {
+                            // set image data as background of div
+                            //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                            uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+
+                        }
+                    }
+
+                });
+            });
+
+
+
+
+
+
+
+
+
+    });
+
+</script>
+
+
+<script>
+
+      $( function() {
+      $(".datepicker").datepicker({
+          dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true, yearRange: "2010:2015"
+      , minDate: new Date(2010, 0, 1), maxDate: new Date(2018, 0, 1)
+      });
+  } );
+</script>
+
+
+<script>
+    function UserCheck() {
+        $("#Status").html("Checking...");
+        $.post("@Url.Action("CheckUsernameAvailability", "User")",
+            {
+                userdata: $("#Username").val()
+            },
+        function (data) {
+            if (data == 0) {
+                $("#Status").html('<font color="Green">Available !. you can take it.</font>');
+                $("#Username").css("border-color", "Green");
+
+            }
+            else {
+                $("#Status").html('<font color="Red">That name is taken.Try Another.</font>');
+                $("#Username").css("border-color", "Red");
+            }
+        });
+    }</script>
+
+
+<script>
+
+    $(function () {
+
+        $("#username_error_message").hide();
+        $("#password_error_message").hide();
+        $("#retype_password_error_message").hide();
+        $("#email_error_message").hide();
+
+        var error_username = false;
+        var error_password = false;
+        var error_retype_password = false;
+        var error_email = false;
+
+        $("#Username").focusout(function () {
+
+            check_username();
+
+        });
+
+        $("#form_password").focusout(function () {
+
+            check_password();
+
+        });
+
+        $("#form_retype_password").focusout(function () {
+
+            check_retype_password();
+
+        });
+
+        $("#form_email").focusout(function () {
+
+            check_email();
+
+        });
+
+        function check_username() {
+
+            var username_length = $("#Username").val().length;
+
+            if (username_length < 5 || username_length > 20) {
+                $("#username_error_message").html("Should be between 5-20 characters");
+                $("#username_error_message").show();
+                error_username = true;
+            } else {
+                $("#username_error_message").hide();
+            }
+
+        }
+
+        function check_password() {
+
+            var password_length = $("#form_password").val().length;
+
+            if (password_length < 8) {
+                $("#password_error_message").html("At least 8 characters");
+                $("#password_error_message").show();
+               // $("#password_error_message").css("border-color","red");
+                error_password = true;
+            } else {
+                $("#password_error_message").hide();
+            }
+
+        }
+
+        function check_retype_password() {
+
+            var password = $("#form_password").val();
+            var retype_password = $("#form_retype_password").val();
+
+            if (password != retype_password) {
+                $("#retype_password_error_message").html("Passwords don't match");
+                $("#retype_password_error_message").show();
+                error_retype_password = true;
+            } else {
+                $("#retype_password_error_message").hide();
+            }
+
+        }
+
+
+
+        function check_email() {
+
+            var pattern = new RegExp(/^[+a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i);
+
+            if (pattern.test($("#form_email").val())) {
+                $("#email_error_message").hide();
+            } else {
+                $("#email_error_message").html("Invalid email address");
+                $("#email_error_message").show();
+                error_email = true;
+            }
+
+        }
+
+
+
+        $("#registration_form").submit(function () {
+
+            error_username = false;
+            error_password = false;
+            error_retype_password = false;
+            error_email = false;
+
+            check_username();
+            check_password();
+            check_retype_password();
+            check_email();
+
+            if (error_username == false && error_password == false && error_retype_password == false && error_email == false) {
+                return true;
+            } else {
+                return false;
+            }
+
+        });
+
+    });
+</script>

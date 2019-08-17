@@ -1,0 +1,237 @@
+﻿@model IEnumerable<RC.Models.Organization>
+@*@model RC.ViewModels.test*@
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+@*@foreach (var org in Model.Organizations)
+{
+    foreach (var sec in Model.Sector)
+    {
+        if(org.Category.sectorId == sec.Id)
+        {
+            <h2>Organization Name: @org.orgnizationName</h2>
+            <h2>Sector: @sec.Name</h2>
+        }
+    }
+}*@
+
+  <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">New Organizations</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+
+                    <table id="newOrganizations" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Organization Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var organization in Model)
+                            {
+
+
+                                <tr>
+                                    <td>
+
+                                        <div class='box box-solid collapsed-box'>
+                                            <div class='box-header'>
+                                                <h3 class='box-title'>
+                                                    <img src="~/Content/img/OrganizationsProfilePics/@organization.User.imageUrl" class="img-circle"  style="display:inline-block;margin-top:13px;width:48px;height:48px" />
+
+                                                    <span style="font-weight:bolder;color:darkslategray">@organization.orgnizationName</span>
+                                                </h3>
+                                                <div class='box-tools pull-right'>
+                                                    <button class='btn btn-default btn-sm' data-widget='collapse'><i class='fa fa-plus'></i></button>
+                                                    <button class="btn btn-default btn-sm delete-organization" organization-id=@organization.Id><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                            <div style="display: none;" class="box-body">
+                                               
+                                             
+                            
+                                                <table class="table table-bordered table-condensed table-hover table-responsive">
+
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="font-weight:bolder;font-size:20px;color:dimgray">@organization.orgnizationName Headers</th>
+                                                            <th style="font-weight:bolder;font-size:20px;color:dimgray">Description</th>
+                                                        </tr>
+
+
+                                                    </thead>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i>  Organization ID</td>
+                                                        <td>@organization.Id</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i>  Organization Name</td>
+                                                        <td>@organization.orgnizationName</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i> Owner First Name</td>
+                                                        <td>@organization.ownerFirstName</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i> Owner Last Name</td>
+                                                        <td>@organization.ownerLastName</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Username</td>
+                                                        <td>@organization.User.Username</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Owner Personal Email</td>
+                                                        <td>@organization.User.Email</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Owner Business Email</td>
+                                                        <td>@organization.businessEmail</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Website</td>
+                                                        <td><a style="color:darkslategray" href="@organization.websiteUrl">@organization.websiteUrl</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization First Social Link</td>
+                                                        <td><a style="color:darkslategray" href="@organization.socialLink_1">@organization.socialLink_1</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i> Organization Second Social Link</td>
+                                                        <td><a style="color:darkslategray" href="@organization.socialLink_2">@organization.socialLink_2</a></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Fax </td>
+                                                        <td>@organization.Fax</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Registered At </td>
+                                                        <td>@organization.User.JoniedAt</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization  Establishment Date </td>
+                                                        <td>@organization.EstablishOrg.ToShortDateString()</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization City </td>
+                                                        <td>@organization.City.Name</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Category </td>
+                                                        <td>@organization.Category.Name</td>
+                                                    </tr>
+
+
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Price Range</td>
+                                                        <td>@organization.PriceRange.Name</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Sector</td>
+                                                        <td>@organization.Category.Sector.Name</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Brief Description</td>
+                                                        <td>@organization.Description</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Admin Decision</td>
+
+                                                        <td>
+                                                            <button class='btn btn-success accept-organization' organization-id="@organization.Id " style="margin 13px 12px 12px 10px;">Accept</button>
+                                                            <button class='btn btn-danger delete-organization' organization-id="@organization.Id " style="margin 13px 12px 12px 10px;">Refuse</button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+
+                                                
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                                
+
+
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+@section scripts
+{
+<script>
+
+    $(document).ready(function () {
+
+        var table = $("#newOrganizations").DataTable({
+            //ajax: {
+            //    url: "/api/newOrganizations",
+            //    dataSrc: ""
+            //},
+            //columns: [
+            //          {
+            //              data: "orgnizationName",
+            //              render: function (data, type, Organization) {
+            //                  return "<div class='box box-solid collapsed-box'> <div class='box-header'> <h3 class='box-title'>" + data + "</h3> <div class='box-tools pull-right'> <button class='btn btn-default btn-sm' data-widget='collapse'><i class='fa fa-plus'></i></button> <button  class='btn btn-default btn-sm delete-organization'organization-id=" + Organization.Id + "><i class='fa fa-times'></i></button> </div> </div> <div style='display: none;' class='box-body'><p>" + Organization.ownerFirstName + "</p>" +
+            //                      "<button  class='btn btn-success accept-organization'organization-id=" + Organization.Id + " style=' margin: 13px 12px 12px 10px;'>Accept</button>" +
+            //                      "<button  class='btn btn-danger delete-organization'organization-id=" + Organization.Id + " style=' margin: 13px 12px 12px 10px;'>Refuse</button>" +
+            //                      "</div> </div>";
+            //              }
+            //          }
+            //]
+        });
+
+        $("#newOrganizations").on("click", ".delete-organization", function () {
+            var button = $(this);
+           // bootbox.confirm("Are you sure you want to refuse this customer?", function (result) {
+               // if (result) {
+
+                    $.ajax({
+                        url: "/api/newOrganizations/" + button.attr("organization-id"),
+                        data: { "": 'Del' },
+                        method: "PUT",
+                        success: function () {
+                            table.row(button.parents("tr")).remove().draw();
+                        }
+                    });
+               // }
+                   // });
+                
+
+        });
+
+        $("#newOrganizations").on("click", ".accept-organization", function () {
+            var button = $(this);
+            
+            $.ajax({
+                url: "/api/newOrganizations/" + button.attr("organization-id"),
+                data: { "": 'Accept' },
+                method: "PUT",
+                success: function () {
+                    table.row(button.parents("tr")).remove().draw();
+                }
+            });
+        });
+    });
+    //install-package bootbox -version:4.3.0
+</script>
+}

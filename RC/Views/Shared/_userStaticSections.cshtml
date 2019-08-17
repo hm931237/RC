@@ -1,0 +1,86 @@
+﻿@using RC.Models
+@using System.Data.Entity
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    Layout = null;
+    var userID = (int)Session["UserId"];
+
+    var user = db.Users.Where(u => u.Id == userID).SingleOrDefault();
+    var usertype = user.UserTypeId;
+    var client = new Client();
+    var followings = 0;
+
+    if (usertype == 2)
+    {
+        client = db.Clients.Where(o => o.userId == userID).Include(o => o.User).SingleOrDefault();
+
+         followings = db.Subscribers.Where(x => x.clientId == client.Id).Count();
+
+    }
+
+}
+
+    
+
+
+    <!-- Profile Image -->  
+    <div class="box box-primary">
+        <div class="box-body box-profile">
+            <img class="profile-user-img img-bordered-sm img-responsive img-circle organization-img" src="~/files/@client.User.imageUrl" alt="User profile picture">
+
+            <h3 class="profile-username text-center">
+                @client.firstName
+                
+                @{
+
+                    var org = db.Organizations.Where(x => x.UsernameVerification == user.Username).FirstOrDefault();
+                    if (org != null)
+                    {
+
+
+                        <i class="fa fa-check-circle" style="font-size: 20px;color: cornflowerblue;"></i>
+
+                    }
+
+                }
+            </h3>
+
+            <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                    <b>Following</b> <a class="pull-right"><i class="label label-primary" style="font-size: 15px">@followings</i></a>
+                </li>
+                <lis class="list-group-item">
+                    <b>Points</b> <a class="pull-right"><i class="label label-primary pointload" style="font-size: 15px">@client.Points</i></a>
+                </lis>
+            </ul>
+            @Html.ActionLink("Edit", "Edit", "User", new { id = @client.Id }, new { @class = "btn btn-info", @style = "width:100%;text-align:center;" })
+            
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+    <!-- About Me Box -->
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">About Me</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+         
+            <strong><i class="fas fa-at margin-r-5"></i> Username</strong>
+            <p class="text-muted">@client.User.Username</p>
+            
+            <strong><i class="fas fa-envelope margin-r-5"></i> business Email</strong>
+            <p>@client.User.Email</p>
+
+            <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+            <p class="text-muted">@client.Address</p>
+
+            <strong><i class="fas fa-birthday-cake margin-r-5"></i> Age</strong>
+            <p>@client.Age years old</p>
+
+           
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->

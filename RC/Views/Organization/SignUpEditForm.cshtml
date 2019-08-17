@@ -1,0 +1,1557 @@
+﻿@model RC.ViewModels.OrganizationEditViewModel
+
+@{
+    ViewBag.Title = "SignUp_Org";
+}
+<head>
+    <link href="~/Content/sign-up-org.css" rel="stylesheet" type="text/css" media="screen" runat="server" />
+</head>
+
+<div class="form">
+    @using (Html.BeginForm("Save", "Organization", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <ul class='progressBar'>
+            <li class='active'>Autentication Data</li>
+            <li>Organization Data</li>
+            <li>Choose Profile Picture</li>
+            <li>Organization Factors</li>
+            <li> Description and worktime</li>
+        </ul>
+
+    <!-- First fieldset -->
+
+        <fieldset>
+            <h2 class="fs-title">Your Personal Data</h2>
+
+            <div class="row input-container">
+                @Html.TextBoxFor(o => o.Organization.User.Username, htmlAttributes: new { @name = "username", @placeholder = "Username", id = "username_Field", onfocusout = "UserCheck()" })
+                <span class="error" style="font-weight:bolder;color:red;" id="username"></span>
+            </div>
+
+
+
+            <div class="row input-container">
+
+                @Html.TextBoxFor(o => o.Password, htmlAttributes: new { @placeholder = "password", @name = "password", id = "password_Field" })
+                <span class="error" style="font-weight:bolder;color:red;" id="password"></span>
+            </div>
+
+
+            <div class="row input-container">
+
+                @Html.TextBoxFor(o => o.ConfirmPassword, htmlAttributes: new { @placeholder = "Confirm Password", @name = "password2", id = "ConfirmPassword_Field" })
+                <span class="error" style="font-weight:bolder;color:red;" id="Confirmpassword"></span>
+
+            </div>
+
+            <div class="row input-container">
+
+                @Html.TextBoxFor(o => o.Organization.User.Email, htmlAttributes: new { @placeholder = "Personal Email", id = "PersonalEmail_Field", onfocusout = "PersonalEmail()" })
+                <span class="error" style="font-weight:bolder;color:red;display: block;margin-bottom: 10px;" id="personalEmail"></span>
+
+            </div>
+
+            <div class="row input-container">
+                @Html.TextBoxFor(o => o.Organization.UsernameVerification, htmlAttributes: new { @name = "username", @placeholder = "Username Verification", id = "usernameVerification_Field", onfocusout = "UserVerifyCheck()" })
+                <span class="error" style="font-weight:bolder;color:red;" id="usernameVerification"></span>
+            </div>
+
+            <div class="row input-container">
+                @Html.TextAreaFor(o => o.Organization.Description, htmlAttributes: new { id = "Description_Field", @rows = "5", @name = "message", @placeholder = "Express your business briefly...", @class = "form-control", @style = "color:#333;border:2px solid #DDD;border-radius:3px;max-width:353px;margin-left:16px;" })
+                <span class="error" style="font-weight:bolder;color:red;" id="Description"></span>
+            </div>
+            <input style="width:500px;" type="button" name="next" class="next action-button" value="Next" id="Description" />
+        </fieldset>
+
+
+
+    <!-- Second fieldset -->
+
+
+        <fieldset>
+            <h2 class="fs-title">Your Organization Data</h2>
+
+
+            <div class="row input-container">
+                <div class="col-xs-6 small-input">
+
+                    @Html.TextBoxFor(o => o.Organization.socialLink_1, htmlAttributes: new { @placeholder = "First Social Link", id = "social_Field" })
+                    @Html.ValidationMessageFor(o => o.Organization.socialLink_1)
+
+                    <span class="error" style="font-weight:bolder;color:red;" id="social"></span>
+                </div>
+
+                <div class="col-xs-6 small-input">
+                    @Html.TextBoxFor(o => o.Organization.socialLink_2, htmlAttributes: new { @placeholder = "Second Social Link (*optional)", id = "social2_Field" })
+                    <span class="error" style="font-weight:bolder;color:red;" id="social2"></span>
+                </div>
+
+            </div>
+
+            <div class="row input-container">
+                <div class="col-xs-6 small-input">
+                    @Html.TextBoxFor(o => o.Organization.Fax, htmlAttributes: new { @placeholder = "Fax", id = "fax_Field" })
+                    @Html.ValidationMessageFor(o => o.Organization.Fax)
+                    <span class="error" style="font-weight:bolder;color:red;" id="Fax"></span>
+                </div>
+
+                <div class="col-xs-6 small-input">
+                    @Html.TextBoxFor(o => o.phone, htmlAttributes: new { @placeholder = "Phone", id = "phone_Field" })
+
+                    <span class="error" style="font-weight:bolder;color:red;" id="phoneNumber"></span>
+
+                </div>
+            </div>
+
+            <div class="row input-container">
+                @Html.TextBoxFor(o => o.Organization.businessEmail, htmlAttributes: new { @placeholder = "Business Email", id = "BusinessEmail_Field", onfocusout = "BusinessEmail()" })
+                <span class="error" style="font-weight:bolder;color:red;" id="BusinessEmail"></span>
+
+
+            </div>
+
+
+            <div class="row input-container">
+                @Html.TextBoxFor(o => o.Organization.EstablishOrg, htmlAttributes: new { id = "establishField", @placeholder = "Establishment Date " })
+
+                <span class="error" style="font-weight:bolder;color:red;" id="establish"></span>
+            </div>
+
+
+
+            <div class="row input-container">
+                @Html.TextBoxFor(o => o.Organization.websiteUrl, htmlAttributes: new { @placeholder = "Website URL", id = "website_Field" })
+
+                <span class="error" style="font-weight:bolder;color:red;" id="website"></span>
+            </div>
+
+            <div class="row input-container">
+                <p>Choose your Price Range</p>
+                @Html.DropDownListFor(o => o.Organization.PriceRangeId,
+                    new SelectList(Model.PriceRanges, "Id", "Name"), "Select Your Price Range",
+                    new { @id = "price_Field", @style = "width:350px;padding:5px;border-radius: 3px;border: 2px solid #ccc;" })
+                <span class="error" style="font-weight:bolder;color:red;display:block;" id="priceRange"></span>
+
+            </div>
+
+
+            <div class="row input-container">
+                <p>Select your City</p>
+                @Html.DropDownListFor(o => o.Organization.cityId,
+           new SelectList(Model.Cities, "Id", "Name"), "Select Your City",
+           new { @style = "width:350px;padding:5px;border-radius: 3px;border: 2px solid #ccc;", id = "city_Field" })
+                <span class="error" style="font-weight:bolder;color:red;display:block;" id="city"></span>
+
+            </div>
+            <p>Choose Your Sector Please</p>
+
+
+            <div class="row input-container">
+
+                <div id="sectorDiv">
+                    <select id="sectorDropDownList" style="width:350px;padding:5px;border-radius: 3px;border: 2px solid #ccc;"></select>
+                    <span class="error" style="font-weight:bolder;color:red;display:block;" id="sector"></span>
+
+
+                </div>
+            </div>
+
+            @*@Html.DropDownListFor("SectorID",
+                new SelectList(Model.Sectors, "Id", "Name"), "Select Your Sector",
+                new { id = "SectorId", @style = "width: 350px;padding:5px;border-radius: 3px;border: 2px solid #ccc;" })*@
+
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <input type="button" name="next" class="next action-button" value="Next" />
+        </fieldset>
+
+         <!-- Third fieldset -->
+
+        <!--Second FieldSet-->
+        <fieldset>
+            <h2 class="fs-title">Your Organization Data (Step 2)</h2>
+
+            <div class="row input-container">
+                @Html.TextBoxFor(o => o.Organization.orgnizationName, htmlAttributes: new { @placeholder = "Organization Name", id = "orgName_Field", name = "orgName", onfocusout = "orgName()" })
+                <span class="error" style="font-weight:bolder;color:red" id="org_Name"></span>
+            </div>
+            <div class="row input-container">
+
+                @Html.TextBoxFor(o => o.Organization.ownerFirstName, htmlAttributes: new { @placeholder = "Owner First Name", id = "firstName_Field", name = "firstname" })
+
+                <span class="error" style="font-weight:bolder;color:red;" id="owner_FirstName"></span>
+            </div>
+            <div class="row input-container">
+
+                @Html.TextBoxFor(o => o.Organization.ownerLastName, htmlAttributes: new { @placeholder = "Owner Last Name", id = "lastName_Field" })
+
+                <span class="error" style="font-weight:bolder;color:red;" id="owner_LastName"></span>
+
+
+            </div>
+
+
+            <div class="row">
+
+
+                <div class="col-md-12">
+                    <input type="file" id="pic_Field" value="@Model.Organization.User.imageUrl" onchange="showImage.call(this)" name="upload" accept="image/*">
+                    @*<input type="file" id="pic_Field" onchange="showImage.call(this)" name="upload" accept="image/*">*@
+                    <span class="error" style="font-weight:bolder;color:red;" id="pic"></span>
+                </div>
+
+
+                <div class="thumbnail col-md-12"
+                     style="margin-left:120px;width:210px;height:210px;border-radius:50%;overflow:hidden;background:url(http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);height:180px; background-position: center center;background-size: cover;background-repeat:no-repeat;">
+
+                    <img id="image" name="image" onload="ImageSize.call(this)" src="~/Content/img/OrganizationsProfilePics/@Model.Organization.User.imageUrl" />
+
+                </div>
+
+
+            </div>
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+
+            <input type="button" name="next" class="next action-button" value="Next" />
+
+        </fieldset>
+
+
+        <fieldset>
+            <h2 class="fs-title categoreyHeadLine">Organization Category</h2>
+
+            @*@Html.DropDownListFor(o => o.Organization.categoryId,
+                new SelectList(Model.Categories, "Id", "Name"), "Select Your Category",
+                new { id = "categoryId", @style = "width: 350px;padding:5px;border-radius: 3px;border: 2px solid #ccc;" })*@
+
+
+            <select style="width:350px;padding:5px;border-radius:3px;border: 2px solid #ccc;">
+                <option selected value="@Model.Category.Id">@Model.Category.Name</option>
+            </select>
+            <span class="error" style="font-weight:bolder;color:red;" id="category"></span>
+
+
+            <h2 class="fs-title">Your Chosen Factors</h2>
+            <div class="MainFactors" id="factors">
+
+                @foreach (var factor in Model.orgFactors)
+                {
+                    <div class='row factors'>
+                        <div class='col-md-3'>
+                            <div class='checkbox'>
+                                <label><input type='checkbox' id='blankCheckbox' value='option1' checked disabled /></label>
+                            </div>
+                        </div>
+                        <div class='col-md-9 factor'>@factor.Factor.Name</div>
+                    </div>
+
+
+                }
+
+            </div>
+
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <input type="button" name="next" class="next action-button" value="Next" />
+
+
+
+
+        </fieldset>
+
+    <!-- Third fieldset -->
+        <fieldset>
+
+            <h2 class="fs-title"> worktime</h2>
+
+            @{
+                var myList = (List<RC.Models.WorkTime>)ViewData["WorkTimes"];
+                var count = 1;
+            }
+
+            @*@foreach (var x in myList)
+                {
+
+                    <div class="row">
+                        <div class="col-md-1">
+                            <div class="day">
+                                <input style="margin:5px auto;width:70px;font-weight:bold;font-size:9.4px;" type="text" value="@x.Day" readonly name="Day_@count" />
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-11" id="worktimeID">
+                            <input style="width:70px;margin:4px 2px !important;font-weight:bolder;" type="text" value="@x.From.ToShortTimeString()" name="From_@count" class="time" placeholder="00:00" />
+                            to
+                            <input style="width:70px;margin:4px 2px !important;font-weight:bolder;" type="text" value="@x.To.ToShortTimeString()" name="To_@count" class="time" placeholder="00:00" />
+                            <input style="display:inline;width:12px;" type="checkbox" id="checked" /><label>Day Off ?</label>
+
+                        </div>
+                    </div>
+                    count++;
+
+                }*@
+            @{
+
+
+                List<string> Days = new List<string>
+                        {
+                            "Sunday",
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                            "Saturday",
+                        };
+                count = 1;
+                //var listcount = 0;
+                bool foundflag = false;
+                int indexinarray = -1;
+                foreach (var item in Days)
+                {
+                    for (int i = 0; i < myList.Count; i++)
+                    {
+                        if (myList[i].Day == item)
+                        {
+
+                            foundflag = true;
+                            indexinarray = i;
+                            break;
+                        }
+                    }
+                    if (foundflag)
+                    {
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="day">
+                                    <input style="margin:5px auto;width:70px;font-weight:bold;font-size:9.4px;" type="text" value="@myList[indexinarray].Day" readonly name="Day_@count" />
+                                </div>
+                            </div>
+                            <div class="col-md-11" id="worktimeID">
+                                <input style="width:70px;margin:4px 2px !important" type="text" value="@myList[indexinarray].From.ToShortTimeString()" name="From_@count" class="time" placeholder="00:00" id="DayFrom_@count" onfocusout="WorkTimes();WorkingAllTimes();" />
+                                To
+                                <input style="width:70px;margin:4px 2px !important" type="text" value="@myList[indexinarray].To.ToShortTimeString()" name="To_@count" class="time" placeholder="00:00" id="DayTo_@count" onfocusout="WorkTimes();WorkingAllTimes();" />
+                                <input class="checked_@count" style="display:inline;width:12px;" type="checkbox" id="checked" onclick="WorkTimes();WorkingAllTimes();" /><label>Day Off ?</label>
+                                <span class="error" style="font-weight:bolder;color:red;display:block;margin:2px 0;margin-right:39px;" id="worktimes_@count"></span>
+
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-1">
+                                <div class="day">
+                                    <input style="margin:5px auto;width:70px;font-weight:bold;font-size:9.4px;" type="text" value="@item" readonly name="Day_@count" />
+                                </div>
+                            </div>
+                            <div class="col-md-11" id="worktimeID">
+                                <input style="width:70px;margin:4px 2px !important" type="text" name="From_@count" class="time" placeholder="00:00" id="DayFrom_@count" />
+                                To
+                                <input style="width:70px;margin:4px 2px !important" type="text" name="To_@count" class="time" placeholder="00:00" id="DayTo_@count" />
+                                <input class="checked_@count" style="display:inline;width:12px;" type="checkbox" id="checkedHoliday" checked onload="CheckingWorktimes.call(this)" /><label>Day Off ?</label>
+
+                            </div>
+                        </div>
+                    }
+
+                    count++;
+                    foundflag = false;
+                }
+            }
+
+
+
+            <div style="display:none;width:100%;border:2px solid red;text-align: left;padding:10px;color: red;margin-top:10px;" id="ErrrosList">
+                <i class="fa fa-exclamation-triangle"> Please Check Missing Required Fields</i>
+            </div>
+            @Html.HiddenFor(o => o.Organization.Id)
+            @Html.HiddenFor(o => o.Organization.userId)
+
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <input type="submit" name="submit" id="submit" class="submit action-button" value="Submit" />
+        </fieldset>
+                }
+</div>
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script>
+
+
+    $(document).ready(function () {
+
+        //Validations
+
+        //OrganizationName Field
+        //$("#orgName_Field").focusout(function () {
+        //    var length = $("#orgName_Field").val().length;
+        //   // console.log(length);
+        //    if (length == 0) {
+        //        $("#org_Name").html("Organization Name field is required");
+        //        $("#org_Name").show();
+        //        $("#submit").attr('disabled',true);
+
+        //    }
+        //    else if ($("#orgName_Field").val().match(/^\d+$/)) {
+        //        $("#org_Name").html("Organization Name field should be set of characters");
+        //        $("#org_Name").show();
+        //        $("#submit").attr('disabled', true);
+
+        //    }
+        //    else {
+
+        //        ($("#org_Name").hide());
+
+
+        //        EnableSubmit();
+
+        //    }
+
+        //});
+
+
+        //Username field
+        //$("#username_Field").focusout(function () {
+
+        //    var length = $("#username_Field").val().length;
+
+
+        //    if (length == 0) {
+
+        //        $("#username").html("username field is required");
+        //        $("#username").show();
+        //        $("#submit").attr('disabled', true);
+        //    }
+
+        //    else if (length < 5 || length > 20) {
+        //        $("#username").html("username should be between 5-20 characters");
+        //        $("#username").show();
+        //        $("#submit").attr('disabled', true);
+        //    }
+
+        //    else {
+
+        //        ($("#username").hide());
+        //        EnableSubmit();
+
+        //    }
+
+
+        //});
+
+
+        //Owner firstname
+
+        $("#firstName_Field").focusout(function () {
+            var length = $("#firstName_Field").val().length;
+            if (length == 0) {
+                $("#owner_FirstName").html("Owner FirstName field is required");
+                $("#owner_FirstName").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+
+
+            else if ($("#firstName_Field").val().match(/^\d+$/)) {
+                $("#owner_FirstName").html("Owner FirstName field should be set of characters");
+                $("#owner_FirstName").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+
+
+                //else if ($("#firstName_Field").val().match(/^\w+$/)) {
+                //    //alert();
+                //    $("#owner_FirstName").html("Owner FirstName field should be only set of characters");
+                //    $("#owner_FirstName").show();
+                //    $("#submit").attr('disabled', true);
+
+                //}
+
+
+            else {
+
+                ($("#owner_FirstName").hide());
+
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+
+        });
+
+
+
+        //owner lastname field
+        $("#lastName_Field").focusout(function () {
+            var length = $("#lastName_Field").val().length;
+            if (length == 0) {
+                $("#owner_LastName").html("Owner LastName field is required");
+                $("#owner_LastName").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else if ($("#lastName_Field").val().match(/^\d+$/)) {
+                $("#owner_LastName").html("Owner FirstName field should be set of characters");
+                $("#owner_LastName").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+
+                ($("#owner_LastName").hide());
+                EnableSubmit();
+                WorkingAllTimes();
+            }
+
+        });
+
+
+
+        //Password
+
+
+
+        var password = "";
+        var confirmPassword = $("#ConfirmPassword_Field").val();
+
+        $("#password_Field").focusout(function () {
+            var length = $("#password_Field").val().length;
+            password = $("#password_Field").val();
+            if (length == 0) {
+
+                $("#password").html("Password field is required");
+                $("#password").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+
+            }
+            else if (length < 8) {
+                $("#password").html("Password should be at least 8 characters");
+                $("#password").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else if (confirmPassword != $("#password_Field").val()) {
+             //   alert(confirmPassword);
+
+                $("#password").html("Confirm Password does not match your password");
+                $("#password").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+
+                $("#password").hide();
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+        });
+
+
+
+        //Confirm Password
+        $("#ConfirmPassword_Field").focusout(function () {
+            var length = $("#ConfirmPassword_Field").val().length;
+            var value = $("#ConfirmPassword_Field").val();
+            // alert(password);
+
+            // alert(value);
+            if (length == 0) {
+                $("#Confirmpassword").html("Confirm Password field is required");
+                $("#Confirmpassword").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+
+
+            else if (value != password) {
+                //alert();
+                $("#Confirmpassword").html("Confirm Password does not match your password");
+                $("#Confirmpassword").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+                confirmPassword = $("#ConfirmPassword").val();
+                $("#Confirmpassword").hide();
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+        });
+
+
+        ////Personal Email
+        //$("#PersonalEmail_Field").focusout(function () {
+        //    var length = $("#PersonalEmail_Field").val().length;
+        //    if (length == 0) {
+        //        $("#personalEmail").html("Persona Email field is required");
+        //        $("#personalEmail").show();
+        //        $("#submit").attr('disabled', true);
+
+        //    }
+        //    else if (!$("#PersonalEmail_Field").val().match(/^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+        //        $("#personalEmail").html("Not a Correct Format for Email");
+        //        $("#personalEmail").show();
+        //        $("#submit").attr('disabled', true);
+
+        //    }
+        //    else {
+
+        //        ($("#personalEmail").hide());
+        //        EnableSubmit();
+        //    }
+
+        //});
+
+        //Description Field
+        $("#Description_Field").focusout(function () {
+
+            var length = $("#Description_Field").val().length;
+
+            if (length == 0) {
+                $("#Description").html("Description field is required");
+                $("#Description").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else if (length < 50) {
+                $("#Description").html("Description should be at least 50 characters");
+                $("#Description").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+
+                ($("#Description").hide());
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+        });
+
+
+
+
+        //Picture Field
+        $("#pic_Field").focusout(function () {
+
+            //  var length = $("#sectorDropDownList").val().length;
+            var val = $("#pic_Field").val();
+            //console.log(val);
+
+            if (val == '') {
+                // console.log(val);
+                $("#pic").html("Profile Picture field is required");
+                $("#pic").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+
+            else {
+
+                ($("#pic").hide());
+                EnableSubmit();
+
+                WorkingAllTimes();
+
+            }
+
+        });
+
+
+        //First Social Link
+        $("#social_Field").focusout(function () {
+            var length = $("#social_Field").val().length;
+            var url = $("#social_Field").val();
+            var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
+
+            if (length == 0) {
+                $("#social").html("First Social Link field is required");
+                $("#social").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+
+            }
+            else if (!url.match(pattern)) {
+                $("#social").html("This is not a valid Social Link");
+                $("#social").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+
+                ($("#social").hide());
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+        });
+
+
+
+        //Second Social Link
+        $("#social2_Field").focusout(function () {
+            var length = $("#social2_Field").val().length;
+            var url = $("#social2_Field").val();
+            var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
+
+
+            if (length == 0) {
+
+                $("#social2").hide();
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else if (!url.match(pattern)) {
+                $("#social2").html("This is not a valid Social Link");
+                $("#social2").show();
+                $("#submit").attr('disabled', true);
+                //EnableSubmit();
+                //WorkingAllTimes();
+
+            }
+            else {
+
+                $("#social2").hide();
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+        });
+
+
+        //Fax
+        $("#fax_Field").focusout(function () {
+            var length = $("#fax_Field").val().length;
+            if (length == 0) {
+                $("#Fax").html("Fax field is required");
+                $("#Fax").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+
+            }
+
+            else if (!($("#fax_Field").val().match(/^\d+$/))) {
+                $("#Fax").html("Fax field should be numbers only");
+                $("#Fax").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+
+
+            }
+
+            else {
+
+                ($("#Fax").hide());
+                EnableSubmit();
+
+                WorkingAllTimes();
+
+            }
+
+        });
+
+        //Business Email
+
+        //$("#BusinessEmail_Field").focusout(function () {
+        //    var length = $("#BusinessEmail_Field").val().length;
+        //    if (length == 0) {
+        //        $("#BusinessEmail").html("Persona Email field is required");
+        //        $("#BusinessEmail").show();
+        //        $("#submit").attr('disabled', true);
+
+        //    }
+        //    else if (!$("#BusinessEmail_Field").val().match(/^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+        //        $("#BusinessEmail").html("Not a Correct Format for Email");
+        //        $("#BusinessEmail").show();
+        //        $("#submit").attr('disabled', true);
+
+        //    }
+        //    else {
+
+        //        ($("#BusinessEmail").hide());
+        //        EnableSubmit();
+        //    }
+
+        //});
+
+        //Phone Number
+        $("#phone_Field").focusout(function () {
+            var length = $("#phone_Field").val().length;
+            if (length == 0) {
+                $("#phoneNumber").html("Phone field is required");
+                $("#phoneNumber").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+
+            }
+            else if (!$("#phone_Field").val().match(/^\d+$/)) {
+                $("#phoneNumber").html("Phone field should be set of numbers only");
+                $("#phoneNumber").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+
+            }
+            else {
+
+                ($("#phoneNumber").hide());
+                EnableSubmit();
+
+                WorkingAllTimes();
+
+            }
+
+        });
+
+        //Establishment Date
+
+        $("#establishField").focusout(function () {
+            var length = $("#establishField").val().length;
+            if (length == 0) {
+                $("#establish").html("Establishment Date field is required");
+                $("#establish").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+
+                $("#establish").hide();
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+
+        });
+
+
+        //Website URL
+        $("#website_Field").focusout(function () {
+
+            var url = $("#website_Field").val();
+            var length = $("#website_Field").val().length;
+            var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
+
+
+            if (length == 0) {
+                $("#website").html("Website field is required");
+                $("#website").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else if (!url.match(pattern)) {
+                $("#website").html("This is not a valid Website URL");
+                $("#website").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+
+                ($("#website").hide());
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+        });
+
+
+        //Price Range
+
+        $("#price_Field").focusout(function () {
+            var length = $("#price_Field").val().length;
+            if (length == 0) {
+                $("#priceRange").html("Price Range field is required");
+                $("#priceRange").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else if (!$("#price_Field").val().match(/^\d+$/)) {
+                $("#priceRange").html("Price Range field should be set of numbers only");
+                $("#priceRange").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+
+                ($("#priceRange").hide());
+
+                EnableSubmit();
+                WorkingAllTimes();
+            }
+
+        });
+
+
+        //City Field
+
+        $("#city_Field").focusout(function () {
+            var length = $("#city_Field").val().length;
+            if (length == 0) {
+                $("#city").html("City field is required");
+                $("#city").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+
+            else {
+
+                ($("#city").hide());
+
+                EnableSubmit();
+                WorkingAllTimes();
+            }
+
+        });
+
+
+        //Sector Field
+
+        $("#sectorDropDownList").focusout(function () {
+
+            //  var length = $("#sectorDropDownList").val().length;
+            var val = $("#sectorDropDownList").val();
+
+
+            if (val == null) {
+                //console.log(val);
+                $("#sector").html("Sector field is required");
+                $("#sector").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+
+            else {
+
+                ($("#sector").hide());
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+        });
+
+
+        //Category
+        $("#categoryId").focusout(function () {
+
+            //  var length = $("#sectorDropDownList").val().length;
+            var val = $("#categoryId").val();
+
+
+            if (val == null) {
+                //console.log(val);
+                $("#category").html("Sector field is required");
+                $("#category").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+
+            else {
+
+                ($("#category").hide());
+                EnableSubmit();
+
+                WorkingAllTimes();
+            }
+
+        });
+
+
+
+
+        //End of Validations
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        $.ajax({
+            url: '/Organization/GetSectorsList',
+            dataType: "json",
+            method: 'post',
+
+            success: function (data) {
+                $("#categoryId").prop("disabled", true);
+                var dropdownlist = $('#sectorDropDownList');
+                dropdownlist.empty();
+                dropdownlist.append("<option selected  disabled value='@Session["EditSectorId"].ToString()' >@Session["EditSectorName"].ToString()</option>");
+
+                $(data).each(function (index, row) {
+
+                        dropdownlist.append("<option value='" + row.Id + "'>" + row.Name + "</option>")
+                 });
+            }
+
+        });
+
+
+
+
+
+        @*$("#sectorDropDownList").append("<option selected disabled='true'>@Session["EditSectorName"].ToString()</option>");
+        $("#sectorDropDownList").click(function () {
+
+            $.get("/Organization/GetSectorsList", function (data) {
+                //  $("#sectorDropDownList").empty().append("<option value=''>Choose a sector </option>");
+                $.each(data, function (index, row) {
+                    $("#categoryId").prop("disabled", false);
+                    $("#sectorDropDownList").append("<option value='" + row.Id + "'>" + row.Name + "</option>")
+                });
+
+            });
+
+
+        });*@
+
+      //  $("#categoryId").prop("disabled", true);
+
+        $("#sectorDropDownList").change(function () {
+            $.get("/Organization/GetCategoriesList", { ID: $("#sectorDropDownList").val() }, function (data) {
+                $("#categoryId").empty().append("<option>Select your Categorey</option>");
+                $.each(data, function (index, row) {
+                    $("#categoryId").prop("disabled", false);
+
+                    $("#categoryId").append("<option value='" + row.Id + "'>" + row.Name + "</option>")
+
+
+                });
+
+            });
+        })
+
+
+        $("#categoryId").change(function () {
+            $.get("/Organization/GetFactorsList", { ID: $("#categoryId").val() }, function (data) {
+                $("#factors").empty();
+                //console.log(data);
+                var i = 1;
+                $.each(data, function (index, row) {
+
+                    // console.log(row.id);
+                    $("#factors").append("<div class='row factors'><div class='col-md-3'><div class='checkbox'><label><input type='checkbox' id='blankCheckbox' value='option1' name='factor_" + i.toString() + "'/></label></div></div><div class='col-md-9 factor'>" + row.Name + "</div></div>")
+                    i++;
+                });
+
+            });
+        })
+
+
+
+        $('[id="checked"]').click(function () {
+            $(this).closest("div").find(':text').prop('disabled', this.checked);
+
+
+        });
+
+
+        $('[id="checkedHoliday"]').click(function () {
+            $(this).closest("div").find(':text').prop('disabled', this.checked);
+
+
+        });
+
+
+
+
+        //validations
+
+        //Sector Field
+
+        $("#sectorDropDownList").focusout(function () {
+            var length = $("#sectorDropDownList").val().length;
+            if (length == null) {
+                $("#sectorList").html("Sector field is required");
+                $("#sectorList").show();
+
+            }
+
+            else {
+
+                ($("#sectorList").hide());
+            }
+
+        });
+
+        //Category Field
+        $("#categoryId").focusout(function () {
+            var length = $("#categoryId").val().length;
+            if (length == null) {
+                $("#categoryList").html("Category field is required");
+                $("#categoryList").show();
+
+            }
+
+            else {
+
+                ($("#categoryList").hide());
+            }
+
+        });
+
+
+        $(window).on('load', function () {
+
+            if ($('[id="checkedHoliday"]').prop("checked") == true) {
+
+
+                $('[id="checkedHoliday"]').closest("div").find(':text').prop('disabled',true);
+            }
+
+        });
+
+
+
+    });
+
+
+
+
+    function showImage()
+    {
+        if (this.files && this.files[0])
+        {
+            var obj = new FileReader();
+            obj.readAsDataURL(this.files[0]);
+            obj.onloadend = function (data)
+            {
+                var image = document.getElementById("image");
+                image.src = data.target.result;
+                image.style.height = "100%";
+                image.parentElement.style.background = "none";
+
+            }
+
+        }
+
+    }
+
+
+    function ImageSize()
+    {
+
+        var image = document.getElementById("image");
+        image.style.height = "100%";
+        image.parentElement.style.background = "none";
+
+
+    }
+    function EnableSubmit(x) {
+
+        console.log(x);
+
+        if ($("#username_Field").val().length != 0 && $("#orgName_Field").val().length != 0 && $("#password_Field").val().length != 0
+            && $("#ConfirmPassword_Field").val().length != 0 && $("#PersonalEmail_Field").val().length != 0 && $("#Description_Field").val().length != 0
+            && $("#social_Field").val().length != 0 && $("#fax_Field").val().length != 0 && $("#phone_Field").val().length != 0
+            && $("#BusinessEmail_Field").val().length != 0 && $("#establishField").val().length != 0 && $("#website_Field").val().length != 0
+            && $("#price_Field").val().length != 0 && $("#city_Field").val().length != 0 && $("#sectorDropDownList").val().length != 0
+            && $("#firstName_Field").val().length != 0 && $("#lastName_Field").val().length != 0 && $("#pic_Field").val().length != 0
+            && $("#categoryId").val().length != 0 && x == true
+
+
+            ) {
+
+
+            $("#submit").removeAttr('disabled');
+            $("#ErrrosList").hide();
+
+        }
+        else {
+            //    alert();
+            $("#submit").attr('disabled', true);
+            $("#ErrrosList").show();
+
+        }
+
+
+    }
+
+    //Username Check
+    function UserCheck() {
+
+        var usernameField = $("#username_Field").val().length;
+
+        if (usernameField == 0) {
+            //  alert();
+            $("#username").html("username field is required");
+            $("#username").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+
+
+        }
+
+        else if (usernameField < 5 || usernameField > 20) {
+            $("#username").html("username should be between 5-20 characters");
+            $("#username").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+        }
+
+        else {
+
+            $("#username").html("Checking...");
+            $.post("@Url.Action("CheckUsernameAvailability", "Organization")",
+        {
+            userdata: $("#username_Field").val()
+        },
+        function (data) {
+
+            if (data == 0) {
+                //    alert("available");
+                $("#username").html('<font color="Green">Available !. you can take it.</font>');
+                $("#username").css("border-color", "Green");
+                $("#username").show();
+                EnableSubmit();
+
+                WorkingAllTimes();
+
+            }
+            else {
+                //   alert("not available");
+                $("#username").html('<font color="Red">That name is taken.Try Another.</font>');
+                $("#username").css("border-color", "Red");
+                $("#username").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+            }
+
+        });
+    }
+    }
+    //UserVerifyCheck
+
+    function UserVerifyCheck() {
+
+        var usernameField = $("#usernameVerification_Field").val().length;
+        //(usernameField);
+
+        $("#usernameVerification").html("Checking...");
+        $.post("@Url.Action("UsernameVerification", "Organization")",
+    {
+
+        userdata: $("#usernameVerification_Field").val()
+    },
+    function (data) {
+
+        //  alert(data);
+
+        if (data == 1) {
+            //    alert("available");
+            $("#usernameVerification").html('<font color="Green">Username is Found ! </font>');
+            $("#usernameVerification").css("border-color", "Green");
+            $("#usernameVerification").show();
+            EnableSubmit();
+
+            WorkingAllTimes();
+
+        }
+        else {
+            //   alert("not available");
+            $("#usernameVerification").html('<font color="Red">Username not Found.</font>');
+            $("#usernameVerification").css("border-color", "Red");
+            $("#usernameVerification").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+        }
+
+    });
+    }
+
+    //Personal Email
+    function PersonalEmail() {
+
+
+
+        var length = $("#PersonalEmail_Field").val().length;
+        if (length == 0) {
+            $("#personalEmail").html("Persona Email field is required");
+            $("#personalEmail").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+
+        }
+        else if (!$("#PersonalEmail_Field").val().match(/^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+            $("#personalEmail").html("Not a Correct Format for Email");
+            $("#personalEmail").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+
+        }
+
+        else {
+            $("#personalEmail").html("Checking...");
+            $.post("@Url.Action("CheckPersonalEmailAvailability", "Organization")",
+        {
+            userdata: $("#PersonalEmail_Field").val()
+        },
+        function (data) {
+
+            if (data == 0) {
+                //    alert("available");
+                $("#personalEmail").html('<font color="Green">Available !. you can take it.</font>');
+                $("#personalEmail").css("border-color", "Green");
+                $("#personalEmail").show();
+                EnableSubmit();
+
+                WorkingAllTimes();
+
+            }
+            else {
+                //   alert("not available");
+                $("#personalEmail").html('<font color="Red">That name is taken.Try Another.</font>');
+                $("#personalEmail").css("border-color", "Red");
+                $("#personalEmail").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+            }
+
+        });
+    }
+    }
+
+
+    //Business Email
+
+    function BusinessEmail() {
+
+        var length = $("#BusinessEmail_Field").val().length;
+        if (length == 0) {
+            $("#BusinessEmail").html("Business Email field is required");
+            $("#BusinessEmail").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+
+        }
+        else if (!$("#BusinessEmail_Field").val().match(/^(([^<>()\[\]\\.,;:\s@@"]+(\.[^<>()\[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+            $("#BusinessEmail").html("Not a Correct Format for Email");
+            $("#BusinessEmail").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+
+        }
+        else {
+
+            $("#BusinessEmail").html("Checking...");
+            $.post("@Url.Action("CheckBusinessEmailAvailability", "Organization")",
+        {
+            userdata: $("#BusinessEmail_Field").val()
+        },
+        function (data) {
+
+
+            if (data == 0) {
+                //    alert("available");
+                $("#BusinessEmail").html('<font color="Green">Available !. you can take it.</font>');
+                $("#BusinessEmail").css("border-color", "Green");
+                $("#BusinessEmail").show();
+
+                EnableSubmit();
+                WorkingAllTimes();
+
+            }
+            else {
+                //   alert("not available");
+                $("#BusinessEmail").html('<font color="Red">That name is taken.Try Another.</font>');
+                $("#BusinessEmail").css("border-color", "Red");
+                $("#BusinessEmail").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+            }
+
+
+        });
+    }
+    }
+
+
+    //Organization Name
+
+    function orgName() {
+
+
+
+        var length = $("#orgName_Field").val().length;
+        // console.log(length);
+        if (length == 0) {
+            $("#org_Name").html("Organization Name field is required");
+            $("#org_Name").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+
+        }
+        else if ($("#orgName_Field").val().match(/^\d+$/)) {
+            $("#org_Name").html("Organization Name field should be set of characters");
+            $("#org_Name").show();
+            $("#submit").attr('disabled', true);
+            EnableSubmit();
+            WorkingAllTimes();
+
+        }
+
+        else {
+            $("#org_Name").html("Checking...");
+            $.post("@Url.Action("CheckOrgNameAvailability", "Organization")",
+        {
+            userdata: $("#orgName_Field").val()
+        },
+        function (data) {
+
+            if (data == 0) {
+
+                $("#org_Name").html('<font color="Green">Available !. you can take it.</font>');
+                $("#org_Name").css("border-color", "Green");
+                $("#org_Name").show();
+                EnableSubmit();
+
+                WorkingAllTimes();
+
+            }
+            else {
+                //   alert("not available");
+                $("#org_Name").html('<font color="Red">That name is taken.Try Another.</font>');
+                $("#org_Name").css("border-color", "Red");
+                $("#org_Name").show();
+                $("#submit").attr('disabled', true);
+                EnableSubmit();
+                WorkingAllTimes();
+            }
+
+
+        });
+    }
+    }
+
+    //WorkTimes
+
+
+    function WorkTimes() {
+
+        var From1 = $("#DayFrom_1").val();
+        var To1 = $("#DayTo_1").val();
+
+        if ((From1.length == 0 || To1.length == 0)) {
+            if (document.querySelector('.checked_1').checked == false) {
+
+                $("#worktimes_1").html("Both Fields are Required or Take as Holiday");
+                $("#worktimes_1").show();
+                return false;
+
+
+            }
+
+            else {
+                $("#worktimes_1").hide();
+                return true;
+
+
+            }
+
+
+        }
+
+        else {
+
+            $("#worktimes1").hide();
+            return true;
+
+
+        }
+
+
+
+    }
+
+    function WorkingAllTimes() {
+
+        if (WorkTimes1() == true && WorkTimes2() == true && WorkTimes3() == true && WorkTimes4() == true
+            && WorkTimes5() == true && WorkTimes6() == true && WorkTimes7() == true)
+            EnableSubmit(true);
+        else
+            EnableSubmit(false);
+
+
+
+
+
+
+    }
+
+
+
+
+</script>

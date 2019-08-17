@@ -1,0 +1,240 @@
+﻿@model IEnumerable<RC.Models.Client>
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+
+
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Users Panel</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+
+                <table id="users" class="table table-bordered table-striped">
+                  
+                    <thead>
+                        <tr>
+                            <th>Users Sheet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var client in Model)
+                        {
+                            
+
+                                var status = client.User.State;
+                                string msg = null;
+                                if (status == 1)
+                                {
+                                    msg = "Blocked";
+                                }
+                                else
+                                {
+                                    msg = "Not Blocked";
+                                }
+
+                            
+
+                            <tr>
+                                <td>
+
+                                    <div class='box box-solid collapsed-box'>
+                                        <div class='box-header'>
+                                            <h3 class='box-title'>
+                                                <img src="~/files/@client.User.imageUrl" class="thumbnail"  style="display:inline-block;margin-top:13px;width:70px;height:70px" />
+                                                <span style="font-weight:bolder;color:darkslategray">@client.User.Username</span>
+                                            </h3>
+                                            <div class='box-tools pull-right'>
+                                                <button class='btn btn-default btn-sm' data-widget='collapse'><i class='fa fa-plus'></i></button>
+                                                <button class="btn btn-default btn-sm delete-organization" organization-id=@client.Id><i class="fa fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                        <div style="display: none;" class="box-body">
+                                            <table class="table table-bordered table-condensed table-hover table-responsive">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th style="font-weight:bolder;font-size:20px;color:dimgray">@client.User.Username Headers</th>
+                                                        <th style="font-weight:bolder;font-size:20px;color:dimgray">Description</th>
+                                                    </tr>
+
+
+                                                </thead>
+
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i>  User FirstName</td>
+                                                    <td>@client.firstName</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i> User LastName</td>
+                                                    <td>@client.lastName</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i>Username</td>
+                                                    <td>@client.User.Username</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> User Personal Email</td>
+                                                    <td>@client.User.Email</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> User Business Email</td>
+                                                    <td>@client.businessEmail</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> User Address</td>
+                                                    <td>@client.Address</td>
+                                                </tr>
+
+
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> User Age </td>
+                                                    <td>@client.Age</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> User City </td>
+                                                    <td>@client.City.Name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> User DOB </td>
+                                                    <td>@client.dateOfBirth</td>
+                                                </tr>
+
+
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i>User Gender</td>
+                                                    <td>@client.Gender</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> User Joined At </td>
+                                                    <td>@client.User.JoniedAt</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> User Brief Description</td>
+                                                    <td>Description</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Status</td>
+                                                    <td><button class="btn btn-info" disabled>@msg</button></td>
+                                                </tr>
+
+
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Action Against User </td>
+                                                    <td>
+                                                        <button type="submit" id="block" class="btn btn-danger" client_ID="@client.Id">Block</button>
+                                                        <button type="submit" id="unblock" class="btn btn-success" client_ID="@client.Id">Unblock</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Print user Details </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-warning">Print</button>
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+
+
+        $(document).ready(function () {
+
+            $('[id="block"]').click(function () {
+
+                var button = $(this);
+                bootbox.confirm("Are you sure you want to block this user ?", function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            url: "/Admin/blockClient/" + button.attr("client_ID"),
+
+                            method: "PUT",
+                            success: function () {
+                                toastr.success("User Blocked Successfully");
+
+
+                            },
+                            error: function (err) {
+                                toastr.error('Failed To block this User');
+
+                            }
+
+                        });
+                    }
+                });
+
+
+            });
+
+
+
+
+
+
+            $('[id="unblock"]').click(function () {
+
+                var button = $(this);
+                bootbox.confirm("Are you sure you want to Unblock this user ?", function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            url: "/Admin/UnblockClient/" + button.attr("client_ID"),
+
+                            method: "PUT",
+                            success: function () {
+                                toastr.success("User is Unblocked Successfully");
+
+
+                            },
+                            error: function (err) {
+                                toastr.error('Failed To Unblock this User');
+
+                            }
+
+                        });
+                    }
+                });
+
+
+            });
+
+
+
+        });
+
+  $(function () {
+      $("#users").DataTable();
+
+  });
+    </script>
+}
+

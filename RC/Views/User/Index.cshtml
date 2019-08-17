@@ -1,0 +1,670 @@
+﻿@using RC.Models
+@model RC.ViewModels.PostsForEveryUser
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    List<Post> Posts = new List<Post>();
+    List<Subscriber> Subscribers = new List<Subscriber>();
+    List<User> users = new List<User>();
+    List<Organization> Organizations = new List<Organization>();
+
+
+}
+<link href="~/Content/Slider/Slider.css" rel="stylesheet" />
+<script src="~/Content/Slider/Slider.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+
+
+<head>
+
+    <style>
+		
+		
+.accordion {
+  width: 96%;
+  height: 350px;
+  overflow: hidden;
+  margin: 0px auto;
+}
+
+.accordion ul {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+
+  padding: 0;
+}
+
+.accordion ul li {
+  display: table-cell;
+  vertical-align: bottom;
+  position: relative;
+  width: 16.666%;
+  height: 350px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  transition: all 500ms ease-in-out;
+}
+
+.accordion ul li div {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+}
+
+.accordion ul li div a {
+  display: block;
+  height: 350px;
+  width: 100%;
+  position: relative;
+  z-index: 3;
+  vertical-align: bottom;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  color: #fff;
+  text-shadow: 1px 1px 2px #000;
+  /*filter: invert(100%);*/
+  text-decoration: none;
+  font-family: Open Sans, sans-serif;
+  transition: all 300ms ease-in-out;
+}
+
+.accordion ul li div a * {
+  opacity: 0;
+  margin: 0;
+  width: 100%;
+  text-overflow: ellipsis;
+  position: relative;
+  z-index: 5;
+  white-space: nowrap;
+  overflow: hidden;
+  -webkit-transform: translateX(-20px);
+  transform: translateX(-20px);
+  -webkit-transition: all 400ms ease-in-out;
+  transition: all 400ms ease-in-out;
+}
+.accordion ul li div a h2 {
+  font-family: Montserrat, sans-serif;
+  text-overflow: clip;
+  font-size: 32px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  top: 160px;
+}
+
+.accordion ul li div a p {
+  top: 160px;
+  font-size: 18px;
+  padding-left: 1em;
+}
+
+
+
+.accordion ul li { background-size: cover; }
+.accordion ul:hover li { width: 10%; }
+.accordion ul:hover li:hover { width: 90%; }
+
+/*.accordion ul:hover li:hover a { background: rgba(0, 0, 0, 0.4); }*/
+
+.accordion ul:hover li:hover a * {
+  opacity: 1;
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+}
+
+  .accordion ul li div a * {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+  }
+
+
+
+
+
+
+
+	
+
+	</style>
+
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.1/js/bootstrap.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" />
+
+<input type="hidden" id="NumOfAds" name="custId" value=@Model.Advertisement.Count()>
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Advertisement</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @foreach (var ad in Model.Advertisement)
+                {
+                    <div style="width:540px;height:200px;">
+                        <a href="http://@ad.Link" target="_blank" userId="@Model.userID" advertisementId="@ad.Id" class="advertise"><img src="~/Content/img/AdsImgs/@ad.imageUrl" style="width:550px;height:200px;"></a>
+                    </div><br />
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@foreach (var pormotion in Model.Promotion.Reverse())
+{
+    var count = 0;
+    int NumOfImg = 0;
+    foreach (var post in Model.Posts)
+    {
+        if (pormotion.postId == post.Id)
+        {
+            foreach (var subscriber in Model.Subscribers)
+            {
+                if (post.organizationId == subscriber.organizationId && Model.client.Id == subscriber.clientId)
+                {
+                    count++;
+                }
+            }
+            if (count == 0 && pormotion.isDone == true && pormotion.Reaches > 0 && ((pormotion.Gender == 2) || (Model.client.Gender == "Male" && pormotion.Gender == 0) || (Model.client.Gender == "FeMale" && pormotion.Gender == 1)))
+            {
+                foreach (var promotionAge in Model.PromotionAge)
+                {
+                    if (pormotion.Id == promotionAge.promotionId && Model.client.Age > promotionAge.startAge && Model.client.Age < promotionAge.endAge)
+                    {
+                        foreach (var organization in Model.Organizations)
+                        {
+                            if (organization.Id == post.organizationId)
+                            {
+                                foreach (var user in Model.user)
+                                {
+                                    if (user.Id == organization.userId)
+                                    {
+                                        <div class="nav-tabs-custom Post " id="Promotion">
+                                            <div class="tab-content">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <!-- Box Comment -->
+                                                        <div class="box box-widget">
+                                                            <div class="box-header with-border">
+                                                                <div class="user-block">
+                                                                    <img class="img-circle" src="~/Content/img/OrganizationsProfilePics/@user.imageUrl" alt="@organization.orgnizationName">
+                                                                    <span class="username"><a href="@Url.Action("Index", "Organization", new {id =organization.Id})">@organization.orgnizationName</a></span>
+                                                                    <span class="description"><i class="fa fa-check-circle-o text-primary" aria-hidden="true"></i>Promoted</span>
+                                                                </div>
+                                                                <!-- /.user-block -->
+                                                                <div class="box-tools">
+                                                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                                                        <i class="fa fa-minus"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <!-- /.box-tools -->
+                                                            </div>
+                                                            <div class="box-body">
+                                                                @foreach (var PostImgs in Model.PostImages)
+                                                                {
+                                                                    if (post.Id == PostImgs.postId)
+                                                                    {
+                                                                        NumOfImg++;
+                                                                    }
+                                                                }
+                                                                @if (NumOfImg != 0)
+                                                                {
+                                                                    <div class="row margin-bottom">
+
+                                                                        <div class="accordion">
+                                                                            <ul>
+                                                                                @foreach (var PostImgs in Model.PostImages)
+                                                                                {
+                                                                                    if (post.Id == PostImgs.postId)
+                                                                                    {
+                                                                                        <li>
+
+                                                                                            <img width="100%" style="height:100%" class="img-responsive sliderLink" src="~/Content/img/Posts/@PostImgs.Path" />
+
+                                                                                        </li>
+                                                                                    }
+
+                                                                                }
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+
+
+                                                                <p class="Promotion" client-Id="@Model.client.Id" promotion-Id="@pormotion.Id" style="color:#000">@post.Content</p>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@foreach (var subscriber in Model.Subscribers)
+{
+	foreach (var post in Model.Posts.Reverse())
+	{
+		if (post.organizationId == subscriber.organizationId)
+		{
+			foreach (var organization in Model.Organizations)
+			{
+				if (organization.Id == post.organizationId)
+				{
+					foreach (var user in Model.user)
+					{
+						if (user.Id == organization.userId)
+						{
+							Organizations.Add(organization);
+							Subscribers.Add(subscriber);
+							Posts.Add(post);
+							users.Add(user);
+						}
+					}
+
+				}
+			}
+		}
+	}
+}
+
+@foreach (var subscriber in Model.Subscribers)
+{
+    foreach (var post in Posts)
+    {
+        int c = 0;
+        int NumberOfLikes = 0;
+        int NumberOfDisLikes = 0;
+        int NumOfImg = 0;
+        if (post.organizationId == subscriber.organizationId)
+        {
+            foreach (var organization in Model.Organizations)
+            {
+                if (organization.Id == post.organizationId)
+                {
+                    foreach (var user in Model.user)
+                    {
+                        if (user.Id == organization.userId)
+                        {
+							<div class="nav-tabs-custom Post" id="Post">
+								<div class="tab-content">
+									<div class="row">
+										<div class="col-md-12">
+											<!-- Box Comment -->
+											<div class="box box-widget">
+												<div class="box-header with-border">
+													<div class="user-block">
+														<img class="img-circle" src="~/Content/img/OrganizationsProfilePics/@user.imageUrl" alt="@organization.orgnizationName">
+                                                        <span class="username"><a href="@Url.Action("Index", "Organization", new {id =organization.Id})">@organization.orgnizationName</a></span>
+														<span class="description">@post.Date.ToString("dd/MM/yyyy")</span>
+													</div>
+													<!-- /.user-block -->
+													<div class="box-tools">
+														<button type="button" class="btn btn-box-tool" data-widget="collapse">
+															<i class="fa fa-minus"></i>
+														</button>
+													</div>
+													<!-- /.box-tools -->
+												</div>
+												<!-- /.box-header -->
+												<div class="box-body">
+                                                    @foreach (var PostImgs in Model.PostImages)
+                                                    {
+                                                        if (post.Id == PostImgs.postId)
+                                                        {
+                                                            NumOfImg++;
+                                                        }
+                                                    }
+                                                    @if (NumOfImg != 0)
+                                                    { 
+                                                        <div class="row margin-bottom">
+
+                                                            <div class="accordion">
+                                                                <ul>
+                                                                    @foreach (var PostImgs in Model.PostImages)
+                                                                    {
+                                                                        if (post.Id == PostImgs.postId)
+                                                                        {
+                                                                            <li>
+
+                                                                                <img width="100%" style="height:100%" class="img-responsive sliderLink" src="~/Content/img/Posts/@PostImgs.Path" />
+
+                                                                            </li>
+                                                                        }
+
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    }
+
+
+															<p style="color:#000">@post.Content</p>
+															@foreach (var react in Model.Reactions)
+                                                            {
+                                                                if (react.Reaction == 1 && react.postId == post.Id)
+                                                                {
+                                                                    NumberOfLikes = NumberOfLikes + 1;
+                                                                }
+
+                                                                if (react.Reaction == 2 && react.postId == post.Id)
+                                                                {
+                                                                    NumberOfDisLikes = NumberOfDisLikes + 1;
+                                                                }
+                                                                if (react.clientId == Model.client.Id && react.postId == post.Id && react.Reaction == 1)
+                                                                {
+                                                                    c = c + 1;
+
+
+                                                                    <span id="Like" class="Like" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id" style="display:none"><i class="fa fa-thumbs-o-up fa-3x" aria-hidden="true"></i></span>
+                                                                    <span id="RemoveLike" class="RemoveLike" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-up fa-3x text-primary" aria-hidden="true"></i></span>
+                                                                    <span id="DisLike" class="DisLike" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-o-down fa-3x" aria-hidden="true"></i></span>
+                                                                    <span id="RemoveDislike" class="RemoveDislike " style="display:none" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-down fa-3x text-danger" aria-hidden="true"></i></span>
+                                                                }
+
+                                                                if (react.clientId == Model.client.Id && react.postId == post.Id && react.Reaction == 2)
+                                                                {
+                                                                    c = c + 1;
+
+                                                                    <span id="Like" class="Like" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-o-up fa-3x" aria-hidden="true"></i></span>
+                                                                    <span id="RemoveLike" class="RemoveLike" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id" style="display:none"><i class="fa fa-thumbs-up fa-3x text-primary" aria-hidden="true"></i></span>
+                                                                    <span id="DisLike" class="DisLike" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id" style="display:none"><i class="fa fa-thumbs-o-down fa-3x" aria-hidden="true"></i></span>
+                                                                    <span id="RemoveDislike" class="RemoveDislike" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-down fa-3x text-danger" aria-hidden="true"></i></span>
+                                                                }
+
+
+                                                                if (react.clientId == Model.client.Id && react.postId == post.Id && react.Reaction == 0)
+                                                                {
+                                                                    c = c + 1;
+
+                                                                    <span id="Like" class="Like" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-o-up fa-3x" aria-hidden="true"></i></span>
+                                                                    <span id="RemoveLike" class="RemoveLike" style="display:none" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-up fa-3x text-primary" aria-hidden="true"></i></span>
+                                                                    <span id="DisLike" class="DisLike" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-o-down fa-3x" aria-hidden="true"></i></span>
+                                                                    <span id="RemoveDislike" class="RemoveDislike" style="display:none" postId="@post.Id" clientId="@Model.client.Id" reactId="@react.Id"><i class="fa fa-thumbs-down fa-3x text-danger" aria-hidden="true"></i></span>
+                                                                }
+
+                                                            }
+
+
+                                                            @if (c == 0)
+                                                            {
+
+                                                                <span id="Like" class="Like" postId="@post.Id" clientId="@Model.client.Id" reactId="@c"><i class="fa fa-thumbs-o-up fa-3x" aria-hidden="true"></i></span>
+                                                                <span id="RemoveLike" class="RemoveLike" style="display:none" postId="@post.Id" clientId="@Model.client.Id" reactId="@c"><i class="fa fa-thumbs-up fa-3x text-primary" aria-hidden="true"></i></span>
+                                                                <span id="DisLike" class="DisLike" postId="@post.Id" clientId="@Model.client.Id" reactId="@c"><i class="fa fa-thumbs-o-down fa-3x" aria-hidden="true"></i></span>
+                                                                <span id="RemoveDislike" class="RemoveDislike" style="display:none" postId="@post.Id" clientId="@Model.client.Id" reactId="@c"><i class="fa fa-thumbs-down fa-3x text-danger" aria-hidden="true"></i></span>
+                                                            }
+
+															<span class="pull-right text-muted re">@NumberOfLikes <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> - @NumberOfDisLikes <i class="fa fa-thumbs-o-down" aria-hidden="true"></i></span>
+														</div>
+													</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            var LikeButtons = document.getElementsByClassName('Like');
+            var RemoveLikebuttons = document.getElementsByClassName('RemoveLike');
+            var DisLike = document.getElementsByClassName('DisLike');
+            var RemoveDislike = document.getElementsByClassName('RemoveDislike');
+
+            for (var i = 0 ; i < LikeButtons.length ; i++) {
+                (function (index) {
+                    LikeButtons[index].onclick = function () {
+                        var button = LikeButtons[index];
+                        var React = new Object();
+                        var label = $(".re")[index];
+                        React.postId = button.getAttribute('postId');
+                        React.clientId = button.getAttribute('clientId');
+                        React.reactId = button.getAttribute('reactId');
+                        React.reactType = "Like";
+						
+                        LikeButtons[index].style.display = "none";
+                        RemoveLikebuttons[index].style.display = "inline";
+                        DisLike[index].style.display = "inline";
+                        RemoveDislike[index].style.display = "none";
+                        $.ajax({
+                            url: '/api/React/React',
+                            method: "PUT",
+                            dataType: 'json',
+                            data: React,
+                            success: function (data) {
+                                var like = data.Likes + '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> - '
+                                var disLike = data.disLikes + '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>'
+                                $(label).html(like + disLike);
+                            },
+                            error: function () {
+
+                            }
+                        });
+
+                    };
+                })(i)
+            }
+
+            for (var i = 0 ; i < RemoveLikebuttons.length ; i++) {
+                (function (index) {
+                    RemoveLikebuttons[index].onclick = function () {
+
+                        var button = RemoveLikebuttons[index];
+                        var React = new Object();
+                        var label = $(".re")[index];
+                        React.postId = button.getAttribute('postId');
+                        React.clientId = button.getAttribute('clientId');
+                        React.reactId = button.getAttribute('reactId');
+                        React.reactType = "RemoveLike";
+
+                        LikeButtons[index].style.display = "inline";
+                        RemoveLikebuttons[index].style.display = "none";
+                        $.ajax({
+                            url: '/api/React/React',
+                            method: "PUT",
+                            dataType: 'json',
+                            data: React,
+                            success: function (data) {
+                                var like = data.Likes + '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> - '
+                                var disLike = data.disLikes + '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>'
+                                $(label).html(like + disLike);
+                            },
+                            error: function () {
+
+                            }
+                        });
+                    };
+                })(i)
+            }
+
+            for (var i = 0 ; i < DisLike.length ; i++) {
+                (function (index) {
+                    DisLike[index].onclick = function () {
+
+                        var button = DisLike[index];
+                        var React = new Object();
+                        var label = $(".re")[index];
+                        React.postId = button.getAttribute('postId');
+                        React.clientId = button.getAttribute('clientId');
+                        React.reactId = button.getAttribute('reactId');
+                        React.reactType = "DisLike";
+
+						
+
+                        LikeButtons[index].style.display = "inline";
+                        RemoveLikebuttons[index].style.display = "none";
+                        DisLike[index].style.display = "none";
+                        RemoveDislike[index].style.display = "inline";
+
+                        $.ajax({
+                            url: '/api/React/React',
+                            method: "PUT",
+                            dataType: 'json',
+                            data: React,
+                            success: function (data) {
+                                var like = data.Likes + '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> - '
+                                var disLike = data.disLikes + '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>'
+                                $(label).html(like + disLike);
+                            },
+                            error: function () {
+
+                            }
+                        });
+                    };
+                })(i)
+            }
+
+            for (var i = 0 ; i < RemoveDislike.length ; i++) {
+                (function (index) {
+                    RemoveDislike[index].onclick = function () {
+
+                        var button = RemoveDislike[index];
+                        var React = new Object();
+                        var label = $(".re")[index];
+                        React.postId = button.getAttribute('postId');
+                        React.clientId = button.getAttribute('clientId');
+                        React.reactId = button.getAttribute('reactId');
+                        React.reactType = "RemoveDislike";
+
+                        RemoveDislike[index].style.display = "none";
+                        DisLike[index].style.display = "inline";
+
+
+                        $.ajax({
+                            url: '/api/React/React',
+                            method: "PUT",
+                            dataType: 'json',
+                            data: React,
+                            success: function (data) {
+                                var like = data.Likes + '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> - '
+                                var disLike = data.disLikes + '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>'
+                                $(label).html(like + disLike);
+                            },
+                            error: function () {
+
+                            }
+                        });
+                    };
+                })(i)
+            }
+
+
+        });
+    </script>
+    
+<script>
+    $(document).ready(function () {
+        $.fn.isInViewport = function () {
+            var elementTop = $(this).offset().top;
+            var elementBottom = elementTop + $(this).outerHeight();
+
+            var viewportTop = $(window).scrollTop();
+            var viewportBottom = viewportTop + $(window).height();
+
+            return elementBottom > viewportTop && elementTop < viewportBottom;
+        };
+        var promotionids = [""];
+        $(window).on('resize scroll', function () {
+            $('.Promotion').each(function () {
+                var clientId = $(this).attr('client-Id');
+                var promotionId = $(this).attr('promotion-Id');
+                if ($(this).isInViewport()) {
+                    if (promotionids.includes(promotionId)) {
+                        console.log("if");
+                    }
+                    else {
+                        console.log("else");
+                        promotionids.push(promotionId);
+                        var PromotionViewer = new Object();
+
+                        var clientIds = new Array();
+                        //var promotionIds = new Array();
+
+                        PromotionViewer.promotionId = promotionId;
+                        PromotionViewer.clientId = clientId;
+                        
+
+                        $.ajax({
+                            url: '/api/PromotionPost/PromotionViewer',
+                            method: "POST",
+                            dataType: 'json',
+                            data: PromotionViewer,
+                            success: function () {
+
+                            },
+                            error: function () {
+
+                            }
+                        });
+                    }
+
+
+                }
+            });
+        });
+    });
+</script>
+
+}
+<script>
+    $(window).load(function () {
+        var number = document.getElementById("NumOfAds").value;
+        if (number !=0){
+            $('#myModal').modal('show');
+        }
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $(".advertise").click(function () {
+
+            var advertismentId = $(this).attr('advertisementId');
+            var userId = $(this).attr('userId');
+
+            var AdsClick = new Object();
+
+            AdsClick.advertismentId = advertismentId;
+            AdsClick.userId = userId;
+
+            $.ajax({
+                url: '/api/AddClicks/AdsClick',
+                data: AdsClick,
+                method: "POST",
+                success: function () {
+                },
+                error: function () {
+                }
+            });
+        });
+    });
+</script>
+

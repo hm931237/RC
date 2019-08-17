@@ -1,0 +1,15 @@
+﻿@model RC.Models.User
+
+<head>
+    <style>
+        p.qr-text {
+            margin-bottom: 70px;
+            margin-left: 150px;
+        }
+    </style>
+</head>
+@if (ViewBag.imageBytes != null)
+            {
+    <img style="width:400px; height:400px; margin-top:100px;margin-bottom:30px; margin-left:100px;" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ViewBag.imageBytes))" />
+    <p class="qr-text">Scan QR Codes Via Scanner in Smart Phones</p>
+}

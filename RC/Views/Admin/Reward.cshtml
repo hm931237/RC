@@ -1,0 +1,455 @@
+﻿@model RC.ViewModels.OfferImage
+
+@{
+    ViewBag.Title = "Reward";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+
+
+}
+
+<head>
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+
+
+
+        .form-group .radioo input {
+            width: 40px;
+            display: inline;
+        }
+       
+        .imagePreview {
+            width: 210px;
+            height: 210px;
+            // border-radius: 50%;
+            margin-left: 150px;
+            background-position: center center;
+            background: url(http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
+            background-color: #fff;
+            background-size: cover;
+            margin-top: 32px;
+            background-repeat: no-repeat;
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            // box-shadow: 0px -3px 6px 2px rgba(0,0,0,0.2);
+        }
+
+        .links {
+            margin-bottom: 4px;
+        }
+
+        .card__content {
+            // display:inline !important;
+        }
+
+        .btn-img {
+            display: block;
+            border-radius: 0px;
+            box-shadow: 0px 4px 6px 2px rgba(0,0,0,0.2);
+            // margin-top: 32px;
+            width: 210px;
+            position: absolute;
+            bottom: 0px;
+            // left: 22px;
+        }
+
+        form .form-control {
+            color: black !important;
+        }
+
+        .imgUp {
+            margin-bottom: 15px;
+        }
+
+        .del {
+            position: absolute;
+            top: 0px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            background-color: rgba(255,255,255,0.6);
+            cursor: pointer;
+        }
+
+        .imgAdd {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #4bd7ef;
+            color: #fff;
+            box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.2);
+            text-align: center;
+            line-height: 30px;
+            margin-top: 0px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        fieldset {
+            min-height: 400px;
+        }
+
+        form {
+            // margin-bottom: 100px;
+        }
+
+        span.error_form {
+            color: red;
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+@*<section class="content-header">
+        <h1 style="color:#3dd5e5;">
+            Add Reward
+        </h1>
+    </section>*@
+
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="mdo"><i class="fas fa-plus-circle"></i>&nbsp; Add Reward</button>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><b>Add Reward !</b></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("saveReward", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="form-group">
+                        <label for="recipient-name" class="form-control-label">Gift name:</label>
+
+                        @Html.EditorFor(model => model.offer.rewardName, new { htmlAttributes = new { @class = "form-control", id = "recipient-name", placeholder = "enter gift name" }, type = "text" })
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+
+                            <label for="recipient-name" class="form-control-label">Quantity :</label>
+
+                            @Html.EditorFor(model => model.offer.Quantity, new { htmlAttributes = new { @class = "form-control", id = "recipient-name", placeholder = "enter quantity" }, type = "text" })
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="recipient-name" class="form-control-label">requiredPoint :</label>
+
+                            @Html.EditorFor(model => model.offer.requiredPoint, new { htmlAttributes = new { @class = "form-control", id = "recipient-name", placeholder = "enter required points" }, type = "text" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message-text" class="form-control-label">Description:</label>
+
+                        @Html.TextAreaFor(model => model.offer.Description, htmlAttributes: new { @class = "form-control", id = "message-text", type = "text", name = "content", placeholder = "Write your description here .." })
+                    </div>
+
+                    <div class="col-md-12 imgUp ">
+                        <div class="imagePreview">
+
+                            <label class="btn btn-primary btn-img">
+                                Upload
+                                <input type="file" name="ImageFile" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;display:none; ">
+                            </label>
+                        </div>
+                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" name="submit" value="Submit" class="submit btn btn-primary" style="display:inline" />
+
+                        </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="box box-primary">
+                <div class="box-body">
+                    <div class="box-header with-border">
+                        <h3 class="box-title text-info text-bold" style="font-size:15px;"><i class="fa fa-gift fa-spin"></i> Rewards Offered By Admin </h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="box-body">
+                        <table id="userReports" class="table">
+                            <thead>
+                            <tr>
+                                <th> Gifts</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            @foreach (var item in Model.offers)
+                            {
+
+                                <tr>
+                                    <td>
+                                        <div class="box box-solid collapsed-box">
+                                            <div class="box-header">
+                                                <h3 class="box-title">
+                                                    <ul class="cards">
+                                                        <li class="cards__item" style="margin-left:275px">
+                                                            <div class="card">
+                                                                <div class="card__image" style="background-image: url(../../files/@item.imageUrl )"></div>
+                                                                <div class="card__content">
+                                                                    <div class="card__title">
+                                                                        <span class="pull-left bg bg-black badge"> @item.rewardName</span>
+                                                                        <span class="pull-right bg bg-green badge"><span class="badge bg bg-black">@item.requiredPoint</span> Points</span>
+                                                                    </div>
+                                                                    <p class="card__text" style="margin-top:5px;">This is the shorthand for flex-grow, flex-shrink and flex-basis combined. The second and third parameters (flex-shrink and flex-basis) are optional. Default is 0 1 auto. </p>
+
+                                                                    @*<a href="javascript:void(0);" style="" class="anchorDelete links" data-id="@item.Id"> Delete </a>
+                                                                        <a href="javascript:void(0);" style="float:right" class="anchorDetail links" data-id="@item.Id"> Edit </a>*@
+
+
+                                                                </div><button style="border-radius:4px;" class="anchorDetail links btn-primary" data-id="@item.Id">Edit </button>
+                                                                <button style="border-radius:4px;" class="anchorDelete links btn-danger" data-id="@item.Id">Delete</button>
+                                                            </div>
+                                                        </li>
+
+                                                    </ul>
+                                                </h3>
+
+                                            </div>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            }
+
+                            </tbody>
+                        </table>
+                        </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+<div id='myModal' class='modal'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+
+
+
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+
+
+<script>
+
+
+    var ImageObject = [];
+
+
+    $(document).ready(function () {
+        $(document).on("click", "i.del", function () {
+            $(this).parent().remove();
+
+
+        });
+
+
+        $('#cancel').on("click", function () {
+            ImageObject.splice(0, ImageObject.length);
+        });
+
+            $(function () {
+                $(document).on("change", ".uploadFile", function () {
+                    var uploadFile = $(this);
+
+
+                    var files = !!this.files ? this.files : [];
+
+                    if (!files.length || !window.FileReader)
+                        return; // no file selected, or no FileReader support
+
+
+                    if (/^image/.test(files[0].type)) { // only image file
+                        var reader = new FileReader(); // instance of the FileReader
+                        reader.readAsDataURL(files[0]); // read the local file
+
+                        reader.onloadend = function () {
+                            // set image data as background of div
+                            //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                            uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+
+                        }
+                    }
+
+                });
+            });
+
+
+
+
+
+
+
+
+
+    });
+
+</script>
+
+
+<script>
+    $('#exampleModal').on('show.bs.modal', function (event) {
+                            var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('.modal-title').text('New message to ' + recipient)
+        modal.find('.modal-body input').val(recipient)
+    });
+</script>
+
+
+<script>
+
+    var TeamDetailPostBackURL = '/Admin/EditReward';
+    $(function () {
+        $(".anchorDetail").click(function () {
+            debugger;
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "Get",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "Id": id },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+
+                       // toastr.success("you got a reward Scan QR Code");
+                        $('#myModalContent').html(data);
+                        // $('#myModal').modal(options);
+                        $('#myModal').modal('show');}
+
+                ,
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+       $('#myModal').modal('hide');
+
+        $("#closbtn").click(function () {
+            $('#myModal').modal('hide');
+        });
+    });
+
+
+</script>
+<script>
+
+    $(function () {
+        $(".anchorDelete").click(function () {
+            debugger;
+            var TeamDetailPostBackURL = '/Admin/DeleteReward';
+            var $buttonClicked = $(this);
+            var id = $buttonClicked.attr('data-id');
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "Get",
+                url: TeamDetailPostBackURL,
+                contentType: "application/json; charset=utf-8",
+                data: { "Id": id },
+                datatype: "json",
+                success: function (data) {
+                    debugger;
+
+                     toastr.success("Done");
+                    // $('#myModalContent').html(data);
+                    // $('#myModal').modal(options);
+                    //   $('#myModal').modal('show');}
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+        });
+
+    });
+
+
+</script>
+
+
+@section scripts
+                        {
+    <script>
+            $(function () {
+                $("#userReports").DataTable();
+                            });
+
+            $(function () {
+                $("#organizationReports").DataTable();
+                            });
+    </script>
+
+}

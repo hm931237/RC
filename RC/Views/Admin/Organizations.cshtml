@@ -1,0 +1,260 @@
+﻿@model IEnumerable<RC.Models.Organization>
+@{
+    ViewBag.Title = "Organizations";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Organizations Panel</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+
+                <table id="organizations" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Organizations Sheet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var organization in Model)
+                        {
+
+                            <tr>
+                                <td>
+
+                                    <div class='box box-solid collapsed-box'>
+                                        <div class='box-header'>
+                                            <h3 class='box-title'>
+                                                <img src="~/Content/img/OrganizationsProfilePics/@organization.User.imageUrl" class="thumbnail"  style="display:inline-block;margin-top:13px;width:70px;height:70px;" />
+                                                <span style="font-weight:bolder;color:darkslategray">@organization.orgnizationName</span>
+                                            </h3>
+                                            <div class='box-tools pull-right'>
+                                                <button class='btn btn-default btn-sm' data-widget='collapse'><i class='fa fa-plus'></i></button>
+                                                <button class="btn btn-default btn-sm delete-organization" organization-id=@organization.Id><i class="fa fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                        <div style="display: none;" class="box-body">
+                                            <table class="table table-bordered table-condensed table-hover table-responsive">
+
+                                                @{
+
+                                                    var status = organization.User.State;
+                                                    string msg = null;
+                                                    if (status == 1)
+                                                    {
+                                                        msg = "Blocked";
+                                                    }
+                                                    else
+                                                    {
+                                                        msg = "Not Blocked";
+                                                    }
+
+                                                }
+
+                                                <thead>
+                                                    <tr>
+                                                        <th style="font-weight:bolder;font-size:20px;color:dimgray">@organization.orgnizationName Headers</th>
+                                                        <th style="font-weight:bolder;font-size:20px;color:dimgray">Description</th>
+                                                    </tr>
+
+
+                                                </thead>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i>  Organization ID</td>
+                                                    <td>@organization.Id</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i>  Organization Name</td>
+                                                    <td>@organization.orgnizationName</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i> Owner First Name</td>
+                                                    <td>@organization.ownerFirstName</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i> Owner Last Name</td>
+                                                    <td>@organization.ownerLastName</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Username</td>
+                                                    <td>@organization.User.Username</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Owner Personal Email</td>
+                                                    <td>@organization.User.Email</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Owner Business Email</td>
+                                                    <td>@organization.businessEmail</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Website</td>
+                                                    <td><a style="color:darkslategray" href="@organization.websiteUrl">@organization.websiteUrl</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization First Social Link</td>
+                                                    <td><a style="color:darkslategray" href="@organization.websiteUrl">@organization.socialLink_1</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"> <i class="fa fa-check-circle"></i> Organization Second Social Link</td>
+                                                    <td><a style="color:darkslategray" href="@organization.websiteUrl">@organization.socialLink_2</a></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Fax </td>
+                                                    <td>@organization.Fax</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Registered At </td>
+                                                    <td>@organization.User.JoniedAt</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization  Establishment Date </td>
+                                                    <td>@organization.EstablishOrg.ToShortDateString()</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization City </td>
+                                                    <td>@organization.City.Name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Category </td>
+                                                    <td>@organization.Category.Name</td>
+                                                </tr>
+
+
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Price Range</td>
+                                                    <td>@organization.PriceRange.Name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Sector</td>
+                                                    <td>@organization.Category.Sector.Name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Brief Description</td>
+                                                    <td>@organization.Description</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Organization Status</td>
+                                                    <td><button class="btn btn-info" disabled>@msg</button></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Action Against Organization </td>
+                                                    <td>
+                                                        <button type="submit" id="block" class="btn btn-danger" org_ID="@organization.Id">Block</button>
+                                                        <button type="submit" id="unblock" class="btn btn-success" orgId="@organization.Id">Unblock</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight:bolder;color:darkslategray"><i class="fa fa-check-circle"></i> Print Organization Details </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-warning">Print</button>
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                                                    }
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+
+
+        $(document).ready(function () {
+
+            $('[id="block"]').click(function () {
+
+                var button = $(this);
+                bootbox.confirm("Are you sure you want to block this organization ?", function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            url: "/Admin/Block/" + button.attr("org_ID"),
+
+                            method: "PUT",
+                            success: function () {
+                                toastr.success("Organization Blocked Successfully");
+
+
+                            },
+                            error: function (err) {
+                                toastr.error('Failed To block this organization');
+
+                            }
+
+                        });
+                    }
+                });
+
+
+            });
+
+
+
+
+
+
+            $('[id="unblock"]').click(function () {
+
+                var button = $(this);
+                bootbox.confirm("Are you sure you want to Unblock this organization ?", function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            url: "/Admin/Unblock/" + button.attr("orgId"),
+
+                            method: "PUT",
+                            success: function () {
+                                toastr.success("Organization is Unblocked Successfully");
+
+
+                            },
+                            error: function (err) {
+                                toastr.error('Failed To Unblock this organization');
+
+                            }
+
+                        });
+                    }
+                });
+
+
+            });
+
+
+
+        });
+
+  $(function () {
+      $("#organizations").DataTable();
+
+  });
+    </script>
+}
+

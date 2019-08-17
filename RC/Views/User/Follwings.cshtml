@@ -1,0 +1,85 @@
+﻿@model IEnumerable<RC.Models.Subscriber>
+@using RC.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    ApplicationDbContext db = new ApplicationDbContext();
+
+}
+
+<div class="row">
+    @if (Model.Count() == 0)
+    {
+        <div class="row">
+            <div class="col-md-10 col-lg-offset-1">
+                <div class="alert alert-info" role="alert">There are no Followings</div>
+            </div>
+        </div>
+    }
+    else
+    {
+        foreach (var subscriber in Model)
+        {
+            var num_of_posts = db.Posts.Where(p => p.organizationId == subscriber.organizationId);
+            var num_of_review = db.Reviews.Where(r => r.organizationId == subscriber.organizationId);
+            var num_of_followers = db.Subscribers.Where(f => f.organizationId == subscriber.organizationId);
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <!-- Widget: user widget style 1 -->
+                <div class="box box-widget widget-user">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-aqua-active">
+                        <a href="/Organization/index/@subscriber.Organization.Id" style="color:#FFF;text-decoration: none;"><h3 class="widget-user-username">@subscriber.Organization.User.Username</h3></a>
+                        <a href="http://www.@subscriber.Organization.websiteUrl" style="color:#FFF;text-decoration: none;"><h5 class="widget-user-desc">@subscriber.Organization.websiteUrl</h5></a>
+</div>
+                    <div class="widget-user-image">
+                        <img class="img-circle" style="height: 95px;width: 95px;" src="/Content/img/OrganizationsProfilePics/@subscriber.Organization.User.imageUrl" alt="User Avatar">
+                    </div>
+                    <div class="box-footer">
+                        <div class="row">
+                            <div class="col-sm-4 border-right">
+
+                                <div class="description-block">
+                                    <h5 class="description-header">@num_of_posts.Count()</h5>
+                                    <span class="description-text">POSTS</span>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-4 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header" id="nof">@num_of_followers.Count()</h5>
+                                    <span class="description-text">FOLLOWERS</span>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-4">
+                                <div class="description-block">
+                                    <h5 class="description-header">@num_of_review.Count()</h5>
+                                    <span class="description-text">REVIEWERS</span>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 border-right">
+                                <div class="description-block">
+                                    @{
+                                        var userid = @Convert.ToInt32(Session["UserId"]);
+                                        var client = db.Clients.SingleOrDefault(c => c.userId == userid);
+                                    }
+                                    <button type="button" class="submit action-button btn btn-primary btn-md btn-block login-btn" id="subscribe_@subscriber.organizationId" onclick="Subscribe(@client.Id, @subscriber.organizationId);">UnFollow</button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                </div>
+                <!-- /.widget-user -->
+            </div>
+
+        }
+    }
+</div>

@@ -1,0 +1,206 @@
+﻿@model RC.ViewModels.OrganizationPromotions
+@{
+    ViewBag.Title = "PromotedPosts";
+    Layout = "~/Views/Shared/_OrganizationLayout.cshtml";
+}
+
+<head>
+    <style>
+        .accordion {
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            margin: 0px auto;
+        }
+
+            .accordion ul {
+                width: 95%;
+                display: table;
+                table-layout: fixed;
+                margin-left: 32px;
+                padding: 0;
+            }
+
+                .accordion ul li {
+                    display: table-cell;
+                    vertical-align: bottom;
+                    position: relative;
+                    width: 16.666%;
+                    height: 350px;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    transition: all 500ms ease-in-out;
+                }
+
+                    .accordion ul li div {
+                        display: block;
+                        overflow: hidden;
+                        width: 100%;
+                    }
+
+                        .accordion ul li div a {
+                            display: block;
+                            height: 350px;
+                            width: 100%;
+                            position: relative;
+                            z-index: 3;
+                            vertical-align: bottom;
+                            padding: 15px 20px;
+                            box-sizing: border-box;
+                            color: #fff;
+                            text-shadow: 1px 1px 2px #000;
+                            /*filter: invert(100%);*/
+                            text-decoration: none;
+                            font-family: Open Sans, sans-serif;
+                            transition: all 300ms ease-in-out;
+                        }
+
+                            .accordion ul li div a * {
+                                opacity: 0;
+                                margin: 0;
+                                width: 100%;
+                                text-overflow: ellipsis;
+                                position: relative;
+                                z-index: 5;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                -webkit-transform: translateX(-20px);
+                                transform: translateX(-20px);
+                                -webkit-transition: all 400ms ease-in-out;
+                                transition: all 400ms ease-in-out;
+                            }
+
+                            .accordion ul li div a h2 {
+                                font-family: Montserrat, sans-serif;
+                                text-overflow: clip;
+                                font-size: 32px;
+                                text-transform: uppercase;
+                                margin-bottom: 2px;
+                                top: 160px;
+                            }
+
+                            .accordion ul li div a p {
+                                top: 160px;
+                                font-size: 18px;
+                                padding-left: 1em;
+                            }
+
+
+
+                .accordion ul li {
+                    background-size: cover;
+                }
+
+                .accordion ul:hover li {
+                    width: 10%;
+                }
+
+                    .accordion ul:hover li:hover {
+                        width: 90%;
+                    }
+
+                        /*.accordion ul:hover li:hover a { background: rgba(0, 0, 0, 0.4); }*/
+
+                        .accordion ul:hover li:hover a * {
+                            opacity: 1;
+                            -webkit-transform: translateX(0);
+                            transform: translateX(0);
+                        }
+
+                .accordion ul li div a * {
+                    opacity: 1;
+                    -webkit-transform: translateX(0);
+                    transform: translateX(0);
+                }
+    </style>
+
+
+
+</head>
+
+@foreach (var post in Model.posts)
+{
+    int viewers = 0;
+    int NumOfImg = 0;
+
+    foreach (var promotion in Model.promotions)
+    {
+        if (post.Id == promotion.postId && promotion.Reaches > 0)
+        {
+            foreach (var viewer in Model.PromotionViewer)
+            {
+                if (viewer.promotionId == promotion.Id)
+                {
+                    viewers++;
+                }
+            }
+            <div class="nav-tabs-custom Post " id="Promotion">
+                <div class="tab-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Box Comment -->
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <div class="user-block">
+                                        <img class="img-circle" src="~/Content/img/OrganizationsProfilePics/@Model.UserLoggedIn.imageUrl" alt="@Model.organization.orgnizationName">
+                                        <span class="username"><a href="@Url.Action("Index", "Organization", new {id =Model.organization.Id})">@Model.organization.orgnizationName</a></span>
+                                        @*<span class="username"><a href="#">@Model.organization.orgnizationName</a></span>*@
+                                        @*<span class="description"><i class="fa fa-check-circle-o text-primary" aria-hidden="true"></i>Promoted</span>*@
+                                    </div>
+                                    <div class="box-tools">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <!-- /.box-tools -->
+                                </div>
+                                <div class="box-body">
+                                    @foreach (var PostImgs in Model.PostImages)
+                                    {
+                                        if (post.Id == PostImgs.postId)
+                                        {
+                                            NumOfImg++;
+                                        }
+                                    }
+                                    @if (NumOfImg != 0)
+                                    {
+                                        <div class="row margin-bottom">
+
+                                            <div class="accordion">
+                                                <ul>
+                                                    @foreach (var PostImgs in Model.PostImages)
+                                                    {
+                                                        if (post.Id == PostImgs.postId)
+                                                        {
+                                                            <li>
+
+                                                                <img width="100%" style="height:100%" class="img-responsive sliderLink" src="~/Content/img/Posts/@PostImgs.Path" />
+
+                                                            </li>
+                                                        }
+
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
+                                    <p class="Promotion" style="color:#000">@post.Content</p>
+                                    <span class="pull-right text-muted re">@viewers <i class="fa fa-eye" aria-hidden="true"></i> </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script src="~/Scripts/bootstrap.min.js"></script>
